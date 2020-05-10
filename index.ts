@@ -8,6 +8,9 @@ import bodyParser = require('body-parser');
 import helmet = require('helmet');
 import http = require('http');
 
+const { applyMiddleware, applyRoutes } = require("@Util/index");
+import errorHandlers from "@Middleware/ErrorHandlers";
+
 const app = express();
 const server = http.createServer(app);
 const { PORT, NAME, VERSION } = require('@Config/Config');
@@ -23,6 +26,7 @@ app.use(bodyParser.urlencoded({
 	limit: '100mb'
 }));
 app.disable('x-powered-by');
+applyMiddleware(errorHandlers, app);
 
 app.use('/api', require('@Service/index'));
 
@@ -30,3 +34,14 @@ server.listen(PORT, () => {
     console.log(`Service Server ${NAME}\nversion '${VERSION}\nrunning on localhost:${PORT}\n`);
     console.log(`API Endpoint /api/v${VERSION.split('.')[0]}/{ nama modul }`)
 })
+
+// Handle uncaughtError
+process.on("uncaughtException", e => {
+    console.log(e);
+    process.exit(1);
+});
+// Handle Error
+process.on("unhandledRejection", e => {
+    console.log(e);
+    process.exit(1);
+});

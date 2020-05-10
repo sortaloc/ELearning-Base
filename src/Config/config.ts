@@ -1,14 +1,26 @@
 const dotenv = require('dotenv').config();
 const pkg = require('@Package');
 
-// dotenv().config;
-
 const sub_port = () => {
 	try{
 		return process.env.SUB_PORT.split(',').map(data => Number(data));
 	}catch(err){
 		return new Array(10).fill(1000).map((data, key) => data = data+key);
 	}
+}
+
+interface ResponseObject {
+	data: any,
+	code: number, 
+	state: boolean,
+	message: string
+}
+
+const ResponseStructure: ResponseObject = {
+	data: new Object() || new Array(),
+	code: 100,
+	state: false,
+	message: 'Get Data'
 }
 
 module.exports = {
@@ -22,5 +34,6 @@ module.exports = {
 		dialect: process.env.DIALECTDB || 'pg',
 	},
 	NAME: pkg.name,
-	VERSION: pkg.version
+	VERSION: pkg.version,
+	STRUCTURE: ResponseStructure
 }
