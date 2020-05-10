@@ -4,9 +4,14 @@
         "pretty": true,
         "allowJs": true,
         "removeComments": true,
+        "sourceMap": false,
         "watch": true,
         "declaration": true,
         "listFiles": true,
         "outDir": "Build/"
-    }
+    },
+    "exclude": [
+        "node_modules",
+        "Build"
+    ]
 }
