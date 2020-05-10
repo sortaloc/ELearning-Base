@@ -11,12 +11,12 @@
   },
   "_moduleAliases": {
     "@": "",
-    "@Config": "src/Config",
+    "@Config": "./Build/src/Config",
     "@Package": "./package.json",
-    "@Middleware": "src/Middleware",
-    "@Service": "src/Service",
-    "@Controllers": "src/Controller",
-    "@Util": "src/Util"
+    "@Middleware": "./Build/src/Middleware",
+    "@Service": "./Build/src/Service",
+    "@Controllers": "./Build/src/Controller",
+    "@Util": "./Build/src/Util"
   },
   "dependencies": {
     "@babel/core": "^7.9.6",
