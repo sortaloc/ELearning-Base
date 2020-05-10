@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "pretty": true,
+        "allowJs": true,
+        "removeComments": true,
+        "watch": true,
+        "declaration": true,
+        "listFiles": true
+    }
+}
