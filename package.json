@@ -14,7 +14,9 @@
     "@Config": "src/Config",
     "@Package": "./package.json",
     "@Middleware": "src/Middleware",
-    "@Service": "src/Service"
+    "@Service": "src/Service",
+    "@Controllers": "src/Controller",
+    "@Util": "src/Util"
   },
   "dependencies": {
     "@babel/core": "^7.9.6",
