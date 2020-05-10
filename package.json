@@ -7,7 +7,7 @@
   "scripts": {
     "start": "nodemon --exec babel-node index.js",
     "compile": "tsc",
-    "dev": "nodemon index.js"
+    "dev": "nodemon Build/index.js"
   },
   "_moduleAliases": {
     "@": "",
