@@ -6,6 +6,7 @@
         "removeComments": true,
         "watch": true,
         "declaration": true,
-        "listFiles": true
+        "listFiles": true,
+        "outDir": "Build/"
     }
 }
