@@ -23,15 +23,28 @@ const ResponseStructure: ResponseObject = {
 	message: 'Get Data'
 }
 
+const urlType = (type: string) => {
+	let url: string;
+	switch(type){
+		case 'pg': {
+			url = 'postgresql';
+		} break;
+	}
+	return url;
+}
+
 module.exports = {
 	PORT: process.env.PORT || 9000,
 	SERVICE_PORT: sub_port(),
+	NODE_ENV: process.env.NODE_ENV,
 	DATABASE: {
 		uname: process.env.USERDB || 'root',
 		passwd: process.env.PASSDB || '',
 		host: process.env.HOSTDB || 'localhost',
 		port: process.env.PORTDB || '3306',
 		dialect: process.env.DIALECTDB || 'pg',
+		url: urlType(process.env.DIALECTDB),
+		db: process.env.DATABASE || 'profile'
 	},
 	NAME: pkg.name,
 	VERSION: pkg.version,

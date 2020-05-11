@@ -1,5 +1,15 @@
 {
     "compilerOptions": {
+        "baseUrl": "./src",
+        "paths": {
+            "@Config/*": ["Config/*"],
+            "@Package": ["package.json"],
+            "@Middleware/*": ["Middleware/*"],
+            "@Service/*": ["Service/*"],
+            "@Controllers/*": ["Controller/*"],
+            "@Util/*": ["Util/*"],
+            "@Connection/*": ["Connection/*"]
+        },
         "noImplicitAny": true,
         "pretty": true,
         "allowJs": true,
@@ -8,7 +18,9 @@
         "watch": true,
         "declaration": true,
         "listFiles": true,
-        "outDir": "Build/"
+        "outDir": "Build/",
+        "esModuleInterop": true,
+        "suppressImplicitAnyIndexErrors": true
     },
     "exclude": [
         "node_modules",

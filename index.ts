@@ -8,14 +8,13 @@ import bodyParser = require('body-parser');
 import helmet = require('helmet');
 import http = require('http');
 
-const { applyMiddleware, applyRoutes } = require("@Util/index");
+import { applyMiddleware } from "@Util/index";
 import errorHandlers from "@Middleware/ErrorHandlers";
+import { shouldCompress } from '@Middleware/Compress';
 
+const { PORT, NAME, VERSION } = require('@Config/Config');
 const app = express();
 const server = http.createServer(app);
-const { PORT, NAME, VERSION } = require('@Config/Config');
-
-const { shouldCompress } = require('@Middleware/Compress');
 
 app.use(helmet());
 app.use(cors());
