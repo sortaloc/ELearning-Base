@@ -33,7 +33,7 @@ class DatabaseController {
     public tableList: Array<any>;
     public response: Object;
     public TableStructure: Object;
-    public TableInterface: Array<any>;
+    // public TableInterface: Array<any>;
     constructor(table: string){
         this.table = table;
         this.response = STRUCTURE;
