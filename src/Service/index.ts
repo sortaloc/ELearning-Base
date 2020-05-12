@@ -9,7 +9,6 @@ const router = express.Router();
 
 const { VERSION } = require('@Config/Config');
 
-let fileArray: string[] = [];
 let ver: number = VERSION.split('.')[0];
 fs.readdirSync(__dirname)
 .filter((file: string) => {

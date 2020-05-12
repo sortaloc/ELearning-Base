@@ -17,7 +17,7 @@ interface ResponseObject {
 }
 
 const ResponseStructure: ResponseObject = {
-	data: new Object() || new Array(),
+	data: undefined,
 	code: 100,
 	state: false,
 	message: 'Get Data'

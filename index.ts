@@ -1,4 +1,3 @@
-// require('module-alias/register');
 import 'module-alias/register';
 
 import express = require('express');
@@ -31,7 +30,7 @@ app.use('/api', require('@Service/index'));
 
 server.listen(PORT, () => {
     console.log(`Service Server ${NAME}\nversion '${VERSION}\nrunning on localhost:${PORT}\n`);
-    console.log(`API Endpoint /api/v${VERSION.split('.')[0]}/{ nama modul }`)
+    console.log(`API Endpoint /api/v${VERSION.split('.')[0]}/{ nama modul }`);
 })
 
 // Handle uncaughtError
