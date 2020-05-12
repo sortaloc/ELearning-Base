@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon --exec babel-node index.js",
-    "deploy": "tsc",
+    "deploy": "tsc && yarn install --production && pm2 Build/index.js -i max",
     "dev": "ts-node index.ts",
     "mount": "nodemon -e ts -w . -x yarn dev"
   },
@@ -47,6 +47,5 @@
     "@types/knex": "^0.16.1",
     "@types/node": "^13.13.5",
     "@types/pg-format": "^1.0.0",
-    "@types/slonik": "^22.1.2"
   }
 }
