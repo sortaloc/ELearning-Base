@@ -15,13 +15,19 @@
         "pretty": true,
         "allowJs": true,
         "removeComments": true,
-        "sourceMap": false,
+        "sourceMap": true,
         "watch": true,
-        "declaration": true,
+        "declaration": false,
+        "moduleResolution": "node",
         "listFiles": true,
         "outDir": "Build/",
         "esModuleInterop": true,
-        "suppressImplicitAnyIndexErrors": true
+        "suppressImplicitAnyIndexErrors": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "typeRoots": [
+            "node_modules/@types"
+        ],
     },
     "exclude": [
         "node_modules",
