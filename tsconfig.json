@@ -8,7 +8,8 @@
             "@Service/*": ["Service/*"],
             "@Controllers/*": ["Controller/*"],
             "@Util/*": ["Util/*"],
-            "@Connection/*": ["Connection/*"]
+            "@Connection/*": ["Connection/*"],
+            "@Model/*": ["Model/*"]
         },
         "noImplicitAny": true,
         "pretty": true,
