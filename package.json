@@ -1,8 +1,8 @@
 {
-  "name": "pgri",
+  "name": "elearning",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/mohammedwazier/PGRI-Base-Backend.git",
+  "repository": "https://github.com/mohammedwazier/ELearning-Base.git",
   "license": "MIT",
   "scripts": {
     "start": "nodemon --exec babel-node index.js",
@@ -12,13 +12,14 @@
   },
   "_moduleAliases": {
     "@": "",
-    "@Config": "./Build/src/Config",
+    "@Config": "./src/Config",
     "@Package": "./package.json",
-    "@Middleware": "./Build/src/Middleware",
-    "@Service": "./Build/src/Service",
-    "@Controllers": "./Build/src/Controller",
-    "@Util": "./Build/src/Util",
-    "@Connection": "./Build/src/Connection"
+    "@Middleware": "./src/Middleware",
+    "@Service": "./src/Service",
+    "@Controllers": "./src/Controller",
+    "@Util": "./src/Util",
+    "@Connection": "./src/Connection",
+    "@Model": "./src/Model"
   },
   "dependencies": {
     "@babel/core": "^7.9.6",
@@ -46,6 +47,6 @@
     "@types/helmet": "^0.0.46",
     "@types/knex": "^0.16.1",
     "@types/node": "^13.13.5",
-    "@types/pg-format": "^1.0.0",
+    "@types/pg-format": "^1.0.0"
   }
 }
