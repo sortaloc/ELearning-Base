@@ -9,25 +9,17 @@ const dirname = __dirname;
 
 const db = {};
 
-fs.readdirSync(dirname)
-.filter(file => {
-    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
-})
+// fs.readdirSync(dirname)
+// .filter(file => {
+//     console.log()
+//     return (file.indexOf('.') !== 0) && (file !== basename) && (file !== file.split('.')[0]+'.d.ts');
+// })
 
-.forEach(file => {
-    const modelName = file.split('.')[0];
-    let dataClass = require('@Controllers/DatabaseController');
+['account','admin','cashflow', 'codevoucher', 'elearning', 'inbox', 'outbox', 'profile', 'setting', 'transaksi', 'evoucher', 'otp_list'].forEach(file => {
+    const modelName = file;
+    let dataClass = require('@Controllers/DatabaseController')
     dataClass = new dataClass(modelName)
     db[modelName] = dataClass
-
-    // // Unit Test, Development State, testing some function
-    // if(modelName === 'account'){
-    //     db[modelName].select(['acc_id'])
-    //     .then((data:any) => {
-    //         console.log(data)
-    //         process.exit();
-    //     })
-    // }
 })
 
 module.exports = db;

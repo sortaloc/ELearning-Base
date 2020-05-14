@@ -1,6 +1,3 @@
-const Connection = require('@Connection/Postgre');
-const { STRUCTURE } = require('@Config/Config');
-
 import {
     AccountType, 
     AdminType, 
@@ -12,7 +9,8 @@ import {
     ProfileType,
     SettingType,
     TransaksiType,
-    EvoucherType
+    EvoucherType,
+    OtpType
 } from './InterfaceTypes';
 let {
     AccountStructure,
@@ -25,15 +23,18 @@ let {
     OutboxStructure,
     ProfileStructure,
     SettingStructure,
-    TransaksiStructure
+    TransaksiStructure,
+    OtpStructure
 } = require('./InterfaceStructure');
+const Connection = require('@Connection/Postgre');
+const { STRUCTURE } = require('@Config/Config');
 
 class DatabaseController {
     public table: string;
     public tableList: Array<any>;
     public response: Object;
     public TableStructure: Object;
-    // public TableInterface: Array<any>;
+    public connection: any;
     constructor(table: string){
         this.table = table;
         this.response = STRUCTURE;
@@ -48,13 +49,21 @@ class DatabaseController {
             outbox: <OutboxType> OutboxStructure,
             profile: <ProfileType> ProfileStructure,
             setting: <SettingType> SettingStructure,
-            transaksi: <TransaksiType> TransaksiStructure
+            transaksi: <TransaksiType> TransaksiStructure,
+            otp_list: <OtpType> OtpStructure
         })
         this.TableStructure = TableStructure[table];
+        this.connection = Connection;
+
+        Connection.raw('select 1+1 as result')
+        // .then(() => console.log('Connection Established'))
+        .catch((err: Error) => {
+            console.log('Connection Error to Database', err)
+        })
     }
 
-    public ValidateData = (list: any) => {
-        return new Promise<Object>(async (resolve, reject) => {
+    private ValidateData = (list: any) => {
+        return new Promise<Object>(async (resolve) => {
             var response: any = this.response;
             try{
                 switch(this.table){
@@ -66,9 +75,7 @@ class DatabaseController {
                             let res: AccountType = list;
                             response.data = res;
                         }
-                        response.state = true;
-                        response.message = `Success get data from Table : ${this.table}`;
-                        resolve(response);
+                        resolve(response.data);
                     } break;
                     case 'admin' : {
                         if(Boolean(Array.isArray(list))){
@@ -78,9 +85,7 @@ class DatabaseController {
                             let res: AdminType = list;
                             response.data = res;
                         }
-                        response.state = true;
-                        response.message = `Success get data from Table : ${this.table}`;
-                        resolve(response);
+                        resolve(response.data);
                     } break;
                     case 'cashflow' : {
                         if(Boolean(Array.isArray(list))){
@@ -90,9 +95,7 @@ class DatabaseController {
                             let res: CashflowType = list;
                             response.data = res;
                         }
-                        response.state = true;
-                        response.message = `Success get data from Table : ${this.table}`;
-                        resolve(response);
+                        resolve(response.data);
                     } break;
                     case 'codevoucher' : {
                         if(Boolean(Array.isArray(list))){
@@ -102,9 +105,7 @@ class DatabaseController {
                             let res: CodevoucherType = list;
                             response.data = res;
                         }
-                        response.state = true;
-                        response.message = `Success get data from Table : ${this.table}`;
-                        resolve(response);
+                        resolve(response.data);
                     } break;
                     case 'elearning' : {
                         if(Boolean(Array.isArray(list))){
@@ -114,9 +115,7 @@ class DatabaseController {
                             let res: ElearningType = list;
                             response.data = res;
                         }
-                        response.state = true;
-                        response.message = `Success get data from Table : ${this.table}`;
-                        resolve(response);
+                        resolve(response.data);
                     } break;
                     case 'evoucher' : {
                         if(Boolean(Array.isArray(list))){
@@ -126,12 +125,9 @@ class DatabaseController {
                             let res: EvoucherType = list;
                             response.data = res;
                         }
-                        response.state = true;
-                        response.message = `Success get data from Table : ${this.table}`;
-                        resolve(response);
+                        resolve(response.data);
                     } break;
                     case 'inbox' : {
-                        // let response: Array<InboxType> = list;
                         if(Boolean(Array.isArray(list))){
                             let res: Array<InboxType> = list;
                             response.data = res;
@@ -139,9 +135,7 @@ class DatabaseController {
                             let res: InboxType = list;
                             response.data = res;
                         }
-                        response.state = true;
-                        response.message = `Success get data from Table : ${this.table}`;
-                        resolve(response);
+                        resolve(response.data);
                     } break;
                     case 'outbox' : {
                         if(Boolean(Array.isArray(list))){
@@ -151,9 +145,7 @@ class DatabaseController {
                             let res: OutboxType = list;
                             response.data = res;
                         }
-                        response.state = true;
-                        response.message = `Success get data from Table : ${this.table}`;
-                        resolve(response);
+                        resolve(response.data);
                     } break;
                     case 'profile' : {
                         if(Boolean(Array.isArray(list))){
@@ -163,9 +155,7 @@ class DatabaseController {
                             let res: ProfileType = list;
                             response.data = res;
                         }
-                        response.state = true;
-                        response.message = `Success get data from Table : ${this.table}`;
-                        resolve(response);
+                        resolve(response.data);
                     } break;
                     case 'setting' : {
                         if(Boolean(Array.isArray(list))){
@@ -175,9 +165,7 @@ class DatabaseController {
                             let res: SettingType = list;
                             response.data = res;
                         }
-                        response.state = true;
-                        response.message = `Success get data from Table : ${this.table}`;
-                        resolve(response);
+                        resolve(response.data);
                     } break;
                     case 'transaksi' : {
                         if(Boolean(Array.isArray(list))){
@@ -187,17 +175,42 @@ class DatabaseController {
                             let res: TransaksiType = list;
                             response.data = res;
                         }
-                        response.state = true;
-                        response.message = `Success get data from Table : ${this.table}`;
-                        resolve(response);
+                        resolve(response.data);
+                    } break;
+                    case 'otp_list': {
+                        if(Boolean(Array.isArray(list))){
+                            let res: Array<OtpType> = list;
+                            response.data = res;
+                        }else{
+                            let res: OtpType = list;
+                            response.data = res;
+                        }
                     } break;
                 }
             }catch(err){
-                console.log('Error', err);
-                response.code = 102;
-                response.message = 'Something Error on Parsing data from Database'
-                resolve(response)
+                response.data = [];
+                resolve(response.data)
 
+            }
+        })
+    }
+
+    private ValidateResult = (result: any) => {
+        return new Promise<object>((resolve) => {
+            try{
+                if(result.command === 'INSERT'){
+                    if(result.rowCount === 0){
+                        throw Error;
+                    }
+                    resolve({state: true, message: `Success ${result.command} to ${this.table}`});
+                }else if(result.command === 'UPDATE'){
+
+                }
+            }catch(err){
+                resolve({
+                    state: false,
+                    message: `Failed to ${result.command} on Table ${this.table}`
+                })
             }
         })
     }
@@ -206,6 +219,27 @@ class DatabaseController {
         return new Promise<Object>(async (resolve) => {
             Connection(this.table)
             .select(fields)
+            .then(this.ValidateData)
+            .then(resolve)
+        })
+    }
+
+    public selectField = (fields: Array<string>, where: any) => {
+        return new Promise<Object>(async (resolve) => {
+            Connection(this.table)
+            .select(fields)
+            .where(where)
+            .then(this.ValidateData)
+            .then(resolve)
+        })
+    }
+
+    public selectFieldOne = (fields: Array<string>, where: any) => {
+        return new Promise<Object>(async (resolve) => {
+            Connection(this.table)
+            .select(fields)
+            .where(where)
+            .first()
             .then(this.ValidateData)
             .then(resolve)
         })
@@ -222,26 +256,43 @@ class DatabaseController {
     }
 
     public all = () => {
-        return new Promise<object>(async (resolve) => {
+        return new Promise<Object>(async (resolve) => {
             Connection(this.table)
             .then(this.ValidateData)
             .then(resolve)
         })
     }
 
-    public single = (field: string, value: string | number) => {
-        return new Promise<object>(async(resolve) => {
-            Connection(this.table).where({[field]: value}).first()
+    public allSelect = (where: any) => {
+        return new Promise<Object>(async (resolve) => {
+            Connection(this.table)
+            .where(where)
             .then(this.ValidateData)
             .then(resolve)
         })
     }
 
-    public insertOne = () => {
-        return new Promise<object>(async (resolve) => {
-
+    public single = (where: any) => {
+        return new Promise<Object>(async(resolve) => {
+            Connection(this.table)
+            .where(where)
+            .first()
+            .then(this.ValidateData)
+            .then(resolve)
         })
     }
-}
 
-module.exports = DatabaseController
+    public insertOne = (insert: any) => {
+        return new Promise<object>(async (resolve) => {
+            Connection(this.table)
+            .insert(insert)
+            .then(this.ValidateResult)
+            .then(resolve)
+        })
+    }
+
+    public custom = () => {
+        return Connection;
+    }
+}
+module.exports = DatabaseController;

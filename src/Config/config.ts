@@ -48,5 +48,9 @@ module.exports = {
 	},
 	NAME: pkg.name,
 	VERSION: pkg.version,
-	STRUCTURE: ResponseStructure
+	STRUCTURE: ResponseStructure,
+	WHATSAPP: {
+		accountSid: process.env.ACCOUNTSID,
+		authToken: process.env.AUTHTOKEN
+	}
 }

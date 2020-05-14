@@ -1,3 +1,5 @@
+// export namespace InterfaceTypes{
+// }
 export interface AccountType {
     acc_id: number,
     acc_nama: string,
@@ -7,6 +9,27 @@ export interface AccountType {
     acc_created_at?: string,
     acc_updated_at?: string,
     acc_isactive: string
+}
+
+export interface ProfileType {
+    prl_id: number,
+    prl_nik: string,
+    prl_nama: string,
+    prl_group: string,
+    prl_tempat_lahir: string,
+    prl_nohp: string,
+    prl_email: string,
+    prl_alamat: string,
+    prl_gender: string,
+    prl_saldo: number,
+    prl_username: string,
+    prl_password: string,
+    prl_gelar: string,
+    prl_gelar_profesi: string,
+    prl_created_at?: string,
+    prl_updated_at?: string,
+    prl_isactive: string,
+    prl_profile_id: string
 }
 
 export interface AdminType {
@@ -98,26 +121,6 @@ export interface OutboxType {
     obx_isactive: string
 }
 
-export interface ProfileType {
-    prl_id: number,
-    prl_nik: string,
-    prl_nama: string,
-    prl_group: string,
-    prl_tempat_lahir: string,
-    prl_nohp: string,
-    prl_email: string,
-    prl_alamat: string,
-    prl_gender: string,
-    prl_saldo: number,
-    prl_username: string,
-    prl_password: string,
-    prl_gelar: string,
-    prl_gelar_profesi: string,
-    prl_created_at?: string,
-    prl_updated_at?: string,
-    prl_isactive: string
-}
-
 export interface SettingType {
     st_id: number,
     st_keterangan: string,
@@ -144,4 +147,12 @@ export interface TransaksiType {
     trx_refid: string,
     trx_created_at?: string,
     trx_updated_at?: string
+}
+
+export interface OtpType {
+    id: number,
+    otp_nohp: string,
+    otp_kode: number,
+    otp_status: number,
+    otp_created_at?: string
 }

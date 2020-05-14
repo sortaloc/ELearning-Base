@@ -9,7 +9,8 @@ import {
     ProfileType,
     SettingType,
     TransaksiType,
-    EvoucherType
+    EvoucherType,
+    OtpType
 } from './InterfaceTypes';
 
 const AccountStructure: AccountType = {
@@ -21,6 +22,27 @@ const AccountStructure: AccountType = {
     acc_created_at: "",
     acc_updated_at: "",
     acc_isactive: ""
+}
+
+const ProfileStructure: ProfileType = {
+    prl_id: 0,
+    prl_nik: "",
+    prl_nama: "",
+    prl_group: "",
+    prl_tempat_lahir: "",
+    prl_nohp: "",
+    prl_email: "",
+    prl_alamat: "",
+    prl_gender: "",
+    prl_saldo: 0,
+    prl_username: "",
+    prl_password: "",
+    prl_gelar: "",
+    prl_gelar_profesi: "",
+    prl_created_at: "",
+    prl_updated_at: "",
+    prl_isactive: "",
+    prl_profile_id: ""
 }
 
 const AdminStructure: AdminType = {
@@ -112,25 +134,7 @@ const OutboxStructure: OutboxType = {
     obx_isactive: ""
 }
 
-const ProfileStructure: ProfileType = {
-    prl_id: 0,
-    prl_nik: "",
-    prl_nama: "",
-    prl_group: "",
-    prl_tempat_lahir: "",
-    prl_nohp: "",
-    prl_email: "",
-    prl_alamat: "",
-    prl_gender: "",
-    prl_saldo: 0,
-    prl_username: "",
-    prl_password: "",
-    prl_gelar: "",
-    prl_gelar_profesi: "",
-    prl_created_at: "",
-    prl_updated_at: "",
-    prl_isactive: ""
-}
+
 
 const SettingStructure: SettingType = {
     st_id: 0,
@@ -160,6 +164,14 @@ const TransaksiStructure: TransaksiType = {
     trx_updated_at: ""
 }
 
+const OtpStructure: OtpType = {
+    id: 0,
+    otp_nohp: "",
+    otp_kode: 0,
+    otp_status: 0,
+    otp_created_at: ""
+}
+
 module.exports = {
     AccountStructure,
     AdminStructure,
@@ -171,5 +183,6 @@ module.exports = {
     OutboxStructure,
     ProfileStructure,
     SettingStructure,
-    TransaksiStructure
+    TransaksiStructure,
+    OtpStructure
 }
