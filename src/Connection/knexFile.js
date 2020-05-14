@@ -1,6 +1,7 @@
 const { DATABASE } = require('@Config/Config');
 const { dialect, uname, passwd, host, port, db } = DATABASE;
 
+
 const knexConfig = {
     local: {
         client: dialect,
@@ -37,5 +38,7 @@ const knexConfig = {
         pool: { min: 0, max: 7 }
     }
 };
+
+console.log(knexConfig.development)
 
 module.exports = knexConfig;
