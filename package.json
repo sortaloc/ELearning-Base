@@ -12,14 +12,14 @@
   },
   "_moduleAliases": {
     "@": "",
-    "@Config": "./src/Config",
+    "@Config": "./Build/src/Config",
     "@Package": "./package.json",
-    "@Middleware": "./src/Middleware",
-    "@Service": "./src/Service",
-    "@Controllers": "./src/Controller",
-    "@Util": "./src/Util",
-    "@Connection": "./src/Connection",
-    "@Model": "./src/Model"
+    "@Middleware": "./Build/src/Middleware",
+    "@Service": "./Build/src/Service",
+    "@Controllers": "./Build/src/Controller",
+    "@Util": "./Build/src/Util",
+    "@Connection": "./Build/src/Connection",
+    "@Model": "./Build/src/Model"
   },
   "dependencies": {
     "@babel/core": "^7.9.6",
