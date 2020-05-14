@@ -31,7 +31,7 @@ app.disable('x-powered-by');
 
 app.use('/api', require('@Service/index'));
 app.get('/', (req, res) => {
-    res.send(true)
+    return res.send('Hello World');
 })
 // applyMiddleware(errorHandlers, app);
 
@@ -50,3 +50,5 @@ process.on("unhandledRejection", e => {
     console.log(e);
     process.exit(1);
 });
+
+module.exports = app;
