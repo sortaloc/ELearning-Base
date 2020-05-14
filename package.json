@@ -6,28 +6,35 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon --exec babel-node index.js",
-    "deploy": "tsc && yarn install --production && pm2 restart Build/index.js -i max",
+    "deploy": "tsc && yarn install --production && pm2 restart ./index.js -i max",
     "dev": "ts-node index.ts",
     "mount": "nodemon -e ts -w . -x yarn dev"
   },
   "_moduleAliases": {
     "@": "",
-    "@Config": "./Build/src/Config",
+    "@Config": "./src/Config",
     "@Package": "./package.json",
-    "@Middleware": "./Build/src/Middleware",
-    "@Service": "./Build/src/Service",
-    "@Controllers": "./Build/src/Controller",
-    "@Util": "./Build/src/Util",
-    "@Connection": "./Build/src/Connection",
-    "@Model": "./Build/src/Model"
+    "@Middleware": "./src/Middleware",
+    "@Service": "./src/Service",
+    "@Controllers": "./src/Controller",
+    "@Util": "./src/Util",
+    "@Connection": "./src/Connection",
+    "@Model": "./src/Model"
   },
   "dependencies": {
     "@babel/core": "^7.9.6",
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.9.6",
+    "@types/body-parser": "^1.19.0",
+    "@types/compression": "^1.7.0",
     "@types/cookie-parser": "^1.4.2",
+    "@types/cors": "^2.8.6",
+    "@types/helmet": "^0.0.46",
     "@types/jsonwebtoken": "^8.3.9",
+    "@types/knex": "^0.16.1",
     "@types/moment-timezone": "^0.5.13",
+    "@types/node": "^14.0.1",
+    "@types/pg-format": "^1.0.0",
     "@types/utf8": "^2.1.6",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
@@ -45,19 +52,13 @@
     "pg": "^8.1.0",
     "pg-format": "^1.0.4",
     "ts-node": "^8.10.1",
+    "tslib": "^2.0.0",
     "twilio": "^3.43.0",
     "typescript": "^3.8.3",
     "uid": "^1.0.0",
-    "utf8": "^3.0.0",
-    "@types/body-parser": "^1.19.0",
-    "@types/compression": "^1.7.0",
-    "@types/cors": "^2.8.6",
-    "@types/express": "^4.17.6",
-    "@types/helmet": "^0.0.46",
-    "@types/knex": "^0.16.1",
-    "@types/node": "^13.13.5",
-    "@types/pg-format": "^1.0.0"
+    "utf8": "^3.0.0"
   },
   "devDependencies": {
+    "@types/express": "^4.17.6"
   }
 }
