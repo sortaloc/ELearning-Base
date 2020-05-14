@@ -8,7 +8,8 @@
     "start": "nodemon --exec babel-node index.js",
     "deploy": "tsc && yarn install --production && pm2 restart ./index.js -i max",
     "dev": "ts-node index.ts",
-    "mount": "nodemon -e ts -w . -x yarn dev"
+    "mount": "nodemon -e ts -w . -x yarn dev",
+    "test": "mocha ./test/* --exit"
   },
   "_moduleAliases": {
     "@": "",
@@ -35,11 +36,13 @@
     "helmet": "^3.22.0",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.21.1",
+    "mocha": "^7.1.2",
     "module-alias": "^2.2.2",
     "moment": "^2.25.3",
     "moment-timezone": "^0.5.28",
     "pg": "^8.1.0",
     "pg-format": "^1.0.4",
+    "supertest": "^4.0.2",
     "tslib": "^2.0.0",
     "twilio": "^3.43.0",
     "uid": "^1.0.0",
