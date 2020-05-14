@@ -20,7 +20,7 @@
         "declaration": false,
         "moduleResolution": "node",
         "listFiles": true,
-        "outDir": "Build/",
+        // "outDir": "Build/",
         "esModuleInterop": true,
         "suppressImplicitAnyIndexErrors": true,
         "emitDecoratorMetadata": true,
