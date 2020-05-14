@@ -2,15 +2,16 @@ import 'module-alias/register';
 
 import express = require('express');
 import { Request, Response } from 'express';
-import cors = require('cors');
-import compression = require('compression');
-import bodyParser = require('body-parser');
-import helmet = require('helmet');
-import http = require('http');
+import Cors from 'cors';
+import Compression from 'compression';
+import bodyParser from 'body-parser';
+import helmet from 'helmet';
+import http from 'http';
+import Cookie from 'cookie-parser';
 
 import { applyMiddleware } from "@Util/index";
 import errorHandlers from "@Middleware/ErrorHandlers";
-import { shouldCompress } from '@Middleware/Compress';
+// import { shouldCompress } from '@Middleware/Compress';
 import { MiddlewareValidation } from '@Middleware/Security';
 
 const { PORT, NAME, VERSION } = require('@Config/Config');
@@ -18,8 +19,10 @@ const app = express();
 const server = http.createServer(app);
 
 app.use(helmet());
-app.use(cors());
-app.use(compression({filter: shouldCompress}));
+app.use(Cors());
+app.use(Cookie());
+// app.use(compression({filter: shouldCompress}));
+app.use(Compression())
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 app.disable('x-powered-by');
