@@ -43,11 +43,9 @@ class RegisterController {
                     prl_nohp: body.nohp,
                     prl_username: body.username,
                     prl_password: MainController.createPassword(body.password),
-                    prl_isactive: 0,
+                    prl_isactive: 1,
                     prl_profile_id: MainController.generateID()
                 }
-                // Validasi Data (nik, nama, nohp, username)
-
                 let validate = await database.profile.connection.raw(`
                 SELECT * from 
                 profile 
