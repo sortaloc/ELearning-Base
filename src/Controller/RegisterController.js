@@ -128,7 +128,7 @@ class RegisterController {
             }
         })
     }
-    registerWhatsapp = async (body) => {
+    registerWhatsapp = async (body, res) => {
         return new Promise(async (resolve) => {
             let getText = body.Body;
             let response = this.structure;
@@ -176,12 +176,6 @@ class RegisterController {
                         if(result){
                             return kode;
                         }else{
-                            // response.code = 103;
-                            // response.data = {};
-                            // response.state = false;
-                            // response.message = 'Failed to insert OTP';
-                            // twiml.message('Gagal mendapatkan OTP, silahkan coba beberapa saat lagi');
-                            // throw response;
                             res.writeHead(500, {'Content-Type': 'text/xml'});
                             res.end(twiml.toString());
                         }

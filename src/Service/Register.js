@@ -13,7 +13,7 @@ module.exports = (router) => {
     })
 
     router.post('/whatsappRegister', async (req, res) => {
-        let registerWhatsapp = await RegisterController.registerWhatsapp(req.body);
+        let registerWhatsapp = await RegisterController.registerWhatsapp(req.body, res);
         res.send(registerWhatsapp);
     })
 
