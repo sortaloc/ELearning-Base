@@ -20,7 +20,8 @@
     "@Controllers": "./src/Controller",
     "@Util": "./src/Util",
     "@Connection": "./src/Connection",
-    "@Model": "./src/Model"
+    "@Model": "./src/Model",
+    "@Query": "./src/Query"
   },
   "dependencies": {
     "@babel/core": "^7.9.6",
