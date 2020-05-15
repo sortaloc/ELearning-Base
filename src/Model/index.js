@@ -20,6 +20,7 @@ const db = {};
     'otp_list', 
     'produk', 
     'produk_group',
+    'bank',
 ]
 .forEach(file => {
     const modelName = file;
