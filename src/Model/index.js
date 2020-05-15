@@ -1,21 +1,27 @@
 require('module-alias/register');
-
-const fs = require('fs');
-const path = require('path');
-
-
-const basename = path.basename(__filename);
-const dirname = __dirname;
-
 const db = {};
-
 // fs.readdirSync(dirname)
 // .filter(file => {
 //     console.log()
 //     return (file.indexOf('.') !== 0) && (file !== basename) && (file !== file.split('.')[0]+'.d.ts');
 // })
-
-['account','admin','cashflow', 'codevoucher', 'elearning', 'inbox', 'outbox', 'profile', 'setting', 'transaksi', 'evoucher', 'otp_list'].forEach(file => {
+[
+    'account',
+    'admin',
+    'cashflow', 
+    'code_voucher', 
+    'elearning', 
+    'inbox', 
+    'outbox', 
+    'profile', 
+    'setting', 
+    'transaksi', 
+    'evoucher', 
+    'otp_list', 
+    'produk', 
+    'produk_group',
+]
+.forEach(file => {
     const modelName = file;
     let dataClass = require('@Controllers/DatabaseController')
     dataClass = new dataClass(modelName)

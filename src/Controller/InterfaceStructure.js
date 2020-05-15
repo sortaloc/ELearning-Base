@@ -173,6 +173,14 @@ const OtpStructure = {
     otp_created_at: ""
 }
 
+// const produk = {
+//     id: 0,
+//     produk_namaProduk: "",
+//     id_group: "",
+//     produk_harga: "",
+//     produk
+// }
+
 module = {
     AccountStructure,
     AdminStructure,
@@ -187,3 +195,4 @@ module = {
     TransaksiStructure,
     OtpStructure
 }
+

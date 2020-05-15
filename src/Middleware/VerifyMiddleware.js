@@ -13,7 +13,7 @@ const verifyToken = async (req, res, next) => {
             return res.status(403).send({auth: false, message: 'No Token Provided'});
         }
     
-        jwt.verify(token, cipherID, (err, decoded) => {
+        jwt.verify(token, cipherID, async (err, decoded) => {
             if(err){
                 return res.status(500).send({auth: false, message: 'Failed to authenticate token'});
             }

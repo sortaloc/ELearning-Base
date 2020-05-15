@@ -33,26 +33,26 @@ class DatabaseController {
     table;
     tableList;
     response;
-    TableStructure;
+    // TableStructure;
     connection;
     constructor(table){
         this.table = table;
         this.response = STRUCTURE;
-        const TableStructure = new Object({
-            account: AccountStructure,
-            admin: AdminStructure,
-            cashflow: CashflowStructure,
-            codevoucher: CodevoucherStructure,
-            elearning: ElearningStructure,
-            evoucher: EvoucherStructure,
-            inbox: InboxStructure,
-            outbox: OutboxStructure,
-            profile: ProfileStructure,
-            setting: SettingStructure,
-            transaksi: TransaksiStructure,
-            otp_list: OtpStructure
-        })
-        this.TableStructure = TableStructure[table];
+        // const TableStructure = new Object({
+        //     account: AccountStructure,
+        //     admin: AdminStructure,
+        //     cashflow: CashflowStructure,
+        //     codevoucher: CodevoucherStructure,
+        //     elearning: ElearningStructure,
+        //     evoucher: EvoucherStructure,
+        //     inbox: InboxStructure,
+        //     outbox: OutboxStructure,
+        //     profile: ProfileStructure,
+        //     setting: SettingStructure,
+        //     transaksi: TransaksiStructure,
+        //     otp_list: OtpStructure
+        // })
+        // this.TableStructure = TableStructure[table];
         this.connection = Connection;
 
         Connection.raw('select 1+1 as result')

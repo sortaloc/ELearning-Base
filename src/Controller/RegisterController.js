@@ -10,20 +10,6 @@ const twiml = new MessagingResponse();
 
 const MainController = require('@Controllers/MainController');
 
-// interface validasi {
-//     tipe: string,
-//     value: string
-// }
-
-// interface RegisterData {
-//     nohp: string,
-//     nama: string,
-//     nik: string,
-//     username: string,
-//     password: string,
-//     tipe: string
-// }
-
 class RegisterController {
     structure;
     constructor(){
