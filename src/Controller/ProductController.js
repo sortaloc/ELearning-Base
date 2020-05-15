@@ -87,7 +87,7 @@ class ProductController {
             try{
                 let data = await database.produk.allSelect({produk_id_group: groupid})
                 if(data.length > 0){
-
+                    // 
                 }else{
                     throw err;
                 }
@@ -100,8 +100,28 @@ class ProductController {
             }
         })
     }
+
+    getSingleProduct(productid){
+        return new Promise(async (resolve) => {
+            try{
+                let data = await database.produk.allSelect({produk_id: productid});
+                if(data.length > 0){
+                    // 
+                    // Get Kategori Group
+                }else{
+                    throw err;
+                }
+            }catch(err){
+                response.state = false;
+                response.data = {};
+                response.message = "Produk tidak Ditemukan";
+                response.code = 102;
+                return resolve(response);
+            }
+        })
+    }
     
-    
+
 }
 
 module.exports = new ProductController;

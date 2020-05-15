@@ -1,6 +1,7 @@
 const { STRUCTURE, WHATSAPP } = require('@Config/Config');
 const database = require('@Model/index');
 const NIK = require('@Controllers/NikParse');
+const { profileSelect } = require('@Query/QueryModel');
 
 const { accountSid, authToken } = WHATSAPP;
 
@@ -32,18 +33,20 @@ class RegisterController {
                     prl_isactive: 1,
                     prl_profile_id: MainController.generateID()
                 }
-                let validate = await database.profile.connection.raw(`
-                SELECT * from 
-                profile 
-                WHERE
-                prl_nik LIKE '%${profileData.prl_nik}%'
-                OR
-                prl_nama LIKE '%${profileData.prl_nama}%'
-                OR
-                prl_nohp LIKE '%${profileData.prl_nohp}%'
-                OR
-                prl_username LIKE '%${profileData.prl_username}%'
-                `)
+                // let validate = await database.profile.connection.raw(`
+                // SELECT * from 
+                // profile 
+                // WHERE
+                // prl_nik LIKE '%${profileData.prl_nik}%'
+                // OR
+                // prl_nama LIKE '%${profileData.prl_nama}%'
+                // OR
+                // prl_nohp LIKE '%${profileData.prl_nohp}%'
+                // OR
+                // prl_username LIKE '%${profileData.prl_username}%'
+                // `)
+
+                let validate = await database.profile.connection.raw(profileSelect());
                 if(validate.rows.length > 0){
                     response.data = body
                     response.message = 'User Exists'

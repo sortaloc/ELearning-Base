@@ -25,6 +25,11 @@ module.exports = (router) => {
         let data = await ProductController.getGroupedProductWithKey(req.body.groupid);
         res.send(true);
     })
-    // router.post('/getCategory', ())
+
+    router.post('/getSingleProduct'/*, */, async (req, res) => {
+        // Validasi Productid
+        let data = await ProductController.getSingleProduct(productid);
+        res.send(true);
+    })
     return router;
 }
