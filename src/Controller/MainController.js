@@ -48,15 +48,15 @@ class MainController {
         return { data: data, jwt: datajwt, auth: `Bearer ${datajwt}` }
     }
     
-    static random = (start= 1, end= 9)=> {
+    random = (start= 1, end= 9)=> {
         const val = Math.floor(start + Math.random() * end)
         return val
     }
-    static milli = ()=> {
+    milli = ()=> {
         const hrTime = process.hrtime()
         return hrTime[0] * 1000 + hrTime[1] / 1000000
     }
-    static validateDate(date){
+    validateDate(date){
         let retDate = date < 10 ? `0${date}` : date
         return retDate
     }
