@@ -35,5 +35,6 @@ module.exports = {
 	WHATSAPP: {
 		accountSid: process.env.ACCOUNTSID,
 		authToken: process.env.AUTHTOKEN
-	}
+	},
+	CIPHERID: process.env.CIPHERID
 }

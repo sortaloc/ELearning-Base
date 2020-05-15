@@ -42,7 +42,8 @@ const ProfileStructure = {
     prl_created_at: "",
     prl_updated_at: "",
     prl_isactive: "",
-    prl_profile_id: ""
+    prl_profile_id: "",
+    prl_token: "",
 }
 
 const AdminStructure = {

@@ -12,7 +12,7 @@ const Cookie = require('cookie-parser');
 // const { applyMiddleware } = require("@Util/index");
 // const errorHandlers = require("@Middleware/ErrorHandlers");
 // const { shouldCompress } = require('@Middleware/Compress');
-const { MiddlewareValidation } = require('@Middleware/Security');
+// const { MiddlewareValidation } = require('@Middleware/Security');
 
 const { PORT, NAME, VERSION } = require('@Config/Config');
 const app = express();

@@ -2,10 +2,10 @@
 const LoginController = require('@Controllers/LoginController');
 
 module.exports = (router) => {
-    router.post('/LoginUsername', (req, res) => {
+    router.post('/', async (req, res) => {
         console.log(req.baseUrl)
-        let responseData = LoginController.loginValidate(['username', 'password'], req.body)
-        res.send(true)
+        let responseData = await LoginController.loginValidate(['username', 'password'], req.body)
+        return res.send(responseData);
     })
 
     return router;

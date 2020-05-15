@@ -62,131 +62,18 @@ class DatabaseController {
         })
     }
 
-    static ValidateData = (list) => {
+    ValidateData = (list) => {
         return new Promise(async (resolve) => {
             var response = this.response;
             try{
-                switch(this.table){
-                    case 'account': {
-                        if(Boolean(Array.isArray(list))){
-                            let res = list;
-                            response.data = res;
-                        }else{
-                            let res = list;
-                            response.data = res;
-                        }
-                        resolve(response.data);
-                    } break;
-                    case 'admin' : {
-                        if(Boolean(Array.isArray(list))){
-                            let res = list;
-                            response.data = res;
-                        }else{
-                            let res = list;
-                            response.data = res;
-                        }
-                        resolve(response.data);
-                    } break;
-                    case 'cashflow' : {
-                        if(Boolean(Array.isArray(list))){
-                            let res = list;
-                            response.data = res;
-                        }else{
-                            let res = list;
-                            response.data = res;
-                        }
-                        resolve(response.data);
-                    } break;
-                    case 'codevoucher' : {
-                        if(Boolean(Array.isArray(list))){
-                            let res = list;
-                            response.data = res;
-                        }else{
-                            let res = list;
-                            response.data = res;
-                        }
-                        resolve(response.data);
-                    } break;
-                    case 'elearning' : {
-                        if(Boolean(Array.isArray(list))){
-                            let res = list;
-                            response.data = res;
-                        }else{
-                            let res = list;
-                            response.data = res;
-                        }
-                        resolve(response.data);
-                    } break;
-                    case 'evoucher' : {
-                        if(Boolean(Array.isArray(list))){
-                            let res = list;
-                            response.data = res;
-                        }else{
-                            let res = list;
-                            response.data = res;
-                        }
-                        resolve(response.data);
-                    } break;
-                    case 'inbox' : {
-                        if(Boolean(Array.isArray(list))){
-                            let res = list;
-                            response.data = res;
-                        }else{
-                            let res = list;
-                            response.data = res;
-                        }
-                        resolve(response.data);
-                    } break;
-                    case 'outbox' : {
-                        if(Boolean(Array.isArray(list))){
-                            let res = list;
-                            response.data = res;
-                        }else{
-                            let res = list;
-                            response.data = res;
-                        }
-                        resolve(response.data);
-                    } break;
-                    case 'profile' : {
-                        if(Boolean(Array.isArray(list))){
-                            let res = list;
-                            response.data = res;
-                        }else{
-                            let res = list;
-                            response.data = res;
-                        }
-                        resolve(response.data);
-                    } break;
-                    case 'setting' : {
-                        if(Boolean(Array.isArray(list))){
-                            let res = list;
-                            response.data = res;
-                        }else{
-                            let res = list;
-                            response.data = res;
-                        }
-                        resolve(response.data);
-                    } break;
-                    case 'transaksi' : {
-                        if(Boolean(Array.isArray(list))){
-                            let res = list;
-                            response.data = res;
-                        }else{
-                            let res = list;
-                            response.data = res;
-                        }
-                        resolve(response.data);
-                    } break;
-                    case 'otp_list': {
-                        if(Boolean(Array.isArray(list))){
-                            let res = list;
-                            response.data = res;
-                        }else{
-                            let res = list;
-                            response.data = res;
-                        }
-                    } break;
+                if(Boolean(Array.isArray(list))){
+                    let res = list;
+                    response.data = res;
+                }else{
+                    let res = list;
+                    response.data = res;
                 }
+                resolve(response.data);
             }catch(err){
                 response.data = [];
                 resolve(response.data)
@@ -195,7 +82,7 @@ class DatabaseController {
         })
     }
 
-    static ValidateResult = (result) => {
+    ValidateResult = (result) => {
         return new Promise((resolve) => {
             try{
                 if(result.command === 'INSERT'){
@@ -211,6 +98,19 @@ class DatabaseController {
                     state: false,
                     message: `Failed to ${result.command} on Table ${this.table}`
                 })
+            }
+        })
+    }
+
+    ValidateUpdate = (result) => {
+        return new Promise(resolve => {
+            try{
+                if(Number(result) > 0){
+                    return resolve({state: true, message: `Success Update`});
+                }
+                throw err
+            }catch(err){
+                return resolve({state: false, message: `Failed to Update`});
             }
         })
     }
@@ -291,9 +191,13 @@ class DatabaseController {
         })
     }
 
-    updateOne = (whre, update) => {
+    updateOne = (where, update) => {
         return new Promise(async (resolve) => {
-            
+            Connection(this.table)
+            .where(where)
+            .update(update)
+            .then(this.ValidateUpdate)
+            .then(resolve);
         })
     }
 }

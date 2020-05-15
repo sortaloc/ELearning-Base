@@ -2,9 +2,13 @@ const crypto = require('crypto');
 const utf8 = require('utf8');
 const jwt = require('jsonwebtoken');
 const moment = require('moment-timezone');
+
 moment.tz.setDefault("Asia/Jakarta");
+
+const { CIPHERID } = require('@Config/Config');
+
 class MainController {
-    cipherID = 'l3arn1nGbyd0!n9';
+    cipherID = CIPHERID;
     constructor(){}
 
     encryption = (dataOriginal) => {
@@ -115,6 +119,11 @@ class MainController {
 
     getToday = () => {
         return `${moment().tz("Asia/Jakarta").format("YYYY-MM-DD")}`;
+    }
+
+    createToken = (data) => {
+        const token = jwt.sign(data, this.cipherID, {expiresIn: 0x31536000});
+        return {auth: true, token: token};
     }
 
 

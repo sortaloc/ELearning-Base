@@ -1,12 +1,25 @@
-const cid = `aA1!bB2@`;
-const dt = new Date();
+const database = require('@Model/index');
 
-// const hash = 
+const jwt = require('jsonwebtoken')
+const { CIPHERID } = require('@Config/Config');
+const cipherID = CIPHERID;
 
-const encodeHash = (variable) => {
+const verifyToken = async (req, res, next) => {
+    const token = req.headers['x-access-token'];
+    if(!token){
+        return res.status(403).send({auth: false, message: 'No Token Provided'});
+    }
 
+    jwt.verify(token, cipherID, (err, decoded) => {
+        if(err){
+            return res.status(500).send({auth: false, message: 'Failed to authenticate token'});
+        }
+        let validasi = await database.profile.allSelect({prl_id: decoded.id});
+        if(Number(validasi.length) === 0){
+            return res.status(500).send({auth: false, message: 'User Not Found'});
+        }
+        next();
+    })
 }
 
-export const SecurityController = () => {
-
-}
+module.exports = verifyToken;
