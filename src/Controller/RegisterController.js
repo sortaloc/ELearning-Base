@@ -1,7 +1,7 @@
 const { STRUCTURE, WHATSAPP } = require('@Config/Config');
 const database = require('@Model/index');
 const NIK = require('@Controllers/NikParse');
-const { profileSelect } = require('@Query/QueryModel');
+const { profileSelect, kodeOtpSelect } = require('@Query/QueryModel');
 
 // const { accountSid, authToken } = WHATSAPP;
 const accountSid = 'AC7e1fed5ec1e569e4d0f94e7b6ae2275d';
@@ -158,11 +158,7 @@ class RegisterController {
                     const getKodeOTP = async () => {
                         let number = getNumber;
                         const kode = MainController.generateOTP();
-                        let OTPDatabase = await database.otp_list.connection.raw(`
-                        SELECT * FROM 
-                        public.otp_list 
-                        WHERE 
-                        otp_kode LIKE '%${kode}%' AND otp_nohp LIKE '%${number}%' AND otp_created_at LIKE '${MainController.getToday()}%' AND otp_status = 0`)
+                        let OTPDatabase = await database.otp_list.connection.raw(kodeOtpSelect(kode, number, MainController.getToday()))
                         if(OTPDatabase.rows > 0){
                             getKodeOTP()
                         }

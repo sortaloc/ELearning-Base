@@ -13,6 +13,15 @@ const profileSelect = (profileData) => {
     `
 }
 
+const kodeOtpSelect = (kode, number, today) => {
+    return `
+    SELECT * FROM 
+    public.otp_list 
+    WHERE 
+    otp_kode LIKE '%${kode}%' AND otp_nohp LIKE '%${number}%' AND otp_created_at LIKE '${today}%' AND otp_status = 0`
+}
+
 exports.QueryModel = {
-    profileSelect
+    profileSelect,
+    kodeOtpSelect
 }
