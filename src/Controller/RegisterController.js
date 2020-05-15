@@ -3,11 +3,12 @@ const database = require('@Model/index');
 const NIK = require('@Controllers/NikParse');
 const { profileSelect } = require('@Query/QueryModel');
 
-const { accountSid, authToken } = WHATSAPP;
+// const { accountSid, authToken } = WHATSAPP;
+const accountSid = 'AC7e1fed5ec1e569e4d0f94e7b6ae2275d';
+const authToken = '081233cc9cedd9faef9f2894c3ca0400';
 
 const client = require('twilio')(accountSid, authToken);
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
-const twiml = new MessagingResponse();
 
 const MainController = require('@Controllers/MainController');
 
@@ -44,7 +45,7 @@ class RegisterController {
                     return resolve(response)
                 }else{
                     let result = await database.profile.insertOne(profileData);
-                    console.log(result)
+                    // console.log(result)
                     if(result.state){
                         response.data = {
                             username: profileData.prl_username,
@@ -131,76 +132,69 @@ class RegisterController {
         return new Promise(async (resolve) => {
             let getText = body.Body;
             let response = this.structure;
-            try{
-                getText = getText.trim().toLowerCase();
-                if(getText.indexOf('reg') > -1 || getText.indexOf('xus') > -1){ //Jika ada
-                    let getNumber = (number = body.From) => {
-                        number = number.split(':');
-                        number = number[number.length-1];
-                        number = number.replace(/\+/gi, '');
-                        return number;
-                    };
 
-                    getNumber = getNumber(body.From);
-                    const valNomer = await database.profile.allSelect({prl_nohp: getNumber, prl_isactive: 1})
+            const twiml = new MessagingResponse();
 
-                    if(valNomer.length > 0){
-                        response.code = 101;
-                        response.state = false;
-                        response.data = {};
-                        response.message = `Nomor : ${getNumber} telah terdaftar di database`;
-                        twiml.message('Nomor anda telah terdaftar pada aplikasi');
-                        throw response;
-                    }else{
-                        const getKodeOTP = async () => {
-                            let number = getNumber;
-                            const kode = MainController.generateOTP();
-                            let OTPDatabase = await database.otp_list.connection.raw(`
-                            SELECT * FROM 
-                            public.otp_list 
-                            WHERE 
-                            otp_kode LIKE '%${kode}%' AND otp_nohp LIKE '%${number}%' AND otp_created_at LIKE '${MainController.getToday()}%' AND otp_status = 0`)
-                            if(OTPDatabase.rows > 0){
-                                getKodeOTP()
-                            }
+            getText = getText.trim().toLowerCase();
+            if(getText.indexOf('reg') > -1 || getText.indexOf('xus') > -1){ //Jika ada
+                let getNumber = (number = body.From) => {
+                    number = number.split(':');
+                    number = number[number.length-1];
+                    number = number.replace(/\+/gi, '');
+                    return number;
+                };
 
-                            const otp_listStructure = {
-                                otp_nohp: number,
-                                otp_kode: kode,
-                                otp_status: 0
-                            }
-                            const result = await database.otp_list.insertOne(otp_listStructure);
-                            if(result){
-                                return kode;
-                            }else{
-                                response.code = 103;
-                                response.data = {};
-                                response.state = false;
-                                response.message = 'Failed to insert OTP';
-                                twiml.message('Gagal mendapatkan OTP, silahkan coba beberapa saat lagi');
-                                throw response;
-                            }
-                        }
-                        let OTP = await getKodeOTP();
-                        const message = `Kode OTP anda adalah : ${OTP}`
-                        twiml.message(message);
-                        response.code = 100;
-                        response.data = {otp: OTP, nohp: getNumber};
-                        response.state = true;
-                        response.message = message;
-                        resolve(response)
-                    }
-                }else{
-                    response.code = 102;
-                    response.data = {};
+                getNumber = getNumber(body.From);
+                const valNomer = await database.profile.allSelect({prl_nohp: getNumber, prl_isactive: 1})
+
+                if(valNomer.length > 0){
+                    response.code = 101;
                     response.state = false;
-                    response.message = 'Command Not Found';
-                    twiml.message('Command tidak ditemukan, Masukkan Reg Nexus untuk memulai');
+                    response.data = {};
+                    response.message = `Nomor : ${getNumber} telah terdaftar di database`;
+                    twiml.message('Nomor anda telah terdaftar pada aplikasi');
                     throw response;
+                }else{
+                    const getKodeOTP = async () => {
+                        let number = getNumber;
+                        const kode = MainController.generateOTP();
+                        let OTPDatabase = await database.otp_list.connection.raw(`
+                        SELECT * FROM 
+                        public.otp_list 
+                        WHERE 
+                        otp_kode LIKE '%${kode}%' AND otp_nohp LIKE '%${number}%' AND otp_created_at LIKE '${MainController.getToday()}%' AND otp_status = 0`)
+                        if(OTPDatabase.rows > 0){
+                            getKodeOTP()
+                        }
+
+                        const otp_listStructure = {
+                            otp_nohp: number,
+                            otp_kode: kode,
+                            otp_status: 0
+                        }
+                        const result = await database.otp_list.insertOne(otp_listStructure);
+                        if(result){
+                            return kode;
+                        }else{
+                            // response.code = 103;
+                            // response.data = {};
+                            // response.state = false;
+                            // response.message = 'Failed to insert OTP';
+                            // twiml.message('Gagal mendapatkan OTP, silahkan coba beberapa saat lagi');
+                            // throw response;
+                            res.writeHead(500, {'Content-Type': 'text/xml'});
+                            res.end(twiml.toString());
+                        }
+                    }
+                    let OTP = await getKodeOTP();
+                    const message = `Kode OTP anda adalah : ${OTP}`
+                    twiml.message(message);
+                    res.writeHead(200, {'Content-Type': 'text/xml'});
+                    res.end(twiml.toString());
                 }
-            }catch(resultError){
-                console.log(resultError)
-                resolve(resultError)
+            }else{
+                res.writeHead(500, {'Content-Type': 'text/xml'});
+                res.end(twiml.toString());
             }
         })
     }
