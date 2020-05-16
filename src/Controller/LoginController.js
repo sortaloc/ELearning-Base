@@ -68,6 +68,17 @@ class LoginController {
             }
         })
     }
+
+    logout = (body) => {
+        return new Promise(async resolve => {
+            try{
+                // Hapus Token
+                
+            }catch(err){
+                return resolve(err)
+            }
+        })
+    }
 }
 
 module.exports = new LoginController;

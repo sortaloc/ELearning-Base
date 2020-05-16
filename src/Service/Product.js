@@ -5,7 +5,7 @@ module.exports = (router) => {
     router.get('/', (req, res) => {
         res.send(true);
     })
-    router.post('/getCategory'/*, VerifyMiddleware*/, async (req, res) => {
+    router.post('/getAllCategory'/*, VerifyMiddleware*/, async (req, res) => {
         let data = await ProductController.getCategory();
         res.send(data);
     })
@@ -30,6 +30,14 @@ module.exports = (router) => {
         // Validasi Productid
         let data = await ProductController.getSingleProduct(productid);
         res.send(true);
+    })
+
+    router.post('/createProduct'/*, ValidasiMiddleware */, async (req, res) => {
+
+    })
+
+    router.post('/createCategory'/*, ValidasiMiddleware */, async (req, res) => {
+
     })
     return router;
 }
