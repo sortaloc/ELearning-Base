@@ -4,9 +4,9 @@ const express = require('express');
 const { Request, Response } = require('express');
 const Cors = require('cors');
 const Compression = require('compression');
-const bodyParser = require('body-parser');
+const { urlencoded, json } = require('body-parser');
 const helmet = require('helmet');
-const http = require('http');
+const { createServer } = require('http');
 const Cookie = require('cookie-parser');
 
 // const { applyMiddleware } = require("@Util/index");
@@ -16,15 +16,15 @@ const Cookie = require('cookie-parser');
 
 const { PORT, NAME, VERSION } = require('@Config/Config');
 const app = express();
-const server = http.createServer(app);
+const server = createServer(app);
 
 app.use(helmet());
 app.use(Cors());
 app.use(Cookie());
 // app.use(compression({filter: shouldCompress}));
 app.use(Compression())
-app.use(bodyParser.urlencoded({extended: false}))
-app.use(bodyParser.json())
+app.use(urlencoded({extended: false}))
+app.use(json())
 app.disable('x-powered-by');
 
 // app.use(MiddlewareValidation) //Middleware Security
@@ -51,4 +51,5 @@ process.on("unhandledRejection", e => {
     process.exit(1);
 });
 
+// export default app;
 module.exports = app;
