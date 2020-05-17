@@ -1,4 +1,4 @@
-profileSelect(profileData){
+export const profileSelect = (profileData) => {
     return `
     SELECT * from 
     profile 
@@ -13,8 +13,7 @@ profileSelect(profileData){
     `
 }
 
-kodeOtpSelect(kode, number, today){
-    console.log(kode, number, today)
+export const kodeOtpSelect = (kode, number, today) => {
     return `
     SELECT * FROM 
     public.otp_list 
@@ -22,7 +21,7 @@ kodeOtpSelect(kode, number, today){
     otp_kode LIKE '%${kode}%' AND otp_nohp LIKE '%${number}%' AND otp_created_at LIKE '${today}%' AND otp_status = 0`
 }
 
-exports.module = {
-    profileSelect,
-    kodeOtpSelect
-}
+// exports.module = {
+//     profileSelect,
+//     kodeOtpSelect
+// }
