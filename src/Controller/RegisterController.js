@@ -156,6 +156,7 @@ class RegisterController extends MainController {
         })
     }
     registerWhatsapp = async (body, res) => {
+        console.log(body);
         return new Promise(async (resolve) => {
             let getText = body.Body;
             let response = this.structure;
