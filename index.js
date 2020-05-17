@@ -9,6 +9,9 @@ const helmet = require('helmet');
 const { createServer } = require('http');
 const Cookie = require('cookie-parser');
 
+const busboy = require('connect-busboy');
+const busboyBodyParser = require('busboy-body-parser');
+
 // const { applyMiddleware } = require("@Util/index");
 // const errorHandlers = require("@Middleware/ErrorHandlers");
 // const { shouldCompress } = require('@Middleware/Compress');
@@ -24,7 +27,11 @@ app.use(Cookie());
 // app.use(compression({filter: shouldCompress}));
 app.use(Compression())
 app.use(urlencoded({extended: false}))
-app.use(json())
+app.use(bodyParser.json())
+
+app.use(busboy());
+app.use(busboyBodyParser());
+
 app.disable('x-powered-by');
 
 // app.use(MiddlewareValidation) //Middleware Security
@@ -51,5 +58,4 @@ process.on("unhandledRejection", e => {
     process.exit(1);
 });
 
-// export default app;
 module.exports = app;
