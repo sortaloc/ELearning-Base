@@ -180,7 +180,9 @@ class RegisterController extends MainController {
                     response.data = {};
                     response.message = `Nomor : ${getNumber} telah terdaftar di database`;
                     twiml.message('Nomor anda telah terdaftar pada aplikasi');
-                    throw response;
+                    res.writeHead(200, {'Content-Type': 'text/xml'});
+                    res.end(twiml.toString());
+                    // throw response;
                 }else{
                     const getKodeOTP = async () => {
                         let number = getNumber;
@@ -210,6 +212,7 @@ class RegisterController extends MainController {
                     res.end(twiml.toString());
                 }
             }else{
+                console.log(err;)
                 res.writeHead(500, {'Content-Type': 'text/xml'});
                 res.end(twiml.toString());
             }
