@@ -12,9 +12,10 @@ const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
 const MainController = require('@Controllers/MainController');
 
-class RegisterController {
+class RegisterController extends MainController {
     structure;
     constructor(){
+        super();
         this.structure = STRUCTURE;
     }
 
@@ -30,9 +31,9 @@ class RegisterController {
                     prl_group: 'ekoji',
                     prl_nohp: body.nohp,
                     prl_username: body.username,
-                    prl_password: MainController.createPassword(body.password),
+                    prl_password: this.createPassword(body.password),
                     prl_isactive: 1,
-                    prl_profile_id: MainController.generateID()
+                    prl_profile_id: this.generateID()
                 }
 
                 let validate = await database.profile.connection.raw(profileSelect(profileData));
@@ -101,9 +102,16 @@ class RegisterController {
                 }
                 let status = tipe.includes(data.tipe)
                 if(status){
-                    let fields = `prl_${data.tipe}`;
-                    const where = { [fields] : data.value };
-                    let res = await database.profile.allSelect(where);
+                    let res;
+                    if(data.tipe === 'otp'){
+                        const where = { otp_kode: data.value, otp_status: 0 };
+                        res = await database.otp_list.allSelect(where)
+                    }else{
+                        let fields = `prl_${data.tipe}`;
+                        const where = { [fields] : data.value };
+                        res = await database.profile.allSelect(where);
+                    }
+
                     if(res.length === 0){
                         response.state = true;
                         response.message = `${data.value} are valid to register`;
@@ -157,8 +165,8 @@ class RegisterController {
                 }else{
                     const getKodeOTP = async () => {
                         let number = getNumber;
-                        const kode = MainController.generateOTP();
-                        let OTPDatabase = await database.otp_list.connection.raw(kodeOtpSelect(kode, number, MainController.getToday()))
+                        const kode = this.generateOTP();
+                        let OTPDatabase = await database.otp_list.connection.raw(kodeOtpSelect(kode, number, this.getToday()))
                         if(OTPDatabase.rows > 0){
                             getKodeOTP()
                         }
