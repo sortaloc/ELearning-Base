@@ -106,30 +106,49 @@ class RegisterController extends MainController {
                     if(data.tipe === 'otp'){
                         const where = { otp_kode: data.value, otp_status: 0 };
                         res = await database.otp_list.allSelect(where)
+                        if(res.length > 0){
+                            res = res[0];
+                            const retData = {
+                                nohp: res.otp_nohp,
+                                otp: res.otp_kode
+                            }
+                            response.code = 100
+                            response.message = `OTP Valid`
+                            response.state = true;
+                            response.data = retData;
+                            resolve(response)
+                        }else{
+                            response.code = 103
+                            response.message = `OTP Not Exist`
+                            response.state = false;
+                            response.data = {};
+                            throw response;
+                        }
                     }else{
                         let fields = `prl_${data.tipe}`;
                         const where = { [fields] : data.value };
                         res = await database.profile.allSelect(where);
+                        if(res.length === 0){
+                            response.state = true;
+                            response.message = `${data.value} are valid to register`;
+                            response.code = 100;
+                            response.data = data;
+                            resolve(response);
+                        }else{
+                            response.code = 102
+                            response.message = `${data.value} was exist`
+                            response.state = false;
+                            response.data = {};
+                            throw response;
+                        }
                     }
 
-                    if(res.length === 0){
-                        response.state = true;
-                        response.message = `${data.value} are valid to register`;
-                        response.code = 100;
-                        response.data = data;
-                        resolve(response);
-                    }else{
-                        response.code = 102
-                        response.message = `${data.value} was exist`
-                        response.state = false;
-                        response.data = {};
-                        throw response;
-                    }
                 }else{
                     response.code = 104;
                     response.state = false;
                     response.data = {};
                     response.message = `Data not Valid`;
+                    throw response;
                 }
             }catch(errRes){
                 resolve(errRes);
