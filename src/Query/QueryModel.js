@@ -14,6 +14,7 @@ const profileSelect = (profileData) => {
 }
 
 const kodeOtpSelect = (kode, number, today) => {
+    console.log(kode, number, today)
     return `
     SELECT * FROM 
     public.otp_list 
