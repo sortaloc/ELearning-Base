@@ -2,6 +2,17 @@ const database = require('@Model/index');
 const MainController = require('@Controllers/MainController');
 const { STRUCTURE } = require('@Config/Config');
 
+const path = require('path')
+const basename = path.basename(__filename);
+const fs = require('fs-extra');
+const fsNorm = require('fs');
+
+const busboy = require('connect-busboy');
+
+
+const uploadPath = path.join(__dirname, '../Source/');
+fs.ensureDir(uploadPath);
+
 class PaymentController {
     structure;
     constructor(){
@@ -88,9 +99,62 @@ class PaymentController {
                 resolve(response);
             }
         })
-
-
     }
+
+    uploadImage = (req) => {
+        return new Promise(resolve => {
+            let response = this.structure;
+            let request = req
+            req.pipe(req.busboy)
+    
+            let imageCount = 0;
+            var imageRespon = [];
+    
+            req.busboy.on('file', (fieldname, file, filename, encoding, mime) => {
+                let name= filename.split('.')
+                let typeFiles = mile.split('/')
+                name[0] = name[0].replace('/ /gi', '_');
+                name = `${MainController.generateID}_${name[0]}.${name[name.length-1]}`;
+    
+                const fstream = fs.createWriteStream(path.join(uploadPath, name))
+    
+                imageCount++;
+    
+                file.pipe(fstream);
+    
+                fstream.on('close', () => {
+                    file.unpipe(fstream);
+                });
+
+                fstream.on('error', (err) => {
+                    console.log(err)
+                })
+            })
+    
+
+            req.busboy.on('finish', function(){
+                req.unpipe(req.busboy);
+                response.data = {
+                    fileLength: imageCount
+                };
+                response.code = 100;
+                response.state = true;
+                response.message = "Berhasil Upload File";
+                resolve(response);
+            })
+
+            req.busboy.on('error', function(){
+                response.data = {};
+                response.code = 101;
+                response.state = false;
+                response.message = "Gagal Upload File";
+                resolve(response);
+            })
+            
+        })
+    }
+
+
 }
 
 module.exports = new PaymentController;
