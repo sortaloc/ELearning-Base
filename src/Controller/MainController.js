@@ -6,11 +6,41 @@ const jwt = require('jsonwebtoken');
 require('moment');
 const moment = require('moment-timezone');
 moment.tz.setDefault("Asia/Jakarta");
-const { CIPHERID } = require('@Config/Config');
+const { CIPHERID, STRUCTURE, SLEEP } = require('@Config/Config');
+
+const path = require('path')
+const basename = path.basename(__filename);
+const fs = require('fs-extra');
+const fsNorm = require('fs');
+
+const busboy = require('connect-busboy');
+
+const uploadPath = path.join(__dirname, '../Source/');
+fs.ensureDir(uploadPath);
 
 class MainController {
     cipherID = CIPHERID;
+    structure = STRUCTURE;
     constructor(){}
+
+    switchingCommand(){
+        return new Promise(async resolve => {
+          let JamSekarang = Number(moment().format('HH'))
+          let cutStart, cutEnd
+    
+          cutStart = 23;
+          cutEnd = 1;
+    
+          if (JamSekarang >= cutStart || JamSekarang < cutEnd) {
+            setTimeout(() => {
+              console.log(`Cutout Inbox, ${new Date()}`)
+              return resolve({state:false, 'data': 'Cutout Inbox', SLEEP})
+            }, (6000 * 10) * 10)
+          } else {
+            return resolve({state:true, 'data': null, SLEEP})
+          }
+        })
+      }
 
     encryption = (dataOriginal) => {
         const idcustomer = '1234567973' /*Vendor*/
@@ -142,7 +172,73 @@ class MainController {
         return {auth: true, token: token};
     }
 
+    uploadImage = (req) => {
+        return new Promise(resolve => {
+            let response = this.structure;
+            let request = req
+            req.pipe(req.busboy)
+            
+            let imageCount = 0;
+            var imageRespon = [];
+            var dataSource = {};
+    
+            req.busboy.on('file', (fieldname, file, filename, encoding, mime) => {
+                console.log(fieldname, filename, encoding, mime)
+                let name= filename.split('.')
+                let typeFiles = mime.split('/')
+                name[0] = name[0].replace('/ /gi', '_');
+                name = `${this.generateID()}_${name[0]}.${name[name.length-1]}`;
+    
+                const fstream = fs.createWriteStream(path.join(uploadPath, name))
+    
+                imageCount++;
+    
+                file.pipe(fstream);
+
+                imageRespon.push({
+                    name: name,
+                    type: mime
+                })
+    
+                fstream.on('close', () => {
+                    file.unpipe(fstream);
+                });
+
+                fstream.on('error', (err) => {
+                    console.log(err)
+                })
+            })
+
+            req.busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
+                dataSource[fieldname] = val;
+            });
+    
+
+            req.busboy.on('finish', function(){
+                req.unpipe(req.busboy);
+                response.data = {
+                    fileLength: imageCount,
+                    fieldData: dataSource,
+                    image: imageRespon
+                };
+                response.code = 100;
+                response.state = true;
+                response.message = "Berhasil Upload File";
+                resolve(response);
+            })
+
+            req.busboy.on('error', function(){
+                response.data = {};
+                response.code = 101;
+                response.state = false;
+                response.message = "Gagal Upload File";
+                resolve(response);
+            })
+            
+        })
+    }
+
 
 
 }
-module.exports = new MainController;
+module.exports = MainController;

@@ -1,5 +1,6 @@
 require('module-alias/register')
 
-const MainController = require('@Controllers/MainController.js');
+let MainController = require('@Controllers/MainController.js');
+MainController = new MainController;
 
 console.log(MainController.generateID());

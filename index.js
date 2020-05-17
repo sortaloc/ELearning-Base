@@ -9,12 +9,6 @@ const helmet = require('helmet');
 const { createServer } = require('http');
 const Cookie = require('cookie-parser');
 
-const busboy = require('connect-busboy');
-const busboyBodyParser = require('busboy-body-parser');
-
-// const { applyMiddleware } = require("@Util/index");
-// const errorHandlers = require("@Middleware/ErrorHandlers");
-// const { shouldCompress } = require('@Middleware/Compress');
 // const { MiddlewareValidation } = require('@Middleware/Security');
 
 const { PORT, NAME, VERSION } = require('@Config/Config');
@@ -24,13 +18,9 @@ const server = createServer(app);
 app.use(helmet());
 app.use(Cors());
 app.use(Cookie());
-// app.use(compression({filter: shouldCompress}));
 app.use(Compression())
 app.use(urlencoded({extended: false}))
 app.use(json())
-
-app.use(busboy());
-app.use(busboyBodyParser());
 
 app.disable('x-powered-by');
 
@@ -40,7 +30,8 @@ app.use('/api', require('@Service/index'));
 app.get('/', (req, res) => {
     return res.send('Hello World');
 })
-// applyMiddleware(errorHandlers, app);
+
+app.use('/files', express.static('./src/Source'));
 
 server.listen(PORT, () => {
     console.log(`Service Server ${NAME}\nversion ${VERSION}\nrunning on localhost:${PORT}\n`);

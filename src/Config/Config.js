@@ -36,5 +36,6 @@ module.exports = {
 		accountSid: process.env.ACCOUNTSID,
 		authToken: process.env.AUTHTOKEN
 	},
-	CIPHERID: process.env.CIPHERID
+	CIPHERID: process.env.CIPHERID,
+	SLEEP: 750
 }

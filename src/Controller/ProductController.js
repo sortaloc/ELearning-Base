@@ -2,10 +2,10 @@ const database = require('@Model/index');
 const MainController = require('@Controllers/MainController');
 const { STRUCTURE } = require('@Config/Config');
 
-class ProductController {
+class ProductController extends MainController {
     response = STRUCTURE;
     constructor(){
-
+        super();
     }
 
     getCategory(){

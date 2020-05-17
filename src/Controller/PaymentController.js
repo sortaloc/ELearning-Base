@@ -13,9 +13,10 @@ const busboy = require('connect-busboy');
 const uploadPath = path.join(__dirname, '../Source/');
 fs.ensureDir(uploadPath);
 
-class PaymentController {
+class PaymentController extends MainController {
     structure;
     constructor(){
+        super();
         this.structure = STRUCTURE;
     }
 
@@ -31,7 +32,7 @@ class PaymentController {
                     let Profile = await database.profile.allSelect({prl_profile_id: body.id});
                     if(Number(Profile.length) > 0){
                         const codeUnique = async () => {
-                            let kode = MainController.generateKodeUnik();
+                            let kode = this.generateKodeUnik();
                             // let statusOtp = await database.deposit.allSelect({dep_kode_unik: kode, dep_status: 1});
                             let statusOtp = await database.deposit.raw(`
                             SELECT * FROM 
@@ -48,12 +49,12 @@ class PaymentController {
                         let kode = await codeUnique();
                         // Buat Deposit
                         const deposit = {
-                            dep_id: MainController.generateID(),
+                            dep_id: this.generateID(),
                             dep_kode_unik: kode,
                             dep_nominal: Number(body.nominal),
                             dep_id_profile: body.id,
                             dep_total: Number(body.nominal) + Number(kode),
-                            dep_expired: MainController.createDate()
+                            dep_expired: this.createDate()
                         }
                         let insert = await database.deposit.insertOne(deposit);
                         if(insert.state){
@@ -101,58 +102,37 @@ class PaymentController {
         })
     }
 
-    uploadImage = (req) => {
-        return new Promise(resolve => {
+    uploadBuktiTransfer = (fields, req) => {
+        return new Promise(async (resolve) => {
             let response = this.structure;
-            let request = req
-            req.pipe(req.busboy)
-            
-            let imageCount = 0;
-            var imageRespon = [];
-    
-            req.busboy.on('file', (fieldname, file, filename, encoding, mime) => {
-                console.log(fieldname, filename, encoding, mime)
-                let name= filename.split('.')
-                let typeFiles = mime.split('/')
-                name[0] = name[0].replace('/ /gi', '_');
-                name = `${MainController.generateID()}_${name[0]}.${name[name.length-1]}`;
-    
-                const fstream = fs.createWriteStream(path.join(uploadPath, name))
-    
-                imageCount++;
-    
-                file.pipe(fstream);
-    
-                fstream.on('close', () => {
-                    file.unpipe(fstream);
-                });
+            try{
+                let body = req;
+                let newBody = Object.keys(body);
+                let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+                // Validasi ID
+                let akun = database.profile.allSelect({prl_profile_id: body.id});
+                console.log(akun);
+                if(diff.length === 0){
+                    // Masukkan ke inbox
 
-                fstream.on('error', (err) => {
-                    console.log(err)
-                })
-            })
-    
-
-            req.busboy.on('finish', function(){
-                req.unpipe(req.busboy);
-                response.data = {
-                    fileLength: imageCount
-                };
-                response.code = 100;
-                response.state = true;
-                response.message = "Berhasil Upload File";
-                resolve(response);
-            })
-
-            req.busboy.on('error', function(){
+                    console.log(body);
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    resolve(response);
+                }
+            }catch(err){
+                console.log(err)
                 response.data = {};
-                response.code = 101;
-                response.state = false;
-                response.message = "Gagal Upload File";
+                response.message = `Something Error`;
+                response.code = 105;
+                response.state = false
                 resolve(response);
-            })
-            
+            }
         })
+    
     }
 
 

@@ -2,11 +2,12 @@
 const { STRUCTURE } = require('@Config/Config');
 const database = require('@Model/index');
 
-const MainController = require('@Controllers/MainController');
+let MainController = require('@Controllers/MainController');
 
-class LoginController {
+class LoginController extends MainController {
     structure;
     constructor(){
+        super();
         this.structure = STRUCTURE;
     }
 
@@ -18,7 +19,7 @@ class LoginController {
             try{
                 if(diff.length === 0){
                     let { username, password } = body;
-                    password = MainController.createPassword(password);
+                    password = this.createPassword(password);
                     let result = await database.profile.allSelect({prl_username: username, prl_password: password});
                     if(Number(result.length) === 0){
                         response.data = {}
@@ -34,7 +35,7 @@ class LoginController {
                         username: result.prl_username,
                         nohp: result.prl_nohp
                     }
-                    const Token = MainController.createToken(data);
+                    const Token = this.createToken(data);
                     data.token = Token.token;
                     const update = await database.profile.updateOne({
                         prl_id: data.id

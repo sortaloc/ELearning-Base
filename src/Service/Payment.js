@@ -3,7 +3,6 @@ const PaymentController = require('@Controllers/PaymentController');
 const Busboy = require('connect-busboy');
 
 module.exports = (router) => {
-
     router.use(Busboy({
         highWaterMark: 50 * 1024 * 1024, // Set 50MiB buffer
     })); // Insert the busboy middle-ware
@@ -14,10 +13,15 @@ module.exports = (router) => {
     })
 
     router.post('/sendTopup', async (req, res) => {
-        // console.log(req)
+        // console.log(req.body, req.query, req)
         let uploadImage = await PaymentController.uploadImage(req);
-        console.log(uploadImage)
+        if(uploadImage.state){
+            let data = uploadImage.data.fieldData;
+            data.image = uploadImage.data.image
+            let response = await PaymentController.uploadBuktiTransfer(['id', 'image'], data);
+        }else{
 
+        }
         res.send(true);
     })
     return router;
