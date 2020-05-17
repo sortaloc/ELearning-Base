@@ -197,7 +197,7 @@ class RegisterController extends MainController {
                         }
 
                         const otp_listStructure = {
-                            otp_nohp: number,
+                            otp_nohp: numberPhone,
                             otp_kode: kode,
                             otp_status: 0
                         }
