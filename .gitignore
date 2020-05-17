@@ -3,5 +3,7 @@ node_modules/
 yarn.lock
 yarn-error.log
 *.js.map
-src/Source/*
+src/Source/*.jpeg
+src/Source/*.png
+src/Source/*.jpg
 Build
