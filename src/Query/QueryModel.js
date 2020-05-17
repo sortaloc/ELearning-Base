@@ -21,7 +21,7 @@ const kodeOtpSelect = (kode, number, today) => {
     otp_kode LIKE '%${kode}%' AND otp_nohp LIKE '%${number}%' AND otp_created_at LIKE '${today}%' AND otp_status = 0`
 }
 
-exports.QueryModel = {
+exports.module = {
     profileSelect,
     kodeOtpSelect
 }
