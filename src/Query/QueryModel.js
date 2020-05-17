@@ -1,4 +1,4 @@
-export const profileSelect = (profileData) => {
+const profileSelect = (profileData) => {
     return `
     SELECT * from 
     profile 
@@ -13,7 +13,7 @@ export const profileSelect = (profileData) => {
     `
 }
 
-export const kodeOtpSelect = (kode, number, today) => {
+const kodeOtpSelect = (kode, number, today) => {
     return `
     SELECT * FROM 
     public.otp_list 
@@ -25,3 +25,8 @@ export const kodeOtpSelect = (kode, number, today) => {
 //     profileSelect,
 //     kodeOtpSelect
 // }
+
+module.exports = {
+    profileSelect,
+    kodeOtpSelect
+}
