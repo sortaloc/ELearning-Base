@@ -156,7 +156,6 @@ class RegisterController extends MainController {
         })
     }
     registerWhatsapp = async (body, res) => {
-        console.log(body);
         return new Promise(async (resolve) => {
             let getText = body.Body;
             let response = this.structure;
@@ -190,7 +189,6 @@ class RegisterController extends MainController {
                         const kode = this.generateOTP();
                         // console.log(kode, numberPhone, this.getToday())
                         const query = kodeOtpSelect(kode, numberPhone, this.getToday())
-                        console.log(query)
                         let OTPDatabase = await database.otp_list.connection.raw(query)
                         if(OTPDatabase.rows > 0){
                             getKodeOTP()
@@ -210,7 +208,7 @@ class RegisterController extends MainController {
                         }
                     }
                     let OTP = await getKodeOTP();
-                    const message = `Kode OTP anda adalah : ${OTP}`
+                    const message = `Kode OTP anda adalah : \n${OTP}`
                     twiml.message(message);
                     res.writeHead(200, {'Content-Type': 'text/xml'});
                     res.end(twiml.toString());
