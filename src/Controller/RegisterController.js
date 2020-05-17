@@ -213,7 +213,7 @@ class RegisterController extends MainController {
                     res.end(twiml.toString());
                 }
             }else{
-                console.log(err;)
+                console.log('Error');
                 res.writeHead(500, {'Content-Type': 'text/xml'});
                 res.end(twiml.toString());
             }
