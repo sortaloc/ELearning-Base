@@ -106,15 +106,16 @@ class PaymentController {
             let response = this.structure;
             let request = req
             req.pipe(req.busboy)
-    
+            
             let imageCount = 0;
             var imageRespon = [];
     
             req.busboy.on('file', (fieldname, file, filename, encoding, mime) => {
+                console.log(fieldname, filename, encoding, mime)
                 let name= filename.split('.')
-                let typeFiles = mile.split('/')
+                let typeFiles = mime.split('/')
                 name[0] = name[0].replace('/ /gi', '_');
-                name = `${MainController.generateID}_${name[0]}.${name[name.length-1]}`;
+                name = `${MainController.generateID()}_${name[0]}.${name[name.length-1]}`;
     
                 const fstream = fs.createWriteStream(path.join(uploadPath, name))
     

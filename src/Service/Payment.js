@@ -14,6 +14,7 @@ module.exports = (router) => {
     })
 
     router.post('/sendTopup', async (req, res) => {
+        // console.log(req)
         let uploadImage = await PaymentController.uploadImage(req);
         console.log(uploadImage)
 
