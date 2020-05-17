@@ -1,4 +1,4 @@
-const profileSelect = (profileData) => {
+profileSelect(profileData){
     return `
     SELECT * from 
     profile 
@@ -13,7 +13,7 @@ const profileSelect = (profileData) => {
     `
 }
 
-const kodeOtpSelect = (kode, number, today) => {
+kodeOtpSelect(kode, number, today){
     console.log(kode, number, today)
     return `
     SELECT * FROM 
