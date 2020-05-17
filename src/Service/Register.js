@@ -8,7 +8,7 @@ module.exports = (router) => {
     })
 
     router.post('/validasi', async (req, res) => {
-        let validasi = await RegisterController.validasi(['nohp', 'nik', 'username', 'email'], req.body);
+        let validasi = await RegisterController.validasi(['nohp', 'nik', 'username', 'email', 'otp'], req.body);
         res.send(validasi);
     })
 
