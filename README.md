@@ -12,6 +12,6 @@ Notes :
     1. Password
     2. Convert to Base64
     3. Encode t UTF8
-    4. Encrypt to SHA1 with Cipher/Salt = l3arn1nGbyd0!n9
+    4. Encrypt to SHA1 with Cipher/Salt = 
     5. Done Password
  	
