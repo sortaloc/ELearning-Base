@@ -186,10 +186,10 @@ class RegisterController extends MainController {
                     // throw response;
                 }else{
                     const getKodeOTP = async () => {
-                        let number = getNumber;
+                        const numberPhone = getNumber;
                         const kode = this.generateOTP();
-                        console.log(kode, number, this.getToday())
-                        // const query = kodeOtpSelect(kode, number, this.getToday())
+                        // console.log(kode, numberPhone, this.getToday())
+                        const query = kodeOtpSelect(kode, numberPhone, this.getToday())
                         // console.log(query)
                         process.exit()
                         let OTPDatabase = await database.otp_list.connection.raw(query)
