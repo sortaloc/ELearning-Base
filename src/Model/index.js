@@ -1,10 +1,5 @@
 require('module-alias/register');
 const db = {};
-// fs.readdirSync(dirname)
-// .filter(file => {
-//     console.log()
-//     return (file.indexOf('.') !== 0) && (file !== basename) && (file !== file.split('.')[0]+'.d.ts');
-// })
 [
     'account',
     'admin',
@@ -21,6 +16,7 @@ const db = {};
     'produk', 
     'produk_group',
     'bank',
+    'deposit'
 ]
 .forEach(file => {
     const modelName = file;

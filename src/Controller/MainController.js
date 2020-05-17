@@ -1,10 +1,11 @@
+const database = require('@Model/index');
+
 const crypto = require('crypto');
 const utf8 = require('utf8');
 const jwt = require('jsonwebtoken');
+require('moment');
 const moment = require('moment-timezone');
-
 moment.tz.setDefault("Asia/Jakarta");
-
 const { CIPHERID } = require('@Config/Config');
 
 class MainController {
@@ -61,6 +62,16 @@ class MainController {
         return retDate
     }
 
+    createDate = (add = 24, type= 'hours') => {
+        if(['hours', 'days', 'months', 'years', 'minutes', 'secods'].includes(type)){
+            let date = moment().tz("Asia/Jakarta").format("YYYY-MM-DDTHH:mm:ssZ")
+            date = moment(date).add(24, 'hours').format('YYYY-MM-DDTHH:mm:ssZ');
+            return date;
+        }else{
+            return null;
+        }
+    }
+
     generateID = () => {
         let date = new Date()
         let year = date.getFullYear()
@@ -115,6 +126,11 @@ class MainController {
     generateOTP = () => {
         let otp = this.random(1111111111, 9999999999);
         return otp;
+    }
+
+    generateKodeUnik = () => {
+        let kode = this.random(111, 999);
+        return kode;
     }
 
     getToday = () => {
