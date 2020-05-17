@@ -190,8 +190,7 @@ class RegisterController extends MainController {
                         const kode = this.generateOTP();
                         // console.log(kode, numberPhone, this.getToday())
                         const query = kodeOtpSelect(kode, numberPhone, this.getToday())
-                        // console.log(query)
-                        process.exit()
+                        console.log(query)
                         let OTPDatabase = await database.otp_list.connection.raw(query)
                         if(OTPDatabase.rows > 0){
                             getKodeOTP()
