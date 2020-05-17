@@ -27,7 +27,7 @@ app.use(Cookie());
 // app.use(compression({filter: shouldCompress}));
 app.use(Compression())
 app.use(urlencoded({extended: false}))
-app.use(bodyParser.json())
+app.use(json())
 
 app.use(busboy());
 app.use(busboyBodyParser());
