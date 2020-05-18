@@ -10,21 +10,21 @@ const verifyToken = async (req, res, next) => {
         token = token.split(' ');
         token = token[token.length - 1];
         if(!token){
-            return res.status(403).send({auth: false, message: 'No Token Provided'});
+            return res.status(403).send({auth: false, state:false, code:500, message: 'No Token Provided'});
         }
     
         jwt.verify(token, cipherID, async (err, decoded) => {
             if(err){
-                return res.status(500).send({auth: false, code: 500, message: 'Failed to authenticate token'});
+                return res.status(500).send({auth: false, state:false, code:500, message: 'Failed to authenticate token'});
             }
             let validasi = await database.profile.allSelect({prl_profile_id: decoded.id, prl_token: token});
             if(Number(validasi.length) === 0){
-                return res.status(500).send({auth: false, message: 'Token or User Not Valid'});
+                return res.status(500).send({auth: false, state:false, code:500, message: 'Token or User Not Valid'});
             }
             next();
         })
     }catch(err){
-        return res.status(500).send({auth: false, code: 500, message: 'Failed to authenticate token'});
+        return res.status(500).send({auth: false, state:false, code:500, message: 'Failed to authenticate token'});
     }
     
     
