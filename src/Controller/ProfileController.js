@@ -1,6 +1,6 @@
 const database = require('@Model/index');
 const MainController = require('@Controllers/MainController');
-const { STRUCTURE } = require('@Config/Config');
+const { STRUCTURE, URLIMAGE } = require('@Config/Config');
 
 const fs = require('fs-extra');
 const path = require('path')
@@ -34,7 +34,8 @@ class ProfileController extends MainController{
                             username: profile.prl_username,
                             gelar: profile.prl_gelar,
                             gelar_profesi: profile.prl_gelar_profesi,
-                            saldo: profile.prl_saldo_nexus
+                            saldo: profile.prl_saldo_nexus,
+                            photo: `${URLIMAGE}${profile.prl_photo}`
                         }
                         response.data = data;
                         response.message = "Data Found";
@@ -208,12 +209,7 @@ class ProfileController extends MainController{
             let diff = fields.filter((x) => newBody.indexOf(x) === -1)
             try{
                 if(diff.length === 0){
-                    // console.log(body);
                     let updated = await database.profile.updateOne({prl_profile_id: body.id}, {prl_photo: body.image});
-                    // let data = await database.profile.allSelect({prl_profile_id: body.id});
-                    // console.log(data)
-                    // console.log(body)
-                    // console.log(updated)
                     if(updated.state){
                         response.data = {
                             id: body.id,
@@ -229,6 +225,46 @@ class ProfileController extends MainController{
                         response.code = 104;
                         response.state = false
                         throw response;    
+                    }
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    throw response;
+                }
+            }catch(err){
+                resolve(err);
+            }
+        });
+    }
+
+    getProfilePicture = (fields, body) => {
+        let response = this.structure;
+        return new Promise(async (resolve) => {
+            let newBody = Object.keys(body);
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    let data = await database.profile.allSelect({prl_profile_id: body.id});
+                    // console.log(data)
+                    if(data.length > 0){
+                        data = data[0];
+                        response.data = {
+                            image: data.prl_photo,
+                            imageURL:  `${URLIMAGE}${data.prl_photo}`,
+                            id: body.id
+                        };
+                        response.message = "Success to get Photo Profile";
+                        response.code = 100;
+                        response.state = true
+                        throw response;
+                    }else{
+                        response.data = {};
+                        response.message = "Failed to get Photo Profile, profile not found";
+                        response.code = 104;
+                        response.state = false
+                        throw response;
                     }
                 }else{
                     response.data = {};

@@ -20,10 +20,10 @@ class LoginController extends MainController {
                 if(diff.length === 0){
                     let { username, password } = body;
                     password = this.createPassword(password);
-                    let result = await database.profile.allSelect({prl_username: username, prl_password: password});
+                    let result = await database.profile.allSelect({prl_username: username, prl_password: password, prl_login: 0});
                     if(Number(result.length) === 0){
                         response.data = {}
-                        response.message = "Failed to Login, check username or password"
+                        response.message = "Failed to Login, check username or password or user was logged in"
                         response.code = 103;
                         response.state = false;
                         throw response;
@@ -40,7 +40,8 @@ class LoginController extends MainController {
                     const update = await database.profile.updateOne({
                         prl_profile_id: data.id
                     }, {
-                        prl_token: Token.token
+                        prl_token: Token.token,
+                        prl_login: 1
                     });
                     if(update.state){
                         response.data = data;
@@ -70,10 +71,34 @@ class LoginController extends MainController {
     }
 
     logout = (body) => {
+        let response = this.structure;
         return new Promise(async resolve => {
             try{
-                // Hapus Token
-                
+                let data = await database.profile.allSelect({prl_token: body.token});
+                if(data.length > 0){
+                    // update Data
+                    data = data[0];
+                    let update = await database.profile.updateOne({prl_profile_id: data.prl_profile_id, prl_login: 1}, {prl_token: null, prl_login: 0});
+                    if(update.state){
+                        response.data = {};
+                        response.message = "Success Logout";
+                        response.code = 100;
+                        response.state = true;
+                        return resolve(response)
+                    }else{
+                        response.data = {};
+                        response.message = "Failed to Logout";
+                        response.code = 104;
+                        response.state = false
+                        return resolve(response)
+                    }
+                }else{
+                    response.data = {};
+                    response.message = "Failed to Logout, Token was not Valid";
+                    response.code = 103;
+                    response.state = false
+                    throw response
+                }
             }catch(err){
                 return resolve(err)
             }
