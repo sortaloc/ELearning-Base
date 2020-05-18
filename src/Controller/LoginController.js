@@ -23,7 +23,7 @@ class LoginController extends MainController {
                     let result = await database.profile.allSelect({prl_username: username, prl_password: password});
                     if(Number(result.length) === 0){
                         response.data = {}
-                        response.message = "Data Not Found"
+                        response.message = "Failed to Login, check username or password"
                         response.code = 103;
                         response.state = false;
                         throw response;
