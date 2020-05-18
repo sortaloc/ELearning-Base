@@ -30,10 +30,14 @@ module.exports = (router) => {
         return res.send(response)
     })
 
-
     router.post('/getKotaIndonesia', async (req, res) => {
         let response = ProfileController.getKota();
         return res.send(response);
+    })
+
+    router.get('/getPhoto/:id', VerifyMiddleware, async (req, res) => {
+        let response = await ProfileController.getProfilePicture(['id'], req.params);
+        res.send(response)
     })
     return router;
 }

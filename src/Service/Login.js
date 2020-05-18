@@ -12,8 +12,7 @@ module.exports = (router) => {
     router.post('/Logout', VerifyMiddleware, async (req, res) => {
         req.body.token = req.headers.authorization.split(' ');
         req.body.token = req.body.token[req.body.token.length - 1];
-        console.log(req.body);
-        let reponse = await LoginController.logout(req.body);
+        let response = await LoginController.logout(req.body);
         return res.send(response);
     })
 
