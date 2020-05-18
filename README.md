@@ -15,3 +15,18 @@ Notes :
     4. Encrypt to SHA1 with Cipher/Salt = 
     5. Done Password
  	
+
+ENV Primary
+    ENV=
+    NODE_ENV=
+    PORT=
+    SUB_PORT=
+    USERDB=
+    PASSDB=
+    HOSTDB=
+    PORTDB=
+    DATABASE=
+    DIALECTDB=
+    ACCOUNTSID=
+    AUTHTOKEN=
+    CIPHERID=
