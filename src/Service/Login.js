@@ -4,7 +4,7 @@ const VerifyMiddleware = require('@Middleware/VerifyMiddleware');
 
 
 module.exports = (router) => {
-    router.post('/', async (req, res) => {
+    router.post('/Login', async (req, res) => {
         let response = await LoginController.loginValidate(['username', 'password'], req.body)
         return res.send(response);
     })
