@@ -17,7 +17,7 @@ const verifyToken = async (req, res, next) => {
             if(err){
                 return res.status(500).send({auth: false, code: 500, message: 'Failed to authenticate token'});
             }
-            let validasi = await database.profile.allSelect({prl_id: decoded.id});
+            let validasi = await database.profile.allSelect({prl_profile_id: decoded.id});
             if(Number(validasi.length) === 0){
                 return res.status(500).send({auth: false, message: 'User Not Found'});
             }
