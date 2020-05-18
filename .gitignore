@@ -4,4 +4,5 @@ yarn.lock
 yarn-error.log
 *.js.map
 !/src/Source/*.*
+src/Source/*.*
 Build
