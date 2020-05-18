@@ -29,8 +29,9 @@ class LoginController extends MainController {
                         throw response;
                     }
                     result = result[result.length - 1];
+                    console.log(result)
                     const data = {
-                        id: result.prl_profile_id,
+                        id: result.prl_id,
                         nama: result.prl_nama,
                         username: result.prl_username,
                         nohp: result.prl_nohp
