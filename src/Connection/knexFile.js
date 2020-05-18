@@ -15,7 +15,7 @@ const knexConfig = {
     },
 
     development: {
-        // debug: true,
+        debug: true,
         useNullAsDefault: true,
         client: dialect,
         connection: {

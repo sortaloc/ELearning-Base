@@ -15,8 +15,7 @@ module.exports = (router) => {
 
     router.post('/updatePhoto', VerifyMiddleware, async (req, res) => {
         let uploadImage = await ProfileController.uploadImage(req);
-        console.log(uploadImage)
-        if(uploadImage.state){
+        if(Boolean(uploadImage.state) === true){
             let data = uploadImage.data.fieldData;
             data.image = uploadImage.data.image[0].name
             let response = await ProfileController.updatePhoto(['id', 'image'], data);
@@ -24,7 +23,6 @@ module.exports = (router) => {
         }else{
             res.status(500).send({state: false, message: "Failed to Upload Image", code: 105})
         }
-        // res.send(true);
     })
 
     router.post('/checkUsername', async (req, res) => {
