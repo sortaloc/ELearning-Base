@@ -210,6 +210,8 @@ class ProfileController extends MainController{
                 if(diff.length === 0){
                     // console.log(body);
                     let updated = await database.profile.updateOne({prl_profile_id: body.id}, {prl_photo: body.image});
+                    console.log(body)
+                    console.log(updated)
                     if(updated.state){
                         response.data = {
                             id: body.id,
