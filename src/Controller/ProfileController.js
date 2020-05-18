@@ -210,8 +210,10 @@ class ProfileController extends MainController{
                 if(diff.length === 0){
                     // console.log(body);
                     let updated = await database.profile.updateOne({prl_profile_id: body.id}, {prl_photo: body.image});
-                    console.log(body)
-                    console.log(updated)
+                    // let data = await database.profile.allSelect({prl_profile_id: body.id});
+                    // console.log(data)
+                    // console.log(body)
+                    // console.log(updated)
                     if(updated.state){
                         response.data = {
                             id: body.id,
@@ -223,7 +225,7 @@ class ProfileController extends MainController{
                         resolve(response);
                     }else{
                         response.data = {};
-                        response.message = "Failed to update Photo Profile";
+                        response.message = "Failed to update Photo Profile, profile not found";
                         response.code = 104;
                         response.state = false
                         throw response;    
