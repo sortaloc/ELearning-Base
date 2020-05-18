@@ -8,6 +8,7 @@ const { urlencoded, json } = require('body-parser');
 const helmet = require('helmet');
 const { createServer } = require('http');
 const Cookie = require('cookie-parser');
+const timeout = require('connect-timeout');
 
 // const { MiddlewareValidation } = require('@Middleware/Security');
 
@@ -15,6 +16,8 @@ const { PORT, NAME, VERSION } = require('@Config/Config');
 const app = express();
 const server = createServer(app);
 
+
+app.use(timeout('60s'))
 app.use(helmet());
 app.use(Cors());
 app.use(Cookie());
