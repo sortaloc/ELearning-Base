@@ -3,9 +3,7 @@ const database = require('@Model/index');
 const NIK = require('@Controllers/NikParse');
 const { profileSelect, kodeOtpSelect } = require('@Query/QueryModel');
 
-// const { accountSid, authToken } = WHATSAPP;
-const accountSid = 'AC7e1fed5ec1e569e4d0f94e7b6ae2275d';
-const authToken = '081233cc9cedd9faef9f2894c3ca0400';
+const { accountSid, authToken } = WHATSAPP;
 
 const client = require('twilio')(accountSid, authToken);
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
