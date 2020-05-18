@@ -21,6 +21,7 @@ class LoginController extends MainController {
                     let { username, password } = body;
                     password = this.createPassword(password);
                     let result = await database.profile.allSelect({prl_username: username, prl_password: password});
+                    
                     if(Number(result.length) === 0){
                         response.data = {}
                         response.message = "Failed to Login, check username or password"
