@@ -15,7 +15,7 @@ const verifyToken = async (req, res, next) => {
     
         jwt.verify(token, cipherID, async (err, decoded) => {
             if(err){
-                return res.status(500).send({auth: false, message: 'Failed to authenticate token'});
+                return res.status(500).send({auth: false, code: 500, message: 'Failed to authenticate token'});
             }
             let validasi = await database.profile.allSelect({prl_id: decoded.id});
             if(Number(validasi.length) === 0){
@@ -24,7 +24,7 @@ const verifyToken = async (req, res, next) => {
             next();
         })
     }catch(err){
-        return res.status(500).send({auth: false, message: 'Failed to authenticate token'});
+        return res.status(500).send({auth: false, code: 500, message: 'Failed to authenticate token'});
     }
     
     

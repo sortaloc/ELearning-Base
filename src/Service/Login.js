@@ -2,19 +2,14 @@
 const LoginController = require('@Controllers/LoginController');
 const VerifyMiddleware = require('@Middleware/VerifyMiddleware');
 
-// const mw = (req, res, next) => {
-//     console.log('lewat middleware');
-//     next();
-// }
 
 module.exports = (router) => {
     router.post('/', async (req, res) => {
-        // console.log(req.baseUrl)
-        let responseData = await LoginController.loginValidate(['username', 'password'], req.body)
-        return res.send(responseData);
+        let response = await LoginController.loginValidate(['username', 'password'], req.body)
+        return res.send(response);
     })
 
-    router.post('/logout', VerifyMiddleware, async (req, res) => {
+    router.post('/Logout', VerifyMiddleware, async (req, res) => {
         req.body.token = req.headers.authorization.split(' ');
         req.body.token = req.body.token[req.body.token.length - 1];
         console.log(req.body);
@@ -22,10 +17,12 @@ module.exports = (router) => {
         return res.send(response);
     })
 
-    // router.post('/testLog', mw, (req, res) => {
-    //     console.log('doneee')
-    //     return res.send(true)
-    // })
+    router.post('/forgotPassword', async (req, res) => {
+        console.log('reset password, with username, email, or number phone');
+        let response = await LoginController.forgotPassword(req.body);
+        res.send(true);
+
+    })
 
     return router;
 }

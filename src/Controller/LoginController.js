@@ -80,6 +80,14 @@ class LoginController extends MainController {
             }
         })
     }
+
+    forgotPassword = (body) => {
+        return new Promise(async resolve => {
+            let response = STRUCTURE;
+            let id = body.id;
+            console.log(id);
+        })
+    }
 }
 
 module.exports = new LoginController;

@@ -193,7 +193,6 @@ class RegisterController extends MainController {
                         if(OTPDatabase.rows > 0){
                             getKodeOTP()
                         }
-
                         const otp_listStructure = {
                             otp_nohp: numberPhone,
                             otp_kode: kode,
