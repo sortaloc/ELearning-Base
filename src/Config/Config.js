@@ -16,6 +16,13 @@ const ResponseStructure = {
 	message: 'Get Data'
 }
 
+let urlImage;
+if(process.env.NODE_ENV === 'development'){
+	urlImage = 'https://devsck.nenggala.id/files/';
+}else{
+	urlImage  = 'https://devsck.nenggala.id/files/';
+}
+
 module.exports = {
 	PORT: process.env.PORT || 9000,
 	SERVICE_PORT: sub_port(),
@@ -37,5 +44,6 @@ module.exports = {
 		authToken: process.env.AUTHTOKEN
 	},
 	CIPHERID: process.env.CIPHERID,
-	SLEEP: 750
+	SLEEP: 750,
+	URLIMAGE: urlImage
 }
