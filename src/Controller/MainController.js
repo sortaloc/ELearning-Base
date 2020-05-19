@@ -184,7 +184,7 @@ class MainController {
             var dataSource = {};
     
             req.busboy.on('file', (fieldname, file, filename, encoding, mime) => {
-                console.log(fieldname, filename, encoding, mime)
+                // console.log(fieldname, filename, encoding, mime)
                 let name= filename.split('.')
                 let typeFiles = mime.split('/')
                 name[0] = name[0].replace('/ /gi', '_');
