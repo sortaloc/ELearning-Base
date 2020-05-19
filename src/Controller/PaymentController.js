@@ -153,6 +153,18 @@ class PaymentController extends MainController {
         })
     }
 
+    getListNominal = () => {
+        return new Promise(resolve => {
+            let response = this.structure;
+            let data = [50000, 100000, 150000, 200000, 250000,300000, 350000, 400000, 450000, 500000];
+            response.data = data;
+            response.code = 100;
+            response.state = true;
+            response.message = "Success get List nominal";
+            resolve(response);
+        })
+    }
+
 
 }
 

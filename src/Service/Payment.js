@@ -13,7 +13,6 @@ module.exports = (router) => {
     })
 
     router.post('/sendTopup', VerifyMiddleware, async (req, res) => {
-        // console.log(req.body, req.query, req)
         let uploadImage = await PaymentController.uploadImage(req);
         if(uploadImage.state){
             let data = uploadImage.data.fieldData;
@@ -23,6 +22,11 @@ module.exports = (router) => {
 
         }
         res.send(true);
+    })
+
+    router.get('/listNominal', VerifyMiddleware, async (req, res) => {
+        let response = await PaymentController.getListNominal();
+        res.send(response);
     })
 
     router.get('/listBank', VerifyMiddleware, async (req, res) => {
