@@ -139,6 +139,19 @@ class PaymentController extends MainController {
     
     }
 
+    getListBank = () => {
+        return new Promise(async resolve => {
+            let response = this.structure;
+            let data = await database.bank.all();
+            response.data = data;
+            response.code = 100;
+            response.state = true;
+            response.message = "Success get list bank"
+            resolve(response)
+            // console.log(data)
+        })
+    }
+
 
 }
 

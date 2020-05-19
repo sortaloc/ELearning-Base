@@ -24,5 +24,10 @@ module.exports = (router) => {
         }
         res.send(true);
     })
+
+    router.get('/listBank', VerifyMiddleware, async (req, res) => {
+        let response = await PaymentController.getListBank();
+        return res.send(response)
+    })
     return router;
 }
