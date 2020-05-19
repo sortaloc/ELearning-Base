@@ -21,7 +21,8 @@
     "@Util": "./src/Util",
     "@Connection": "./src/Connection",
     "@Model": "./src/Model",
-    "@Query": "./src/Query"
+    "@Query": "./src/Query",
+    "@Helper": "./src/Helper"
   },
   "dependencies": {
     "@babel/core": "^7.9.6",
@@ -46,6 +47,7 @@
     "module-alias": "^2.2.2",
     "moment": "^2.25.3",
     "moment-timezone": "^0.5.28",
+    "node-fetch": "^2.6.0",
     "pg": "^8.1.0",
     "pg-format": "^1.0.4",
     "supertest": "^4.0.2",
