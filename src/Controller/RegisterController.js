@@ -43,13 +43,11 @@ class RegisterController extends MainController {
                     return resolve(response)
                 }else{
                     let result = await database.profile.insertOne(profileData);
-                    // console.log(result)
                     if(result.state){
                         response.data = {
                             username: profileData.prl_username,
                             nama: profileData.prl_nama
                         }
-
                         // Update Kode OTP Menjadi 1
                         response.message = `Success to Create user ${profileData.prl_nama}`
                         response.state = true;

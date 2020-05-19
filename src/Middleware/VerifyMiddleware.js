@@ -15,11 +15,11 @@ const verifyToken = async (req, res, next) => {
     
         jwt.verify(token, cipherID, async (err, decoded) => {
             if(err){
-                return res.status(500).send({auth: false, state:false, code:500, message: 'Failed to authenticate token'});
+                return res.status(200).send({auth: false, state:false, code:110, message: 'Failed to authenticate token, try again'});
             }
-            let validasi = await database.profile.allSelect({prl_profile_id: decoded.id, prl_token: token});
+            let validasi = await database.login.allSelect({log_profile_id: decoded.id, log_token: token, log_status: 1});
             if(Number(validasi.length) === 0){
-                return res.status(500).send({auth: false, state:false, code:500, message: 'Token or User Not Valid'});
+                return res.status(500).send({auth: false, state:false, code:500, message: 'Token Not Valid'});
             }
             next();
         })

@@ -6,7 +6,9 @@ const jwt = require('jsonwebtoken');
 require('moment');
 const moment = require('moment-timezone');
 moment.tz.setDefault("Asia/Jakarta");
-const { CIPHERID, STRUCTURE, SLEEP } = require('@Config/Config');
+const { CIPHERID, STRUCTURE, SLEEP, GEOLOCATION } = require('@Config/Config');
+
+const API = require('@Helper/API.js');
 
 const path = require('path')
 const basename = path.basename(__filename);
@@ -23,7 +25,14 @@ class MainController {
     structure = STRUCTURE;
     constructor(){}
 
-    switchingCommand(){
+    getLocation = (ipAddress = '192.1.1.1') => {
+        return new Promise(async (resolve) => {
+            let url = `http://api.ipstack.com/36.88.30.82?access_key=${GEOLOCATION}`
+            let result = await API.get(url);
+            resolve(result);
+        })
+    }
+    switchingCommand = () =>{
         return new Promise(async resolve => {
           let JamSekarang = Number(moment().format('HH'))
           let cutStart, cutEnd

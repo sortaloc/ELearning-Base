@@ -18,17 +18,40 @@ class LoginController extends MainController {
             let diff = list.filter((x) => newBody.indexOf(x) === -1)
             try{
                 if(diff.length === 0){
-                    let { username, password } = body;
+                    let { username, password, ip } = body;
+
+                    if(ip === '::1'){
+                        ip = '36.88.30.82';
+                    }
+
+                    let tipe;
+                    
                     password = this.createPassword(password);
-                    let result = await database.profile.allSelect({prl_username: username, prl_password: password, prl_login: 0});
+                    let result = await database.profile.allSelect({prl_username: username, prl_password: password});
                     if(Number(result.length) === 0){
                         response.data = {}
-                        response.message = "Failed to Login, check username or password or user was logged in"
+                        response.message = "Failed to Login, check username or password"
                         response.code = 103;
                         response.state = false;
                         throw response;
                     }
                     result = result[result.length - 1];
+
+                    if(newBody.indexOf('tipe') === -1){
+                        tipe = 'smartphone'
+                        // Validasi jika sudah ada yang login di akun lain pada smartphone
+                        let loginCheck = await database.login.allSelect({log_profile_id: result.prl_profile_id, log_type: tipe, log_status: 1, log_ip: ip});
+                        if(loginCheck.length > 0){
+                            response.data = {}
+                            response.message = "User has Logged in on another Smartphone";
+                            response.code = 104;
+                            response.state = false;
+                            throw response;
+                        }
+                    }else{
+                        tipe = body.tipe;
+                    }
+
                     const data = {
                         id: result.prl_profile_id,
                         nama: result.prl_nama,
@@ -37,22 +60,32 @@ class LoginController extends MainController {
                     }
                     const Token = this.createToken(data);
                     data.token = Token.token;
-                    const update = await database.profile.updateOne({
-                        prl_profile_id: data.id
-                    }, {
-                        prl_token: Token.token,
-                        prl_login: 1
-                    });
-                    if(update.state){
+                    // console.log(body)
+                    let geolocation = await this.getLocation(ip);
+                    geolocation = geolocation.data;
+                    // const 
+                    const insertData = {
+                        log_profile_id: result.prl_profile_id,
+                        log_token: Token.token,
+                        log_type: tipe,
+                        log_status: 1,
+                        log_ip: ip,
+                        log_data: JSON.stringify(geolocation),
+                        log_lat: geolocation.latitude,
+                        log_ing: geolocation.longitude
+                    }
+                    const insert = await database.login.insertOne(insertData);
+                    if(insert.state){
                         response.data = data;
                         response.message = "Success Login";
                         response.code = 100;
                         response.state = true;
+                        console.log(response)
                         return resolve(response)
                     }else{
                         response.data = {};
                         response.message = "Error on Database";
-                        response.code = 104;
+                        response.code = 105;
                         response.state = false
                         return resolve(response)
                     }
@@ -74,11 +107,10 @@ class LoginController extends MainController {
         let response = this.structure;
         return new Promise(async resolve => {
             try{
-                let data = await database.profile.allSelect({prl_token: body.token});
+                let data = await database.login.allSelect({log_token: body.token, log_status: 1});
                 if(data.length > 0){
-                    // update Data
                     data = data[0];
-                    let update = await database.profile.updateOne({prl_profile_id: data.prl_profile_id, prl_login: 1}, {prl_token: null, prl_login: 0});
+                    let update = await database.login.updateOne({id: data.id, log_token: data.log_token}, {log_status: 0});
                     if(update.state){
                         response.data = {};
                         response.message = "Success Logout";

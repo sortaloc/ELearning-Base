@@ -5,6 +5,7 @@ const VerifyMiddleware = require('@Middleware/VerifyMiddleware');
 
 module.exports = (router) => {
     router.post('/Login', async (req, res) => {
+        req.body.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
         let response = await LoginController.loginValidate(['username', 'password'], req.body)
         return res.send(response);
     })

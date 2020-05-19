@@ -16,7 +16,8 @@ const db = {};
     'produk', 
     'produk_group',
     'bank',
-    'deposit'
+    'deposit',
+    'login'
 ]
 .forEach(file => {
     const modelName = file;

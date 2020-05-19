@@ -200,5 +200,18 @@ class DatabaseController {
             .then(resolve);
         })
     }
+
+    deleteOne = (where) => {
+        return new Promise(async (resolve) => {
+            Connection(this.table)
+            .where(where)
+            .del()
+            .then(data => {
+                console.log(data)
+            })
+            // .then(this.ValidateData)
+            // .then(resolve)
+        })
+    }
 }
 module.exports = DatabaseController;
