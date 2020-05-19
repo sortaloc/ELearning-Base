@@ -22,7 +22,7 @@ let ver = VERSION.split('.')[0];
 
 fs.readdirSync(__dirname)
 .filter((file) => {
-    return (file.indexOf('.') !== 0) && (file !== basename) && (file !== file.split('.')[0]+'.d.ts');
+    return (file.indexOf('.') !== 0) && (file !== basename) && (file === file.split('.')[0]+'.js');
 }).forEach((file) => {
     let RouteApi = `/v${ver}/${file.substring(0, file.length - 3)}`
     console.log(RouteApi)
