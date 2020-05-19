@@ -26,7 +26,6 @@ class RegisterController extends MainController {
                 const profileData = {
                     prl_nik: body.nik,
                     prl_nama: body.nama,
-                    prl_group: 'ekoji',
                     prl_nohp: body.nohp,
                     prl_username: body.username,
                     prl_password: this.createPassword(body.password),
