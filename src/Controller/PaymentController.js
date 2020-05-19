@@ -58,7 +58,8 @@ class PaymentController extends MainController {
                             dep_nominal: Number(body.nominal),
                             dep_id_profile: body.id,
                             dep_total: Number(body.nominal) + Number(kode),
-                            dep_expired: this.createDate()
+                            dep_expired: this.createDate(),
+                            dep_kode_bank: Number(body.id_bank)
                         }
                         let insert = await database.deposit.insertOne(deposit);
                         if(insert.state){

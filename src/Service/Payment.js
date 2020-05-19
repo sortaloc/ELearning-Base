@@ -8,7 +8,7 @@ module.exports = (router) => {
     })); // Insert the busboy middle-ware
 
     router.post('/requestTopup', VerifyMiddleware, async (req, res) => {
-        let response = await PaymentController.createDeposit(['id', 'nominal'], req.body);
+        let response = await PaymentController.createDeposit(['id', 'nominal', 'id_bank'], req.body);
         return res.send(response);
     })
 
