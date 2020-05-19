@@ -29,22 +29,26 @@ class PaymentController extends MainController {
                 let newBody = Object.keys(body);
                 let diff = fields.filter((x) => newBody.indexOf(x) === -1)
                 if(diff.length === 0){
-                    let Profile = await database.profile.allSelect({prl_profile_id: body.id});
-                    if(Number(Profile.length) > 0){
+                    let profile = await database.profile.allSelect({prl_profile_id: String(body.id)});
+                    // console.log(profile)
+                    if(Number(profile.length) > 0){
                         const codeUnique = async () => {
-                            let kode = this.generateKodeUnik();
-                            // let statusOtp = await database.deposit.allSelect({dep_kode_unik: kode, dep_status: 1});
-                            let statusOtp = await database.deposit.raw(`
-                            SELECT * FROM 
-                            public.deposit 
-                            WHERE 
-                            dep_kode_unik = %${kode}% AND dep_created_at LIKE '${today}%'
-                            `)
-                            if(statusOtp.length === 0){ //Belum ada Kode OTP maka Lanjut
-                                return kode;
-                            }else{
-                                codeUnique();
-                            }
+                            return new Promise(async retData => {
+                                let kode = this.generateKodeUnik();
+                                // let statusOtp = await database.deposit.allSelect({dep_kode_unik: kode, dep_status: 1});
+                                let statusOtp = await database.deposit.connection.raw(`
+                                SELECT * FROM 
+                                deposit 
+                                WHERE 
+                                dep_kode_unik = ${kode} AND dep_created_at BETWEEN '${this.createDate(-24)}' AND '${this.createDate(0)}' AND dep_status = 0
+                                `)
+                                if(statusOtp.rows.length === 0){ //Belum ada Kode OTP maka Lanjut
+                                    retData(kode);
+                                }else{
+                                    codeUnique();
+                                }
+
+                            })
                         }
                         let kode = await codeUnique();
                         // Buat Deposit

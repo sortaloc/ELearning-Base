@@ -7,12 +7,12 @@ module.exports = (router) => {
         highWaterMark: 50 * 1024 * 1024, // Set 50MiB buffer
     })); // Insert the busboy middle-ware
 
-    router.post('/requestTopup', async (req, res) => {
+    router.post('/requestTopup', VerifyMiddleware, async (req, res) => {
         let response = await PaymentController.createDeposit(['id', 'nominal'], req.body);
         return res.send(response);
     })
 
-    router.post('/sendTopup', async (req, res) => {
+    router.post('/sendTopup', VerifyMiddleware, async (req, res) => {
         // console.log(req.body, req.query, req)
         let uploadImage = await PaymentController.uploadImage(req);
         if(uploadImage.state){

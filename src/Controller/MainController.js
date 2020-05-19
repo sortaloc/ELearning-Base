@@ -154,12 +154,13 @@ class MainController {
     }
 
     generateOTP = () => {
-        let otp = this.random(1111111111, 9999999999);
+        let otp = this.random(1000000000, 9999999999);
         return otp;
     }
 
     generateKodeUnik = () => {
-        let kode = this.random(111, 999);
+        // let kode = this.random(100, 999);
+        let kode = Math.floor(Math.random()*(999-100+1)+100);
         return kode;
     }
 
