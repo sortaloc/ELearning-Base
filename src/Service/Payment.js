@@ -17,11 +17,16 @@ module.exports = (router) => {
         if(uploadImage.state){
             let data = uploadImage.data.fieldData;
             data.image = uploadImage.data.image
-            let response = await PaymentController.uploadBuktiTransfer(['id', 'image'], data);
+            let response = await PaymentController.uploadBuktiTransfer(['id', 'image', 'kode_unik'], data);
+            return res.send(response);
         }else{
-
+            return res.send({
+                code: 105,
+                state: false,
+                data: {},
+                message: "Failed to upload images"
+            });
         }
-        res.send(true);
     })
 
     router.get('/listNominal', VerifyMiddleware, async (req, res) => {

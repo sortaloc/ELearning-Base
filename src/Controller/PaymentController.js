@@ -52,6 +52,7 @@ class PaymentController extends MainController {
                         }
                         let kode = await codeUnique();
                         // Buat Deposit
+                        body.nominal = body.nominal.trim('').trim(',');
                         const deposit = {
                             dep_id: this.generateID(),
                             dep_kode_unik: kode,
@@ -115,12 +116,50 @@ class PaymentController extends MainController {
                 let newBody = Object.keys(body);
                 let diff = fields.filter((x) => newBody.indexOf(x) === -1)
                 // Validasi ID
-                let akun = database.profile.allSelect({prl_profile_id: body.id});
-                console.log(akun);
-                if(diff.length === 0){
+                let akun = await database.profile.allSelect({prl_profile_id: body.id});
+                if(diff.length === 0 && akun.length > 0){
+                    akun = akun[0];
                     // Masukkan ke inbox
+                    // id
+                    // refid
+                    // id_profile
+                    // interface
+                    // tipe
+                    // status
+                    // format_msg
+                    // keterangan
+                    // updated_at
+                    // raw_data
+                    let getDataDeposit = await database.deposit.allSelect({dep_id_profile: body.id, dep_kode_unik: body.kode_unik});
+                    getDataDeposit = getDataDeposit[0];
+                    let refid = `TOPUPDEPO${this.generateID()}`;
+                    let format_msg = `PAY_TOPUP.DEPOSIT.-.${getDataDeposit.dep_nominal}.${body.id}.${refid}`
+                    // `PAY_TOPUP.DEPOSIT.-.[nominal].[id_tujuan].[refid]`
+                    const insertData = {
+                        ibx_refid: refid,
+                        ibx_id_profile: body.id,
+                        ibx_interface: 'H',
+                        ibx_tipe: 'TOPUPDEPOSIT',
+                        ibx_status: 'Q',
+                        ibx_format_msg: format_msg,
+                        ibx_keterangan: `Berhasil input ke inbox pada ${this.createDate(0)}`,
+                        ibx_raw_data: JSON.stringify(body)
+                    }
 
-                    console.log(body);
+                    let insertInbox = await database.inbox.insertOne(insertData);
+                    if(insertInbox.state){
+                        response.data = {};
+                        response.message = `Success create Topup Deposit Trasaction`;
+                        response.code = 100;
+                        response.state = true;
+                        return resolve(response)
+                    }else{
+                        response.data = {};
+                        response.message = `Failed create Topup Deposit Trasaction`;
+                        response.code = 103;
+                        response.state = true;
+                        return resolve(response)
+                    }
                 }else{
                     response.data = {};
                     response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;

@@ -21,23 +21,21 @@ module.exports = (router) => {
     });
 
     router.post('/getAllProductWithGroup', VerifyMiddleware , async (req, res) => {
-        // Validasi dahulu groupidnya
         let data = await ProductController.getGroupedProductWithKey(req.body.groupid);
         res.send(true);
     })
 
     router.post('/getSingleProduct', VerifyMiddleware, async (req, res) => {
-        // Validasi Productid
         let data = await ProductController.getSingleProduct(productid);
         res.send(true);
     })
 
     router.post('/createProduct', VerifyMiddleware , async (req, res) => {
-
+        res.send(true);
     })
 
     router.post('/createCategory', VerifyMiddleware , async (req, res) => {
-
+        res.send(true);
     })
     return router;
 }
