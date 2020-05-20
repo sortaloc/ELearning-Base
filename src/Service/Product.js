@@ -10,6 +10,11 @@ module.exports = (router) => {
         res.send(data);
     })
 
+    router.post('/getSingleCategory', VerifyMiddleware, async (req, res) => {
+        let data = await ProductController.getSingleCategory(['groupid'], req.body);
+        res.send(data);
+    })
+
     router.post('/getAllProduct', VerifyMiddleware, async (req, res) => {
         let data = await ProductController.getAllProduct();
         res.send(true);
@@ -36,14 +41,28 @@ module.exports = (router) => {
 
     router.post('/createCategory', VerifyMiddleware , async (req, res) => {
         let uploadImage = await ProductController.uploadImage(req);
+        console.log(uploadImage)
         if(Boolean(uploadImage.state) === true){
             let data = uploadImage.data.fieldData;
             data.image = uploadImage.data.image[0].name
-            console.log(data)
             let response = await ProductController.createCategory(['image', 'nama'], data);
-            res.send(response)
+            return res.send(response)
         }else{
-            res.status(500).send({state: false, message: "Failed to Upload Image", code: 105})
+            return res.status(500).send({state: false, message: "Failed to Upload Image", code: 105})
+        }
+    })
+
+    router.post('/updateCategory', VerifyMiddleware, async (req, res) => {
+        let uploadImage = await ProductController.uploadImage(req);
+        if(Boolean(uploadImage.state) === true){
+            let data = uploadImage.data.fieldData;
+            if(uploadImage.data.image.length > 0){
+                data.image = uploadImage.data.image[0].name
+            }
+            let response = await ProductController.updateCategory(['nama', 'id'], data);
+            return res.send(response);
+        }else{
+            return res.status(500).send({state: false, message: "Failed to Upload Image", code: 105})
         }
     })
     return router;

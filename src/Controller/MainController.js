@@ -215,7 +215,7 @@ class MainController {
                 });
 
                 fstream.on('error', (err) => {
-                    console.log(err)
+                    console.log('asdasdasd',err)
                 })
             })
 
@@ -238,6 +238,7 @@ class MainController {
             })
 
             req.busboy.on('error', function(){
+                console.log('eError on Busboy')
                 response.data = {};
                 response.code = 101;
                 response.state = false;

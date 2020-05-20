@@ -1,6 +1,6 @@
 const database = require('@Model/index');
 const MainController = require('@Controllers/MainController');
-const { STRUCTURE } = require('@Config/Config');
+const { STRUCTURE, URLIMAGE } = require('@Config/Config');
 
 class ProductController extends MainController {
     response = STRUCTURE;
@@ -12,18 +12,13 @@ class ProductController extends MainController {
         return new Promise(async (resolve) => {
             let response = this.response;
             try{
-                let data = await database.produk_group.allSelect({is_active: '1'})
+                let data = await database.produk_group.all()
                 if(data.length > 0){
                     data = data.map(d => {
                         return {
                             nama: d.group_nama,
-                            gambar: d.gambar_group,
-                            groupid: d.id_group
-                        }
-                    })
-                    data.map((d) => {
-                        return {
-
+                            groupid: d.id_group,
+                            active: Number(d.is_active)
                         }
                     })
                     response.state = true;
@@ -43,6 +38,47 @@ class ProductController extends MainController {
             }
             
         })
+    }
+
+    getSingleCategory = (fields, body) => {
+        let response = this.structure;
+        return new Promise(async (resolve) => {
+            let newBody = Object.keys(body);
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    let result = await database.produk_group.allSelect({id_group: body.groupid});
+                    if(result.length > 0){
+                        result = result[0];
+                        response.data = {
+                            nama: result.group_nama,
+                            gambar: result.gambar_group,
+                            groupid: result.id_group,
+                            active: Number(result.is_active),
+                            urlImage: `${URLIMAGE}${result.gambar_group}`
+                        };
+                        response.message = "Success to get Category";
+                        response.code = 100;
+                        response.state = true
+                        resolve(response);
+                    }else{
+                        response.data = {};
+                        response.message = "Failed to get Category";
+                        response.code = 104;
+                        response.state = false
+                        throw response;    
+                    }
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    throw response;
+                }
+            }catch(err){
+                resolve(err);
+            }
+        });
     }
 
     getAllProduct(){
@@ -152,6 +188,55 @@ class ProductController extends MainController {
                         response.state = false
                         throw response
                     }
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    throw response;
+                }
+            }catch(err){
+                resolve(err)
+            }
+        });
+    }
+
+    updateCategory = (fields, body) => {
+        let response = this.structure;
+        return new Promise(async (resolve) => {
+            let newBody = Object.keys(body);
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    let update = {
+                        where: {
+                            id_group: body.id
+                        },
+                        update: {
+                            group_nama: body.nama
+                        }
+                    }
+                    if(newBody.includes('image')){
+                        update.update.gambar_group = body.image;
+                    }
+                    let updated = await database.produk_group.updateOne(update.where, update.update);
+                    if(updated.state){
+                        response.data = {
+                            id: body.id
+                        };
+                        response.message = "Success Update Kategori Produk";
+                        response.code = 100;
+                        response.state = true
+                        resolve(response);
+                    }else{
+                        response.data = {};
+                        response.message = "Failed to update Kategori Produk";
+                        response.code = 104;
+                        response.state = false
+                        throw response;    
+                    }
+
+
                 }else{
                     response.data = {};
                     response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;

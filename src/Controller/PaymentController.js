@@ -52,7 +52,7 @@ class PaymentController extends MainController {
                         }
                         let kode = await codeUnique();
                         // Buat Deposit
-                        body.nominal = body.nominal.trim('').trim(',');
+                        // body.nominal = body.nominal.trim('').trim(',');
                         const deposit = {
                             dep_id: this.generateID(),
                             dep_kode_unik: kode,
@@ -60,7 +60,7 @@ class PaymentController extends MainController {
                             dep_id_profile: body.id,
                             dep_total: Number(body.nominal) + Number(kode),
                             dep_expired: this.createDate(),
-                            dep_kode_bank: Number(body.id_bank)
+                            dep_bank_kode: Number(body.id_bank)
                         }
                         let insert = await database.deposit.insertOne(deposit);
                         if(insert.state){
