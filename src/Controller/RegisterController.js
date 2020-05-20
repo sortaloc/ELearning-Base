@@ -22,6 +22,12 @@ class RegisterController extends MainController {
             let response = this.structure;
             let newBody = Object.keys(body);
             let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+
+            let role = newBody.indexOf('tipe') === -1 ? 'user' : body.tipe;
+            if(role == "1"){
+                role = 'user';
+            }
+
             if(diff.length === 0){
                 const profileData = {
                     prl_nik: body.nik,
@@ -30,7 +36,8 @@ class RegisterController extends MainController {
                     prl_username: body.username,
                     prl_password: this.createPassword(body.password),
                     prl_isactive: 1,
-                    prl_profile_id: this.generateID()
+                    prl_profile_id: this.generateID(),
+                    prl_role: role
                 }
 
                 let validate = await database.profile.connection.raw(profileSelect(profileData));

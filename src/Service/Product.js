@@ -35,7 +35,16 @@ module.exports = (router) => {
     })
 
     router.post('/createCategory', VerifyMiddleware , async (req, res) => {
-        res.send(true);
+        let uploadImage = await ProductController.uploadImage(req);
+        if(Boolean(uploadImage.state) === true){
+            let data = uploadImage.data.fieldData;
+            data.image = uploadImage.data.image[0].name
+            console.log(data)
+            let response = await ProductController.createCategory(['image', 'nama'], data);
+            res.send(response)
+        }else{
+            res.status(500).send({state: false, message: "Failed to Upload Image", code: 105})
+        }
     })
     return router;
 }

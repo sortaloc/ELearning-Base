@@ -120,6 +120,50 @@ class ProductController extends MainController {
             }
         })
     }
+
+    createCategory = (fields, body) => {
+        let response = this.structure;
+        return new Promise(async (resolve) => {
+            let newBody = Object.keys(body);
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    const insertData = {
+                        group_nama: body.nama,
+                        gambar_group: body.image,
+                        is_active: 1,
+                        id_group: this.generateID()
+                    }
+                    let insert = await database.produk_group.insertOne(insertData);
+                    if(insert.state){
+                        response.data = {
+                            id: insertData.id_group,
+                            nama: body.nama,
+                            image: body.image
+                        };
+                        response.message = `Success Create Kategori`;
+                        response.code = 100;
+                        response.state = true
+                        resolve(response)
+                    }else{
+                        response.data = {};
+                        response.message = `Failed Create Kategori`;
+                        response.code = 103;
+                        response.state = false
+                        throw response
+                    }
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    throw response;
+                }
+            }catch(err){
+                resolve(err)
+            }
+        });
+    }
     
 
 }
