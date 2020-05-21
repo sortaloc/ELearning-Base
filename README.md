@@ -32,6 +32,14 @@ ENV Primary :
     AUTHTOKEN=
     CIPHERID=
 
+## How to Deploy in server (How To Use)
+### Step by Step
+```
+    'cp .env.example .env'
+    'npm install' or 'yarn install'
+    'fill .env files with data'
+    'pm2 start index.js -i max'
+```
 
 ## Developer
 
