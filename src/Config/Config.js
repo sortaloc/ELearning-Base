@@ -46,5 +46,6 @@ module.exports = {
 	CIPHERID: process.env.CIPHERID,
 	SLEEP: 750,
 	URLIMAGE: urlImage,
-	GEOLOCATION: process.env.GEOLOCATION
+	GEOLOCATION: process.env.GEOLOCATION,
+	FIREBASE: process.env.FIREBASE
 }

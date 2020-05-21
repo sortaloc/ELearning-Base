@@ -38,5 +38,21 @@ module.exports = (router) => {
         let response = await PaymentController.getListBank();
         return res.send(response)
     })
+
+    // Dashboard
+    router.post('/getAllDeposit', VerifyMiddleware, async (req, res) => {
+        let response = await PaymentController.getAllDeposit(req.body);
+        return res.send(response);
+    })
+
+    router.post('/detailDeposit', VerifyMiddleware, async (req, res) => {
+        let response = await PaymentController.detailDeposit(['id'], req.body);
+        return res.send(response);
+    })
+
+    router.post('/processDeposit', VerifyMiddleware, async (req, res) => {
+        let response = await PaymentController.processDeposit(['id', 'status', 'adminid'], req.body);
+        return res.send(response);
+    })
     return router;
 }

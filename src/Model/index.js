@@ -3,21 +3,21 @@ const db = {};
 [
     'account',
     'admin',
+    'bank',
     'cashflow', 
     'code_voucher', 
+    'deposit',
     'elearning', 
+    'evoucher', 
     'inbox', 
+    'login',
+    'otp_list', 
     'outbox', 
+    'produk', 
+    'produk_group',
     'profile', 
     'setting', 
     'transaksi', 
-    'evoucher', 
-    'otp_list', 
-    'produk', 
-    'produk_group',
-    'bank',
-    'deposit',
-    'login'
 ]
 .forEach(file => {
     const modelName = file;

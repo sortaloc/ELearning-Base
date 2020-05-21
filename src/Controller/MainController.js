@@ -1,4 +1,5 @@
 const database = require('@Model/index');
+const FCM = require('@Controllers/FCMController.js');
 
 const crypto = require('crypto');
 const utf8 = require('utf8');
@@ -246,6 +247,14 @@ class MainController {
                 resolve(response);
             })
             
+        })
+    }
+
+    sendNotif = (in_data) => {
+        return new Promise(async resolve => {
+            let { data } = in_data;
+            let sendingNotif = await FCM.sendFCM(data);
+            resolve(sendingNotif)
         })
     }
 

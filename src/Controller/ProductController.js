@@ -83,17 +83,14 @@ class ProductController extends MainController {
 
     getAllProduct(){
         return new Promise( async (resolve) => {
+            let response = this.structure;
             try{
                 let data = await database.produk.all();
-                if(data.length > 0){
-                    response.state = true;
-                    response.data = data;
-                    response.code = 100;
-                    response.message = "Sukses mendapatkan Produk";
-                    return resolve(response);
-                }else{
-                    throw err;
-                }
+                response.state = true;
+                response.data = data;
+                response.code = 100;
+                response.message = "Sukses mendapatkan Produk";
+                return resolve(response);
             }catch(err){
                 response.state = false;
                 response.data = [];
@@ -102,6 +99,10 @@ class ProductController extends MainController {
                 return resolve(response);
             }
         })
+    }
+
+    createProduct(){
+        
     }
 
     getGroupedProduct(){
@@ -246,6 +247,43 @@ class ProductController extends MainController {
                 }
             }catch(err){
                 resolve(err)
+            }
+        });
+    }
+
+    deleteCategory = (fields, body) => {
+        let response = this.structure;
+        return new Promise(async (resolve) => {
+            let newBody = Object.keys(body);
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    let result = await database.produk_group.deleteOne({id_group: body.id});
+                    console.log(result);
+                    if(result.state){
+                        response.data = {
+                            id: body.id
+                        };
+                        response.message = `Success Update '${newBody}'`;
+                        response.code = 100;
+                        response.state = true
+                        resolve(response);
+                    }else{
+                        response.data = {};
+                        response.message = "Failed to update Category";
+                        response.code = 104;
+                        response.state = false
+                        throw response;
+                    }
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    throw response;
+                }
+            }catch(err){
+                resolve(err);
             }
         });
     }

@@ -17,7 +17,7 @@ module.exports = (router) => {
 
     router.post('/getAllProduct', VerifyMiddleware, async (req, res) => {
         let data = await ProductController.getAllProduct();
-        res.send(true);
+        res.send(data);
     });
 
     router.post('/getAllGroupedProduct', VerifyMiddleware, async (req, res) => {
@@ -64,6 +64,13 @@ module.exports = (router) => {
         }else{
             return res.status(500).send({state: false, message: "Failed to Upload Image", code: 105})
         }
+    })
+
+    router.post('/deleteCategory', VerifyMiddleware, async (req, res) => {
+        console.log(req.body);
+        let response = await ProductController.deleteCategory(['id'], req.body);
+        console.log(response)
+        return res.send(response);
     })
     return router;
 }

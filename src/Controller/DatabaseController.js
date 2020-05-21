@@ -106,11 +106,11 @@ class DatabaseController {
         return new Promise(resolve => {
             try{
                 if(Number(result) > 0){
-                    return resolve({state: true, message: `Success Update`});
+                    return resolve({state: true, message: `Success`});
                 }
                 throw err
             }catch(err){
-                return resolve({state: false, message: `Failed to Update`});
+                return resolve({state: false, message: `Failed`});
             }
         })
     }
@@ -206,11 +206,8 @@ class DatabaseController {
             Connection(this.table)
             .where(where)
             .del()
-            .then(data => {
-                console.log(data)
-            })
-            // .then(this.ValidateData)
-            // .then(resolve)
+            .then(this.ValidateUpdate)
+            .then(resolve);
         })
     }
 }
