@@ -278,6 +278,98 @@ class ProfileController extends MainController{
             }
         });
     }
+
+    getAll = () => {
+        let response = this.structure;
+        return new Promise(async (resolve) => {
+            try{
+                let data = await database.profile.connection.raw(`
+                SELECT 
+                prl_nama as nama,
+                prl_nohp as nohp,
+                prl_username as username,
+                prl_role as role,
+                prl_saldo_nexus as saldo_nexus,
+                prl_profile_id as id,
+                prl_saldo as saldo
+                FROM
+                profile
+                `)
+                response.data = data.rows
+                response.code = 100;
+                response.state = true;
+                response.message = 'Success to Get All Profile'
+                resolve(response);
+            }catch(err){
+                console.log(err);
+
+                response.data = {}
+                response.code = 102;
+                response.state = false;
+                response.message = 'Failed to Get All Profile'
+                resolve(response);
+            }
+        })
+    }
+
+    detailUser = (fields, body) => {
+        let response = this.structure;
+        return new Promise(async (resolve) => {
+            let newBody = Object.keys(body);
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    let data = await database.profile.connection.raw(`
+                    SELECT 
+                    prl_nama as nama,
+                    prl_nohp as nohp,
+                    prl_username as username,
+                    prl_role as role,
+                    prl_saldo_nexus as saldo_nexus,
+                    prl_profile_id as id,
+                    prl_saldo as saldo,
+                    prl_nik as nik,
+                    prl_tanggal_lahir as tanggal_lahir,
+                    prl_tempat_lahir as tempat_lahir,
+                    prl_alamat as alamat,
+                    prl_gender as gender,
+                    prl_gelar as gelar,
+                    prl_gelar_profesi as gelar_profesi,
+                    prl_created_at as created,
+                    prl_updated_at as updated,
+                    prl_isactive as isactive,
+                    prl_photo as photo
+                    FROM
+                    profile
+                    WHERE
+                    profile.prl_profile_id = '${body.profileid}'
+                    `)
+
+                    if(data.rows.length > 0){
+                        response.data = data.rows[0]
+                        response.code = 100;
+                        response.state = true;
+                        response.message = 'Success to Get All Profile'
+                        resolve(response);
+                    }else{
+                        response.data = data.rows[0]
+                        response.code = 103;
+                        response.state = false;
+                        response.message = 'Failed, Profile Not Found'
+                        throw response;
+                    }
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    throw response;
+                }
+            }catch(err){
+                resolve(err);
+            }
+        });
+    }
 }
 
 module.exports = new ProfileController

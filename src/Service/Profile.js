@@ -39,5 +39,17 @@ module.exports = (router) => {
         let response = await ProfileController.getProfilePicture(['id'], req.params);
         res.send(response)
     })
+
+    // Dashboard
+    router.post('/all', VerifyMiddleware, async(req, res) => {
+        let response = await ProfileController.getAll();
+        res.send(response);
+    })
+
+    router.post('/detail', VerifyMiddleware, async (req, res) => {
+        let response = await ProfileController.detailUser(['id', 'profileid'], req.body);
+        // console.log(response)
+        res.send(response);
+    })
     return router;
 }

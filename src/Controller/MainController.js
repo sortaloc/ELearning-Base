@@ -194,7 +194,6 @@ class MainController {
             var dataSource = {};
     
             req.busboy.on('file', (fieldname, file, filename, encoding, mime) => {
-                // console.log(fieldname, filename, encoding, mime)
                 let name= filename.split('.')
                 let typeFiles = mime.split('/')
                 name[0] = name[0].replace('/ /gi', '_');
@@ -205,6 +204,8 @@ class MainController {
                 imageCount++;
     
                 file.pipe(fstream);
+
+                dataSource[fieldname] = name;
 
                 imageRespon.push({
                     name: name,
@@ -257,6 +258,16 @@ class MainController {
             resolve(sendingNotif)
         })
     }
+
+    makeid = (length) => {
+        var result           = '';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+           result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+     }
 
 
 
