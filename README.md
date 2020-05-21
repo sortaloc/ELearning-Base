@@ -31,3 +31,12 @@ ENV Primary :
     ACCOUNTSID=
     AUTHTOKEN=
     CIPHERID=
+
+
+## Developer
+
+[![Mohammedwazier](https://avatars.githubusercontent.com/u/5354070?s=130)](https://mohammedwazier.github.io/) |
+---|
+[Masihkasar](https://github.com/mohammedwazier) |
+
+> Muhammad Waziruddin Akbar © 2020
