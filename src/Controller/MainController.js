@@ -24,6 +24,7 @@ fs.ensureDir(uploadPath);
 class MainController {
     cipherID = CIPHERID;
     structure = STRUCTURE;
+    
     constructor(){}
 
     getLocation = (ipAddress = '192.1.1.1') => {

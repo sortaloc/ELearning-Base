@@ -24,7 +24,7 @@ class RegisterController extends MainController {
             let diff = fields.filter((x) => newBody.indexOf(x) === -1)
 
             let role = newBody.indexOf('tipe') === -1 ? 'user' : body.tipe;
-            if(role == "1"){
+            if(Number(role) === 1){
                 role = 'user';
             }
 
