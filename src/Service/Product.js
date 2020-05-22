@@ -6,7 +6,7 @@ module.exports = (router) => {
     //     res.send(true);
     // })
 
-    router.post('/upload', VerifyMiddleware, async (req, res) => {
+    router.post('/upload', async (req, res) => {
         let uploadImage = await ProductController.uploadImage(req);
         return res.send(uploadImage);
     })
