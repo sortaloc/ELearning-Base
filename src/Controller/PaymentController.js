@@ -401,7 +401,7 @@ class PaymentController extends MainController {
                             // akun.prl_saldo_nexus = 1000;
                             if(Number(akun.prl_saldo_nexus) - Number(produk.produk_harga) > 0){
                                 let refid = `BUYCERITICATE${this.generateID()}`;
-                                let format_msg = `PAY_BUY.${produk.produk_kodeProduk}.${produk.produk_id}.${produk.produk_harga}.${akun.id}.${refid}`;
+                                let format_msg = `PAY_BUY.${produk.produk_kodeProduk}.${produk.produk_id}.${produk.produk_harga}.${akun.prl_profile_id}.${refid}`;
                                 // `PAY_TOPUP.DEPOSIT.-.[nominal].[id_tujuan].[refid]`
                                 const insertData = {
                                     ibx_refid: refid,

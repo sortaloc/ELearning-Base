@@ -269,7 +269,22 @@ class MainController {
     sendNotif = (in_data) => {
         return new Promise(async resolve => {
             let { data } = in_data;
-            let sendingNotif = await FCM.sendFCM(data);
+            let send;
+            if(data.send === 'user'){
+                send = `/topics/user_${data.id}`
+                delete data.send;
+            }else{
+                send = `/topics/global_`
+                delete data.send;
+            }
+
+            let newData = {
+                data: data,
+                to: send
+            }
+            console.log(newData);
+            let sendingNotif = await FCM.sendFCM(newData);
+            console.log(sendingNotif)
             resolve(sendingNotif)
         })
     }
