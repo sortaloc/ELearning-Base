@@ -398,7 +398,7 @@ class PaymentController extends MainController {
                         var produk = await database.produk.allSelect({produk_id: body.idproduk, produk_kodeProduk: body.kodeproduk});
                         if(produk.length > 0){
                             produk = produk[0];
-                            akun.prl_saldo_nexus = 1000;
+                            // akun.prl_saldo_nexus = 1000;
                             if(Number(akun.prl_saldo_nexus) - Number(produk.produk_harga) > 0){
                                 let refid = `BUYCERITICATE${this.generateID()}`;
                                 let format_msg = `PAY_BUY.${produk.produk_kodeProduk}.${produk.produk_id}.${produk.produk_harga}.${akun.id}.${refid}`;
