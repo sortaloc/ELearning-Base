@@ -130,7 +130,7 @@ const processing = async () => {
                                     id: akun.prl_profile_id,
                                     title: 'Transfer Akun Gagal',
                                     message: keteranganTrx,
-                                    nama_sender: 'Prexus',
+                                    nama_sender: 'Prexux',
                                     menu: 'trx',
                                     tipe: 'default',
 

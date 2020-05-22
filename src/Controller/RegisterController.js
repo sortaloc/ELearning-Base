@@ -50,6 +50,7 @@ class RegisterController extends MainController {
                     return resolve(response)
                 }else{
                     let result = await database.profile.insertOne(profileData);
+                    await database.otp_list.updateOne({otp_nohp: body.nohp, otp_kode: body.otp}, {otp_status: 1})
                     if(result.state){
                         response.data = {
                             username: profileData.prl_username,
