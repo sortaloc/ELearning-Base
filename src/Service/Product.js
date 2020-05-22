@@ -8,6 +8,7 @@ module.exports = (router) => {
 
     router.post('/upload', async (req, res) => {
         let uploadImage = await ProductController.uploadImage(req);
+        console.log(uploadImage)
         return res.send(uploadImage);
     })
 

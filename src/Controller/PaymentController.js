@@ -428,7 +428,7 @@ class PaymentController extends MainController {
                                     trx_total_harga: harga,
                                     trx_saldo_before: Number(akun.prl_saldo),
                                     trx_saldo_after: 0,
-                                    trx_status: 0,
+                                    trx_status: 'Q',
                                     trx_id_profile: akun.prl_profile_id,
                                     trx_code_voucher: '',
                                     trx_invoice: trxINV,
