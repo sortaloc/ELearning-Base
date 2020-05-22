@@ -43,6 +43,7 @@ module.exports = (router) => {
         req.body.token = req.headers.authorization.split(' ');
         req.body.token = req.body.token[req.body.token.length - 1];
         let response = await PaymentController.buyProduct(['idproduk', 'id', 'password'], req.body);
+        console.log(response)
         return res.send(response);
     })
 

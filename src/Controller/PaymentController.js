@@ -405,7 +405,7 @@ class PaymentController extends MainController {
                                 // `PAY_TOPUP.DEPOSIT.-.[nominal].[id_tujuan].[refid]`
                                 const insertData = {
                                     ibx_refid: refid,
-                                    ibx_id_profile: akun.akun,
+                                    ibx_id_profile: akun.prl_profile_id,
                                     ibx_interface: 'H',
                                     ibx_tipe: 'BUYCERITICATE',
                                     ibx_status: 'Q',
@@ -419,7 +419,7 @@ class PaymentController extends MainController {
                                     response.message = `Transaksi Berhasil, silahkan tunggu notifikasi`;
                                     response.code = 107;
                                     response.state = true
-                                    tresolve(response)
+                                    resolve(response)
                                 }else{
                                     response.data = body;
                                     response.message = `Transaksi Gagal!, silahkan dicoba kembali`;
