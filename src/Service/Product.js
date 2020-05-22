@@ -6,6 +6,10 @@ module.exports = (router) => {
     //     res.send(true);
     // })
 
+    router.post('/getHistory', VerifyMiddleware, async (req, res) => {
+        res.send(true);
+    })
+
     router.post('/statistic', VerifyMiddleware, async (req, res) => {
         let data = await ProductController.getStatisticProduct();
         return res.send(data)
@@ -33,7 +37,9 @@ module.exports = (router) => {
     // })
 
     router.post('/getSingleProduct', VerifyMiddleware, async (req, res) => {
-        let data = await ProductController.getSingleProduct(['id', 'produkid'], req.body);
+        req.body.token = req.headers.authorization.split(' ');
+        req.body.token = req.body.token[req.body.token.length - 1];
+        let data = await ProductController.getSingleProduct(['id', 'produkid', 'kodeproduk'], req.body);
         res.send(data);
     })
 

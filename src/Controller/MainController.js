@@ -24,7 +24,7 @@ fs.ensureDir(uploadPath);
 class MainController {
     cipherID = CIPHERID;
     structure = STRUCTURE;
-    
+
     constructor(){}
 
     getLocation = (ipAddress = '192.1.1.1') => {
@@ -34,6 +34,13 @@ class MainController {
             resolve(result);
         })
     }
+
+    commandJobs(){
+        return new Promise(resolve => {
+            return resolve({state:true, data: null, sleep: SLEEP})
+        })
+    }
+
     switchingCommand = () =>{
         return new Promise(async resolve => {
           let JamSekarang = Number(moment().format('HH'))
@@ -89,6 +96,13 @@ class MainController {
 
         return { data: data, jwt: datajwt, auth: `Bearer ${datajwt}` }
     }
+
+    createInvoice (type) {
+    let uID = crypto.randomBytes(6).toString('hex')
+    uID = parseInt(uID, 16)
+    let invoice = `${type}-${uID}`;
+    return invoice
+  }
     
     random = (start= 1, end= 9)=> {
         const val = Math.floor(start + Math.random() * end)
@@ -269,8 +283,6 @@ class MainController {
         }
         return result;
      }
-
-
 
 }
 module.exports = MainController;

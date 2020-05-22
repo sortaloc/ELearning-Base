@@ -10,8 +10,6 @@ const { createServer } = require('http');
 const Cookie = require('cookie-parser');
 const timeout = require('connect-timeout');
 
-// const { MiddlewareValidation } = require('@Middleware/Security');
-
 const { PORT, NAME, VERSION } = require('@Config/Config');
 const app = express();
 const server = createServer(app);
@@ -27,7 +25,6 @@ app.use(json())
 
 app.disable('x-powered-by');
 
-// app.use(MiddlewareValidation) //Middleware Security
 
 app.use('/api', require('@Service/index'));
 app.get('/', (req, res) => {

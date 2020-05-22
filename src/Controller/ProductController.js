@@ -255,7 +255,7 @@ class ProductController extends MainController {
             let diff = fields.filter((x) => newBody.indexOf(x) === -1)
             try{
                 if(diff.length === 0){
-                    let kategoriData = await database.produk.connection.raw(`
+                    let kategoriData = await database.produk_group.connection.raw(`
                     SELECT 
                     produk_group.group_nama as nama,
                     produk_group.is_active as active,
@@ -288,6 +288,8 @@ class ProductController extends MainController {
                     join produk_group on produk_group.id_group = produk.produk_id_group
                     WHERE
                     produk.produk_id = '${body.produkid}'
+                    AND
+                    produk."produk_kodeProduk" = '${body.kodeproduk}'
                     `)
                     if(data.rows.length > 0){
                         data = data.rows[0];

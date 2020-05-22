@@ -161,6 +161,15 @@ class DatabaseController {
         })
     }
 
+    insert = (insert) => {
+        return new Promise(async (resolve) => {
+            Connection(this.table)
+            .insert(insert)
+            .then(this.ValidateResult)
+            .then(resolve)
+        })
+    }
+
     updateOne = (where, update) => {
         return new Promise(async (resolve) => {
             Connection(this.table)

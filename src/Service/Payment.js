@@ -31,12 +31,19 @@ module.exports = (router) => {
 
     router.get('/listNominal', VerifyMiddleware, async (req, res) => {
         let response = await PaymentController.getListNominal();
-        res.send(response);
+        return res.send(response);
     })
 
     router.get('/listBank', VerifyMiddleware, async (req, res) => {
         let response = await PaymentController.getListBank();
         return res.send(response)
+    })
+
+    router.post('/buy', VerifyMiddleware, async (req, res) => {
+        req.body.token = req.headers.authorization.split(' ');
+        req.body.token = req.body.token[req.body.token.length - 1];
+        let response = await PaymentController.buyProduct(['idproduk', 'id', 'password'], req.body);
+        return res.send(response);
     })
 
     // Dashboard
