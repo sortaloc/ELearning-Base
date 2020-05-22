@@ -5,6 +5,7 @@ const db = {};
     'admin',
     'bank',
     'cashflow', 
+    'certificate_user',
     'code_voucher', 
     'deposit',
     'elearning', 
