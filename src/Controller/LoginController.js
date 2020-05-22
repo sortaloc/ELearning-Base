@@ -18,7 +18,7 @@ class LoginController extends MainController {
             let diff = list.filter((x) => newBody.indexOf(x) === -1)
             try{
                 if(diff.length === 0){
-                    let { username, password, ip } = body;
+                    let { input, password, ip } = body;
 
                     if(ip === '::1'){
                         ip = '36.88.30.82';
@@ -27,15 +27,30 @@ class LoginController extends MainController {
                     let tipe;
                     
                     password = this.createPassword(password);
-                    let result = await database.profile.allSelect({prl_username: username, prl_password: password});
-                    if(Number(result.length) === 0){
+                    // console.log(body, password)
+                    // process.exit()
+                    // let result = await database.profile.allSelect({prl_username: username, prl_password: password});
+                    let result = await database.profile.connection.raw(
+                        `SELECT * 
+                        FROM profile
+                        WHERE
+                        prl_password = '${password}'
+                        AND (
+                            prl_username LIKE '%${input}%'
+                            OR
+                            prl_nohp LIKE '%${input}%'
+                        )
+                        `
+                        )
+
+                    if(Number(result.rows.length) === 0){
                         response.data = {}
                         response.message = "Failed to Login, check username or password"
                         response.code = 103;
                         response.state = false;
                         throw response;
                     }
-                    result = result[result.length - 1];
+                    result = result.rows[result.rows.length - 1];
 
                     if(newBody.indexOf('tipe') === -1){
                         tipe = 'smartphone'
@@ -60,7 +75,6 @@ class LoginController extends MainController {
                     }
                     const Token = this.createToken(data);
                     data.token = Token.token;
-                    // console.log(body)
                     let geolocation = await this.getLocation(ip);
                     geolocation = geolocation.data;
                     // const 
@@ -98,6 +112,7 @@ class LoginController extends MainController {
                     return resolve(response)
                 }
             }catch(err){
+                console.log(err);
                 return resolve(err)
             }
         })
