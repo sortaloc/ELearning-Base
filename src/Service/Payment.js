@@ -39,10 +39,11 @@ module.exports = (router) => {
         return res.send(response)
     })
 
-    router.post('/buy', VerifyMiddleware, async (req, res) => {
+    router.post('/buyCertificate', VerifyMiddleware, async (req, res) => {
         req.body.token = req.headers.authorization.split(' ');
         req.body.token = req.body.token[req.body.token.length - 1];
-        let response = await PaymentController.buyProduct(['idproduk', 'id', 'password'], req.body);
+        let response = await PaymentController.buyProduct(['idproduk', 'id', 'password', 'nama'], req.body);
+        console.log(response);
         return res.send(response);
     })
 
