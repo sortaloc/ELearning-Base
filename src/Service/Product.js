@@ -6,9 +6,14 @@ module.exports = (router) => {
     //     res.send(true);
     // })
 
-    router.post('/getHistory', VerifyMiddleware, async (req, res) => {
-        res.send(true);
+    router.post('/upload', VerifyMiddleware, async (req, res) => {
+        let uploadImage = await ProductController.uploadImage(req);
+        return res.send(uploadImage);
     })
+
+    // router.post('/getHistory', VerifyMiddleware, async (req, res) => {
+    //     res.send(true);
+    // })
 
     router.post('/statistic', VerifyMiddleware, async (req, res) => {
         let data = await ProductController.getStatisticProduct();
