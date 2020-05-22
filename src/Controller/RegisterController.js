@@ -165,7 +165,7 @@ class RegisterController extends MainController {
             const twiml = new MessagingResponse();
 
             getText = getText.trim().toLowerCase();
-            if(getText.indexOf('reg') > -1 || getText.indexOf('xus') > -1){ //Jika ada
+            if(getText.indexOf('reg') > -1 && getText.indexOf('xux') > -1){ //Jika ada
                 let getNumber = (number = body.From) => {
                     number = number.split(':');
                     number = number[number.length-1];
