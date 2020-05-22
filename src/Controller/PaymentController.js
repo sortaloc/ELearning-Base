@@ -407,14 +407,38 @@ class PaymentController extends MainController {
                                     ibx_refid: refid,
                                     ibx_id_profile: akun.prl_profile_id,
                                     ibx_interface: 'H',
-                                    ibx_tipe: 'BUYCERITICATE',
+                                    ibx_tipe: 'BUYCERTIFICATE',
                                     ibx_status: 'Q',
                                     ibx_format_msg: format_msg,
                                     ibx_keterangan: `Berhasil input ke inbox pada ${this.createDate(0)}`,
                                     ibx_raw_data: JSON.stringify(body)
                                 }
+
+                                let harga = Number(produk.produk_harga) * 15000;
+
+                                let trxID = this.generateID();
+                                let trxINV = this.createInvoice('TOPUP');
+                                let transaksi = {
+                                    trx_id: trxID,
+                                    trx_keterangan: 'Transaksi sedang dalam proses',
+                                    trx_tipe: 'BUYCERTIFICATE',
+                                    trx_id_tipe: 'BUY',
+                                    trx_harga: harga,
+                                    trx_fee: 0,
+                                    trx_total_harga: harga,
+                                    trx_saldo_before: Number(akun.prl_saldo),
+                                    trx_saldo_after: 0,
+                                    trx_status: 0,
+                                    trx_id_profile: akun.prl_profile_id,
+                                    trx_code_voucher: '',
+                                    trx_invoice: trxINV,
+                                    trx_refid: refid,
+                                }
+
                                 let insertInbox = await database.inbox.insertOne(insertData);
-                                if(insertInbox.state){
+                                let insertTrx = await database.transaksi.insert(transaksi);
+
+                                if(insertInbox.state && insertInbox.state){
                                     response.data = body;
                                     response.message = `Transaksi Berhasil, silahkan tunggu notifikasi`;
                                     response.code = 107;

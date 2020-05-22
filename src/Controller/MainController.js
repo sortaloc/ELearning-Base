@@ -297,7 +297,19 @@ class MainController {
            result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
         return result;
-     }
+    }
+
+    FormatMsg = (key) => {
+      let data = {
+        command: key[0],
+        kode: key[1],
+        productid: key[2],
+        harga: key[3],
+        profileid: key[4],
+        refid: key[5]
+      }  
+      return data;
+    }
 
 }
 module.exports = MainController;
