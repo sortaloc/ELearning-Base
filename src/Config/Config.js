@@ -19,8 +19,10 @@ const ResponseStructure = {
 let urlImage;
 if(process.env.NODE_ENV === 'development'){
 	urlImage = 'https://devsck.nenggala.id/files/';
+	urlData = 'https://devsck.nenggala.id/';
 }else{
 	urlImage  = 'https://devsck.nenggala.id/files/';
+	urlData = 'https://devsck.nenggala.id/';
 }
 
 module.exports = {
@@ -48,5 +50,6 @@ module.exports = {
 	URLIMAGE: urlImage,
 	GEOLOCATION: process.env.GEOLOCATION,
 	FIREBASE: process.env.FIREBASE,
-	YOUTUBEKEY: process.env.YOUTUBEKEY
+	YOUTUBEKEY: process.env.YOUTUBEKEY,
+	URLDATA: urlData
 }
