@@ -130,32 +130,44 @@ class ProductController extends MainController {
         });
     }
 
-    getAllProduct(){
+    getAllProduct(fields, body){
+        let response = this.structure;
         return new Promise( async (resolve) => {
-            let response = this.structure;
+            let newBody = Object.keys(body);
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
             try{
-                let data = await database.produk.all();
-                data = data.map(d => {
-                    return {
-                        produkid: d.produk_id,
-                        nama: d.produk_namaProduk,
-                        groupid: d.produk_id_group,
-                        active: Number(d.produk_is_active),
-                        harga: Number(d.produk_harga),
-                        kodeproduk: d.produk_kodeProduk,
-                        keterangan: d.produk_keterangan,
-                        created: d.produk_created_at,
-                        updated: d.produk_updated_at,
-                        cover: d.produk_cover,
-                        link: d.produk_link,
-                        idpembuat: d.produk_id_profile
-                    }
-                })
-                response.state = true;
-                response.data = data;
-                response.code = 100;
-                response.message = "Sukses mendapatkan Produk";
-                return resolve(response);
+                if(diff.length === 0){
+                    let data = await database.produk.all();
+                    data = data.map(d => {
+                        let statusbuy = await database.transaksi.allSelect({trx_id_profile: body.id, d.produk_id});
+                        return {
+                            produkid: d.produk_id,
+                            nama: d.produk_namaProduk,
+                            groupid: d.produk_id_group,
+                            active: Number(d.produk_is_active),
+                            harga: Number(d.produk_harga),
+                            kodeproduk: d.produk_kodeProduk,
+                            keterangan: d.produk_keterangan,
+                            created: d.produk_created_at,
+                            updated: d.produk_updated_at,
+                            cover: d.produk_cover,
+                            link: d.produk_link,
+                            idpembuat: d.produk_id_profile,
+                            statusbuy: statusbuy.length
+                        }
+                    })
+                    response.state = true;
+                    response.data = data;
+                    response.code = 100;
+                    response.message = "Sukses mendapatkan Produk";
+                    return resolve(response);
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    throw response;
+                }
             }catch(err){
                 response.state = false;
                 response.data = [];

@@ -433,6 +433,7 @@ class PaymentController extends MainController {
                                     trx_code_voucher: '',
                                     trx_invoice: trxINV,
                                     trx_refid: refid,
+                                    trx_produk_id: produk.produk_id
                                 }
 
                                 let insertInbox = await database.inbox.insertOne(insertData);
