@@ -47,5 +47,6 @@ module.exports = {
 	SLEEP: 750,
 	URLIMAGE: urlImage,
 	GEOLOCATION: process.env.GEOLOCATION,
-	FIREBASE: process.env.FIREBASE
+	FIREBASE: process.env.FIREBASE,
+	YOUTUBEKEY: process.env.YOUTUBEKEY
 }
