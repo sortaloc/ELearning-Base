@@ -23,7 +23,7 @@ module.exports = (router) => {
     
 
     router.post('/getAllProduct', VerifyMiddleware, async (req, res) => {
-        let data = await ProductController.getAllProduct(['id'], body.req);
+        let data = await ProductController.getAllProduct(['id'], req.body);
         return res.send(data);
     });
 
