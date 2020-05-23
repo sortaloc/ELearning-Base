@@ -138,9 +138,11 @@ class ProductController extends MainController {
             try{
                 if(diff.length === 0){
                     let data = await database.produk.all();
-                    data = data.map(async d => {
+                    let ret = [];
+                    for(let idx = 0; idx < data.length; idx++){
+                        let d = data[idx];
                         let statusbuy = await database.transaksi.allSelect({trx_id_profile: body.id, trx_produk_id : d.produk_id});
-                        return {
+                        let res = {
                             produkid: d.produk_id,
                             nama: d.produk_namaProduk,
                             groupid: d.produk_id_group,
@@ -155,9 +157,10 @@ class ProductController extends MainController {
                             idpembuat: d.produk_id_profile,
                             statusbuy: statusbuy.length
                         }
-                    })
+                        ret.push(res);
+                    }
                     response.state = true;
-                    response.data = data;
+                    response.data = ret;
                     response.code = 100;
                     response.message = "Sukses mendapatkan Produk";
                     return resolve(response);
@@ -169,6 +172,7 @@ class ProductController extends MainController {
                     throw response;
                 }
             }catch(err){
+                console.log(err)
                 response.state = false;
                 response.data = [];
                 response.message = "Gagal mendapatkan Produk";
