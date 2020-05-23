@@ -5,21 +5,15 @@ const { STRUCTURE } = require('@Config/Config');
 const database = require('@Model/index');
 let MainController = require('@Controllers/MainController');
 
+var Jimp = require('jimp')
+const fs = require('fs')
+const path = require('path')
+
 MainController = new MainController();
 
 const processing = async () => {
     return new Promise(async (resolve) => {
-        let data = await database.inbox.allSelect({ibx_tipe: 'BUYCERITICATE', 'ibx_status': 'Q'});
-
-        /*
-        Step By Step
-        1. Update Inbox;
-        2. Buat Transaksi
-        3. Buat Jurnal /Tambah saldo ke profile dan ke account
-        3. Update Transaksi
-        4. Send Notif Firebase
-        5. Update Status Inbox and Send Outbox
-        */
+        let data = await database.inbox.allSelect({ibx_tipe: 'BUYCERTIFICATE', 'ibx_status': 'Q'});
 
         let ibxSucc = new Array();
 
@@ -28,130 +22,131 @@ const processing = async () => {
             return resolve(true);
         }else{
             try{
-                console.log('Ada Data');
                 for(let idx = 0; idx < data.length; idx++){
                     let inbox = data[idx];
-                    // console.log(inbox);
-
 
                     let FormatMsg = MainController.FormatMsg(inbox.ibx_format_msg.split('.'));
                     
                     let produk = await database.produk.single({produk_id: FormatMsg.productid, produk_kodeProduk: FormatMsg.kode});
                     let akun = await database.profile.single({prl_profile_id: FormatMsg.profileid});
 
-                    console.log(produk)
+                    let transaksi = await database.transaksi.single({trx_refid: inbox.ibx_refid})
 
-                    // let trxID = MainController.generateID();
-                    // let trxINV = MainController.createInvoice('TOPUP');
-                    // let transaksi = {
-                    //     trx_id: trxID,
-                    //     trx_keterangan: 'Transaksi sedang dalam proses',
-                    //     trx_tipe: inbox.ibx_tipe,
-                    //     trx_id_tipe: 'TOPUP',
-                    //     trx_harga: deposit.dep_nominal,
-                    //     trx_fee: deposit.dep_kode_unik,
-                    //     trx_total_harga: deposit.dep_total,
-                    //     trx_saldo_before: akun.prl_saldo,
-                    //     trx_saldo_after: Number(akun.prl_saldo) + Number(deposit.dep_nominal),
-                    //     trx_status: '1',
-                    //     trx_id_profile: akun.prl_profile_id,
-                    //     trx_code_voucher: '',
-                    //     trx_invoice: trxINV,
-                    //     trx_refid: inbox.ibx_refid,
-                    // }
+                    let realHarga = Number(produk.produk_harga) * 15000
+                    let nexus = Number(produk.produk_harga)
 
+                    let jurnal1 = {
+                        cf_keterangan: `Pengurangan Nexus dari profile ${akun.prl_profile_id} sebesar ${produk.produk_harga} Nexus seharga ${realHarga} Rupiah`,
+                        cf_tipe: 'buy',
+                        cf_kredit: realHarga,
+                        cf_debet: 0,
+                        cf_nominal: produk.produk_harga + ' Nexus',
+                        cf_refid: inbox.ibx_refid,
+                        cf_internal_acc: '',
+                        cf_profile_id: akun.prl_profile_id
+                    }
 
+                    let query = `UPDATE profile SET prl_saldo_nexus = prl_saldo_nexus - ${nexus}, prl_saldo = prl_saldo - ${realHarga} WHERE prl_profile_id = '${akun.prl_profile_id}'`;
+                    let updateSaldo = await database.profile.connection.raw(query);
 
-                    // let insertTrx = await database.transaksi.insert(transaksi);
+                    if(updateSaldo.rowCount > 0){
+                        let penampung = '20200507215106956376'
+                        let jurnal2 = {
+                            cf_keterangan: `Penambahan ke account Penampungan Sertifikat dengan id: '${penampung}' degan pembelian sertifikat seharga ${nexus} Nexus dikonversikan menjadi ${realHarga} Rupiah`,
+                            cf_tipe: 'buy',
+                            cf_kredit: 0,
+                            cf_debet: realHarga,
+                            cf_nominal: nexus + ' Nexus',
+                            cf_refid: inbox.ibx_refid,
+                            cf_internal_acc: penampung,
+                            cf_profile_id: akun.prl_profile_id
+                        }
+                        query = `UPDATE account SET acc_saldo = acc_saldo + ${realHarga} WHERE acc_noakun = '${penampung}'`
+                        updateSaldo = await database.account.connection.raw(query);
 
-                    // let internal1 = '20200506045039801303';
-                    // let jurnal1 = {
-                    //     cf_keterangan: 'Penambahan ke penampungan internal',
-                    //     cf_tipe: 'topup',
-                    //     cf_kredit: 0,
-                    //     cf_debet: deposit.dep_total,
-                    //     cf_nominal: deposit.dep_total,
-                    //     cf_refid: inbox.ibx_refid,
-                    //     cf_internal_acc: internal1,
-                    //     cf_profile_id: akun.prl_profile_id
-                    // }
+                        if(updateSaldo.rowCount > 0){
+                            let imgSource = `../../Source/${produk.produk_certificate}`;
+                            let fontSource = '../../Source/Taniya.fnt'
+                            let imgPath = path.join(__dirname, imgSource);
+                            let fontPath = path.join(__dirname, fontSource);
 
-                    // let query = `UPDATE account SET acc_saldo = acc_saldo + ${deposit.dep_total} WHERE acc_noakun = '${internal1}'`
-                    // let updateAkun1 = await database.account.connection.raw(query);
+                            let nameCert = `${MainController.generateID()}_${akun.prl_profile_id}_${produk.produk_certificate}`;
+                            let nameExport = `../../Source/${nameCert}`;
+                            let exportFile = path.join(__dirname, nameExport);
 
-                    // if(updateAkun1.rowCount > 0){
-                    //     let nexus = Math.floor(deposit.dep_nominal / 15000);
+                            const image = await Jimp.read(imgPath);
+                            const font = await Jimp.loadFont(fontPath);
 
-                    //     let jurnal2 = {
-                    //         cf_keterangan: `Pengurangan ke Akun ${akun.prl_profile_id} dengan nilai ${deposit.dep_nominal} dengan nilai konversi nexus menjadi '${nexus} Nexus'`,
-                    //         cf_tipe: 'topup',
-                    //         cf_kredit: deposit.dep_nominal,
-                    //         cf_debet: 0,
-                    //         cf_nominal: deposit.dep_nominal,
-                    //         cf_refid: inbox.ibx_refid,
-                    //         cf_internal_acc: 0,
-                    //         cf_profile_id: akun.prl_profile_id
-                    //     }
+                            var w = image.bitmap.width;
+                            var h = image.bitmap.height;
 
-                    //     query = `UPDATE profile SET prl_saldo = prl_saldo + ${deposit.dep_nominal}, prl_saldo_nexus = prl_saldo_nexus + ${nexus} WHERE prl_profile_id = '${akun.prl_profile_id}'`;
-                    //     let updateAkun2 = await database.account.connection.raw(query);
-                    //     if(updateAkun2.rowCount > 0){
-                    //         let jurnal3 = {
-                    //             cf_keterangan: 'Penambahan ke Saldo Penampungan Keuntungan Topup',
-                    //             cf_tipe: 'topup',
-                    //             cf_kredit: deposit.dep_kode_unik,
-                    //             cf_debet: 0,
-                    //             cf_nominal: deposit.dep_kode_unik,
-                    //             cf_refid: inbox.ibx_refid,
-                    //             cf_internal_acc: '20200506045509647299',
-                    //             cf_profile_id: akun.prl_profile_id
-                    //         }
+                            let txt = akun.prl_nama
 
-                    //         let query = `UPDATE account SET acc_saldo = acc_saldo + ${deposit.dep_kode_unik} WHERE acc_noakun = '${jurnal3.cf_internal_acc}'`
-                    //         let updateAkun1 = await database.account.connection.raw(query);
+                            var textWidth = Jimp.measureText(font, txt);
+                            var textHeight = Jimp.measureTextHeight(font, txt);
 
-                    //         let cashflow = await database.cashflow.insert([jurnal1, jurnal2, jurnal3])
+                            let x = w/2-textWidth/2;
+                            let y = h/2-textHeight/2;
 
-                    //         if(cashflow.state){
+                            if(txt.indexOf(' ') === -1){
+                                y = y - 70;
+                            }
 
-                    //             let updateDeposit = await database.deposit.updateOne({dep_id: deposit.dep_id}, {dep_status: 4});
-                    //             let updateInbox = await database.inbox.updateOne({ibx_refid: inbox.ibx_refid}, {ibx_status: 'S'});
-                    //             let keteranganTrx = `Berhasil Topup sebesar Rp.${deposit.dep_nominal} menjadi ${nexus} Nexus Poin`;
-                    //             let updateTransaksi = await database.transaksi.updateOne({trx_id: trxID, trx_invoice: trxINV, trx_refid: inbox.ibx_refid}, {trx_saldo_after: deposit.dep_nominal, trx_status: 'S', trx_keterangan: keteranganTrx, trx_updated_at: MainController.createDate(0)})
+                            /*Write Image with Text*/
+                            await image.print(font, x, y, { 
+                                text: txt, 
+                                alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
+                                alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
+                            }, textWidth, textHeight);
+                            await image.writeAsync(exportFile); //End
 
-                    //             let Outbox = {
-                    //                 obx_refid: inbox.ibx_refid,
-                    //                 obx_id_profile: akun.prl_profile_id,
-                    //                 obx_interface: 'H',
-                    //                 obx_tipe: 'BUYCERITICATE',
-                    //                 obx_status: 'S',
-                    //                 obx_format_msg: inbox.ibx_format_msg,
-                    //                 obx_keterangan: `Berhasil input ke Outbox pada ${MainController.createDate(0)}`,
-                    //                 obx_raw_data: JSON.stringify(transaksi)
-                    //             }
+                            let cashflow = await database.cashflow.insert([jurnal1, jurnal2])
 
-                    //             await database.outbox.insert(Outbox);
+                            if(cashflow.state){
+                                let keteranganTrx = `Berhasil membeli Sertifikat ${produk.produk_namaProduk}, sertifikat dapat di download pada halaman History`;
+                                let trxData = {
+                                    certificate: nameCert,
+                                    created: MainController.createDate(0),
+                                    download: 0,
+                                    access: 0
+                                }
+                                let updateTransaksi = await database.transaksi.updateOne({trx_id: transaksi.trx_id, trx_invoice: transaksi.trx_invoice, trx_refid: inbox.ibx_refid}, {trx_saldo_after: akun.prl_saldo - realHarga, trx_status: 'S', trx_keterangan: keteranganTrx, trx_updated_at: MainController.createDate(0),trx_data: JSON.stringify(trxData)})
+                                let updateInbox = await database.inbox.updateOne({ibx_refid: inbox.ibx_refid}, {ibx_status: 'S'});
+                                let Outbox = {
+                                    obx_refid: inbox.ibx_refid,
+                                    obx_id_profile: akun.prl_profile_id,
+                                    obx_interface: 'H',
+                                    obx_tipe: 'BUYCERITICATE',
+                                    obx_status: 'S',
+                                    obx_format_msg: inbox.ibx_format_msg,
+                                    obx_keterangan: `Berhasil input ke Outbox pada ${MainController.createDate(0)}`,
+                                    obx_raw_data: JSON.stringify(transaksi)
+                                }
+                                let notifData = {
+                                  data: {
+                                    id: akun.prl_profile_id,
+                                    title: 'Berhasil membeli Sertifikat',
+                                    message: keteranganTrx,
+                                    nama_sender: 'Prexux',
+                                    menu: 'trx',
+                                    tipe: 'default',
 
-                    //             let notifData = {
-                    //               data: {
-                    //                 id: akun.prl_profile_id,
-                    //                 title: 'Transfer Akun Gagal',
-                    //                 message: keteranganTrx,
-                    //                 nama_sender: 'Prexus',
-                    //                 menu: 'trx',
-                    //                 tipe: 'default',
+                                    send: 'user'
+                                  }
+                                }
+                                await MainController.sendNotif(notifData)
 
-                    //                 send: 'user'
-                    //               }
-                    //             }
-                    //             await MainController.sendNotif(notifData)
-
-                    //             ibxSucc.push(inbox.ibx_refid);
-                    //         }
-                    //     }
-                    // }
+                                ibxSucc.push(inbox.ibx_refid);
+                            }else{
+                                /*Cashflow State*/
+                            }
+                        }else{
+                            /*Update Akun 2*/
+                        }
+                    }else{
+                        /*Update Akun 1*/
+                    }
                 }
-                resolve(ibxSucc);
             }catch(err){
                 console.log(err);
                 resolve(false);
@@ -167,7 +162,6 @@ function startCron () {
     .then(response => {
         clearTimeout(timeout)
         timeout = setTimeout(startCron, 750)
-        /*MainController.getSleep()*/
     })
 }
 setTimeout(() => startCron());
