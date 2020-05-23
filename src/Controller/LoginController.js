@@ -39,6 +39,8 @@ class LoginController extends MainController {
                             prl_username LIKE '%${input}%'
                             OR
                             prl_nohp LIKE '%${input}%'
+                            OR
+                            prl_email LIKE '%${input}%'
                         )
                         `
                         )

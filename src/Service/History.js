@@ -3,7 +3,7 @@ const HistoryController = require('@Controllers/HistoryController');
 const Busboy = require('connect-busboy');
 
 module.exports = (router) => {
-	router.post('/getAllHistory', VerifyMiddleware, async (req, res) => {
+	router.post('/', VerifyMiddleware, async (req, res) => {
 		let response = await HistoryController.getAllHistory(['id'], req.body);
 		res.send(response);
 	})
