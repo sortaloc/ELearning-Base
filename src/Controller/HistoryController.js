@@ -27,7 +27,8 @@ class HistoryController extends MainController {
                 		trx_id_tipe,
                 		trx_invoice,
                 		trx_refid,
-                		trx_status
+                		trx_status,
+                        trx_created_at
                 		FROM
                 		transaksi
                 		WHERE
