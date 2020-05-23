@@ -20,15 +20,17 @@ class HistoryController extends MainController {
                 if(diff.length === 0){
                 	let data = await database.transaksi.connection.raw(
                 		`SELECT
-                		trx_id, 
-                		trx_keterangan,
-                		FLOOR(trx_harga / 15000) as trx_harga,
-                		trx_tipe,
-                		trx_id_tipe,
-                		trx_invoice,
-                		trx_refid,
-                		trx_status,
-                        trx_created_at
+                		trx_id as id_history, 
+                		trx_keterangan as keterangan,
+                		FLOOR(trx_harga / 15000) as hargaReal,
+                        trx_harga as hargaNexus,
+                		trx_tipe as tipetransaksi,
+                		trx_id_tipe as tipe,
+                		trx_invoice as invoice,
+                		trx_refid as refid,
+                		trx_status as state,
+                        trx_created_at as created,
+                        trx_updated_at as updated
                 		FROM
                 		transaksi
                 		WHERE
@@ -57,6 +59,7 @@ class HistoryController extends MainController {
                     throw response;
                 }
             }catch(err){
+                console.log(err);
             	resolve(err)
             }
         });
@@ -79,11 +82,12 @@ class HistoryController extends MainController {
                         let trxData = JSON.parse(history.trx_data)
 
                         let resData = {
-                            id: history.trx_id,
+                            id_history: history.trx_id,
                             keterangan: history.trx_keterangan,
                             hargaReal: Number(history.trx_harga),
                             hargaNexus: Math.floor(Number(history.trx_harga) / 15000),
                             status: history.trx_status,
+                            tipetransaksi: history.trx_tipe,
                             profileid: history.trx_id_profile,
                             invoice: history.trx_invoice,
                             refid: history.trx_refid,
