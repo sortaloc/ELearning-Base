@@ -8,6 +8,11 @@ module.exports = (router) => {
 		res.send(response);
 	})
 
+	router.post('/getAllHistory', VerifyMiddleware, async (req, res) => {
+		let response = await HistoryController.getAllHistory(['id'], req.body);
+		res.send(response);
+	})
+
 	router.post('/getSingleHistory', VerifyMiddleware, async (req, res) => {
 		let response = await HistoryController.getSingleHistory(['id', 'trx_id', 'trx_refid'], req.body);
 		res.send(response);
