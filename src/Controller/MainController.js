@@ -27,6 +27,18 @@ class MainController {
 
     constructor(){}
 
+    decipherToken = (token) => {
+        return new Promise(async resolve => {
+            jwt.verify(token, this.cipherID, async (err, decoded) => {
+                if(err) resolve({state: false, data: {}})
+
+                resolve(decoded);
+            });
+
+        })
+
+    }
+
     getLocation = (ipAddress = '192.1.1.1') => {
         return new Promise(async (resolve) => {
             let url = `http://api.ipstack.com/36.88.30.82?access_key=${GEOLOCATION}`
