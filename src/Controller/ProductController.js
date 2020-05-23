@@ -138,7 +138,7 @@ class ProductController extends MainController {
             try{
                 if(diff.length === 0){
                     let data = await database.produk.all();
-                    data = data.map(d => {
+                    data = data.map(async d => {
                         let statusbuy = await database.transaksi.allSelect({trx_id_profile: body.id, d.produk_id});
                         return {
                             produkid: d.produk_id,
