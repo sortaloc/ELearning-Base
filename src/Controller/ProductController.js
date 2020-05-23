@@ -152,7 +152,7 @@ class ProductController extends MainController {
                             keterangan: d.produk_keterangan,
                             created: d.produk_created_at,
                             updated: d.produk_updated_at,
-                            cover: d.produk_cover,
+                            cover: URLIMAGE+d.produk_cover,
                             link: d.produk_link,
                             idpembuat: d.produk_id_profile,
                             statusbuy: statusbuy.length
