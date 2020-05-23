@@ -33,6 +33,7 @@ class HistoryController extends MainController {
                 		transaksi
                 		WHERE
                 		trx_id_profile = '${body.id}'
+                        ORDER BY trx_created_at DESC
                 		`
                 		);
                 	if(data.rows.length > 0){
