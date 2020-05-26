@@ -385,7 +385,7 @@ class PaymentController extends MainController {
         });
     }
 
-    buyProduct = (fields, body) => {
+    buyCertificate = (fields, body) => {
         return new Promise(async (resolve) => {
             var response = this.structure;
             var newBody = Object.keys(body);
@@ -422,6 +422,111 @@ class PaymentController extends MainController {
                                     trx_id: trxID,
                                     trx_keterangan: 'Transaksi sedang dalam proses',
                                     trx_tipe: 'BUYCERTIFICATE',
+                                    trx_id_tipe: 'BUY',
+                                    trx_harga: harga,
+                                    trx_fee: 0,
+                                    trx_total_harga: harga,
+                                    trx_saldo_before: Number(akun.prl_saldo),
+                                    trx_saldo_after: 0,
+                                    trx_status: 'Q',
+                                    trx_id_profile: akun.prl_profile_id,
+                                    trx_code_voucher: '',
+                                    trx_invoice: trxINV,
+                                    trx_refid: refid,
+                                    trx_produk_id: produk.produk_id
+                                }
+
+                                let insertInbox = await database.inbox.insertOne(insertData);
+                                let insertTrx = await database.transaksi.insert(transaksi);
+
+                                if(insertInbox.state && insertInbox.state){
+                                    response.data = body;
+                                    response.message = `Transaksi Berhasil, silahkan tunggu notifikasi`;
+                                    response.code = 107;
+                                    response.state = true
+                                    resolve(response)
+                                }else{
+                                    response.data = body;
+                                    response.message = `Transaksi Gagal!, silahkan dicoba kembali`;
+                                    response.code = 106;
+                                    response.state = false
+                                    resolve(response)
+                                }
+
+                            }else{
+                                response.data = body;
+                                response.message = `Saldo tidak cukup`;
+                                response.code = 105;
+                                response.state = false
+                                resolve(response)
+                            }
+                        }else{
+                            response.data = body;
+                            response.message = `Product Not Valid`;
+                            response.code = 104;
+                            response.state = false
+                            resolve(response)
+                        }
+                    }else{
+                        response.data = body;
+                        response.message = `Account Not Valid`;
+                        response.code = 103;
+                        response.state = false
+                        resolve(response)
+                    }
+                }else{
+                    response.data = body;
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    resolve(response)
+                }
+            }catch(err){
+                console.log(err)
+                response.data = body;
+                response.message = `Something Error`;
+                response.code = 500;
+                response.state = false
+                resolve(response)
+            }
+        })
+    }
+
+    buyEbook = () => {
+        return new Promise(async (resolve) => {
+            var response = this.structure;
+            var newBody = Object.keys(body);
+            var diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    var akun = await database.profile.allSelect({prl_profile_id: body.id, prl_password: this.createPassword(body.password)});
+                    if(akun.length > 0){
+                        akun = akun[0];
+                        var produk = await database.produk.allSelect({produk_id: body.idproduk, produk_kodeProduk: body.kodeproduk});
+                        if(produk.length > 0){
+                            produk = produk[0];
+                            if(Number(akun.prl_saldo_nexus) - Number(produk.produk_harga) > 0){
+                                let refid = `BUYEBOOK${this.generateID()}`;
+                                let format_msg = `PAY_BUY.${produk.produk_kodeProduk}.${produk.produk_id}.${produk.produk_harga}.${akun.prl_profile_id}.${refid}`;
+                                const insertData = {
+                                    ibx_refid: refid,
+                                    ibx_id_profile: akun.prl_profile_id,
+                                    ibx_interface: 'H',
+                                    ibx_tipe: 'BUYEBOOK',
+                                    ibx_status: 'Q',
+                                    ibx_format_msg: format_msg,
+                                    ibx_keterangan: `Berhasil input ke inbox pada ${this.createDate(0)}`,
+                                    ibx_raw_data: JSON.stringify(body)
+                                }
+
+                                let harga = Number(produk.produk_harga) * 15000;
+
+                                let trxID = this.generateID();
+                                let trxINV = this.createInvoice('TOPUP');
+                                let transaksi = {
+                                    trx_id: trxID,
+                                    trx_keterangan: 'Transaksi sedang dalam proses',
+                                    trx_tipe: 'BUYEBOOK',
                                     trx_id_tipe: 'BUY',
                                     trx_harga: harga,
                                     trx_fee: 0,
