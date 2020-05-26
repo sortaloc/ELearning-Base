@@ -1,7 +1,12 @@
 const VerifyMiddleware = require('@Middleware/VerifyMiddleware');
 const ProductController = require('@Controllers/ProductController');
+const Busboy = require('connect-busboy');
 
 module.exports = (router) => {
+    router.use(Busboy({
+        highWaterMark: 50 * 1024 * 1024, // Set 50MiB buffer
+    })); // Insert the busboy middle-ware
+    
     // router.get('/', (req, res) => {
     //     res.send(true);
     // })
