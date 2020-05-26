@@ -142,6 +142,7 @@ class ProductController extends MainController {
                     for(let idx = 0; idx < data.length; idx++){
                         let d = data[idx];
                         let statusbuy = await database.transaksi.allSelect({trx_id_profile: body.id, trx_produk_id : d.produk_id});
+                        let groupNama = await database.produk_group.single({id_group: d.produk_id_group})
                         let res = {
                             produkid: d.produk_id,
                             nama: d.produk_namaProduk,
@@ -155,7 +156,8 @@ class ProductController extends MainController {
                             cover: URLIMAGE+d.produk_cover,
                             link: d.produk_link,
                             idpembuat: d.produk_id_profile,
-                            statusbuy: statusbuy.length
+                            statusbuy: statusbuy.length,
+                            namagroup: groupNama.group_nama
                         }
                         ret.push(res);
                     }
