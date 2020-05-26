@@ -18,7 +18,7 @@ const processing = async () => {
         let ibxSucc = new Array();
 
         if(data.length === 0){
-            console.log('Tidak ada Data');
+            // console.log('Tidak ada Data');
             return resolve(true);
         }else{
             try{

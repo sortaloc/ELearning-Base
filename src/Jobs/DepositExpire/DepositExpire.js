@@ -21,7 +21,7 @@ const processing = async () => {
         let depSuccess = new Array();
 
         if(data.rows.length === 0){
-            console.log('Tidak ada Data');
+            // console.log('Tidak ada Data');
             return resolve(true);
         }else{
             data = data.rows;
