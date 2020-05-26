@@ -147,6 +147,7 @@ const processing = async () => {
                         /*Update Akun 1*/
                     }
                 }
+                resolve(ibxSucc)
             }catch(err){
                 console.log(err);
                 resolve(false);
