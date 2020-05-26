@@ -132,7 +132,7 @@ class MainController {
     createDate = (add = 24, type= 'hours') => {
         if(['hours', 'days', 'months', 'years', 'minutes', 'secods'].includes(type)){
             let date = moment().tz("Asia/Jakarta").format("YYYY-MM-DDTHH:mm:ssZ")
-            date = moment(date).add(24, 'hours').format('YYYY-MM-DDTHH:mm:ssZ');
+            date = moment(date).add(24, type).format('YYYY-MM-DDTHH:mm:ssZ');
             return date;
         }else{
             return null;
