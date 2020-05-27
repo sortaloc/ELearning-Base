@@ -174,7 +174,7 @@ class PaymentController extends MainController {
         return new Promise(async resolve => {
             let response = this.structure;
             let data = await database.bank.connection.raw(
-                `SELECT "id", bank_kode, bank_nama, bank_rekening, bank_created_at, bank_updated_at, bank_image, bank_name, CONCAT('${URLIMAGE}', bank_image)as bank_link from bank`
+                `SELECT "id", bank_id, bank_kode, bank_nama, bank_rekening, bank_created_at, bank_updated_at, bank_image, bank_name, CONCAT('${URLIMAGE}', bank_image)as bank_link from bank`
                 );
             response.data = data.rows;
             response.code = 100;
