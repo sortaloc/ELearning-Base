@@ -186,12 +186,10 @@ class RegisterController extends MainController {
                     twiml.message('Nomor anda telah terdaftar pada aplikasi');
                     res.writeHead(200, {'Content-Type': 'text/xml'});
                     res.end(twiml.toString());
-                    // throw response;
                 }else{
                     const getKodeOTP = async () => {
                         const numberPhone = getNumber;
                         const kode = this.generateOTP();
-                        // console.log(kode, numberPhone, this.getToday())
                         const query = kodeOtpSelect(kode, numberPhone, this.getToday())
                         let OTPDatabase = await database.otp_list.connection.raw(query)
                         if(OTPDatabase.rows > 0){
@@ -217,9 +215,13 @@ class RegisterController extends MainController {
                     res.end(twiml.toString());
                 }
             }else{
-                console.log('Error');
-                res.writeHead(500, {'Content-Type': 'text/xml'});
+                const message = `Registrasi tidak valid, coba menggunakan REX PREXUX`
+                twiml.message(message);
+                res.writeHead(200, {'Content-Type': 'text/xml'});
                 res.end(twiml.toString());
+                // console.log('Error');
+                // res.writeHead(500, {'Content-Type': 'text/xml'});
+                // res.end(twiml.toString());
             }
         })
     }
