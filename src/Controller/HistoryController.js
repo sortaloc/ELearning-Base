@@ -30,7 +30,8 @@ class HistoryController extends MainController {
                 		trx_refid as refid,
                 		trx_status as state,
                         trx_created_at as created,
-                        trx_updated_at as updated
+                        trx_updated_at as updated,
+                        trx_judul as judul
                 		FROM
                 		transaksi
                 		WHERE
@@ -73,13 +74,17 @@ class HistoryController extends MainController {
             try{
                 if(diff.length === 0){
                 	let history = await database.transaksi.allSelect({trx_id_profile: body.id, trx_id: body.trx_id, trx_refid: body.trx_refid,});
+                        // console.log(history)
 
                 	if(history.length > 0){
                         history = history[0];
                         let produk = await database.produk.single({produk_id: history.trx_produk_id})
                         let tipeproduk = await database.produk_group.single({id_group: produk.produk_id_group})
 
-                        let trxData = JSON.parse(history.trx_data)
+                        // Check Status
+                        // Q
+                        // W
+                        // S
 
                         let resData = {
                             id_history: history.trx_id,
@@ -95,11 +100,37 @@ class HistoryController extends MainController {
                             kodeproduk: produk.produk_kodeProduk,
                             created: history.trx_created_at,
                             updated: history.trx_updated_at,
-                            imagecertificate: trxData.certificate,
-                            linkcertificate: `${URLDATA}api/v${VERSION.split('.')[0]}/Download/Certificate/${trxData.certificate}`,
+                            // imagecertificate: trxData.certificate,
+                            // linkcertificate: `${URLDATA}api/v${VERSION.split('.')[0]}/Download/Certificate/${trxData.certificate}`,
                             produkcover: produk.produk_cover,
-                            linkcover: URLIMAGE+produk.produk_cover
+                            linkcover: URLIMAGE+produk.produk_cover,
+                            judul: history.trx_judul
                         }
+
+                        if(history.trx_status === 'Q'){
+                        }else if(history.trx_status === 'W'){
+
+                        }else if(history.trx_status === 'S'){
+                            // dibagi lagi
+                            // Certificate
+                            // Ebook
+                            let trxData = JSON.parse(history.trx_data)
+                            if(history.trx_tipe.toLowerCase().includes('ebook')){
+
+                            }else if(history.trx_tipe.toLowerCase().includes('certificate')){
+                                resData = {
+                                    ...resData,
+                                    imagecertificate: trxData.certificate,
+                                    linkcertificate: `${URLDATA}api/v${VERSION.split('.')[0]}/Download/Certificate/${trxData.certificate}`,
+                                }
+                            }
+                        }
+
+                        
+
+                        console.log(resData)
+
+                        
 
 
                 		response.data = resData;
