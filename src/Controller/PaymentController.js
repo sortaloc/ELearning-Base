@@ -227,7 +227,8 @@ class PaymentController extends MainController {
                 deposit.dep_total as totalbayar, 
                 deposit.dep_updated_at, 
                 profile.prl_nama as namaakun,
-                bank.bank_nama as namarekening
+                bank.bank_nama as namarekening,
+                bank.bank_name as bank
                 from deposit
                 JOIN profile ON profile.prl_profile_id = deposit.dep_id_profile
                 JOIN bank ON bank."id" = deposit.dep_bank_kode
