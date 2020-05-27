@@ -299,7 +299,7 @@ class ProductController extends MainController {
                     produk.produk_updated_at as updated,
                     produk.produk_certificate as produk,
                     profile.prl_nama as namaadmin,
-                    profile.prl_username as adminuseranme,
+                    profile.prl_username as adminusername,
                     produk_group.group_nama as tipegroup,
                     CONCAT('${URLIMAGE}', produk.produk_certificate) as produk_link,
                     CONCAT('${URLIMAGE}', produk.produk_cover) as cover_link
