@@ -1,6 +1,6 @@
 const database = require('@Model/index');
 const MainController = require('@Controllers/MainController');
-const { STRUCTURE } = require('@Config/Config');
+const { STRUCTURE, URLIMAGE } = require('@Config/Config');
 
 const path = require('path')
 const basename = path.basename(__filename);
@@ -173,7 +173,9 @@ class PaymentController extends MainController {
     getListBank = () => {
         return new Promise(async resolve => {
             let response = this.structure;
-            let data = await database.bank.all();
+            let data = await database.bank.connection.raw(
+                `SELECT "id", bank_kode, bank_nama, bank_rekening, bank_created_at, bank_updated_at, bank_image, CONCAT('${URLIMAGE}', bank_image)as bank_link from bank`
+                );
             response.data = data;
             response.code = 100;
             response.state = true;
