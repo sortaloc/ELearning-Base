@@ -38,6 +38,13 @@ const processing = async () => {
 
                     let trxID = MainController.generateID();
                     let trxINV = MainController.createInvoice('TOPUP');
+
+                    let trxData = {
+                        certificate: nameCert,
+                        created: MainController.createDate(0),
+                        download: 0,
+                        access: 0
+                    }
                     let transaksi = {
                         trx_id: trxID,
                         trx_keterangan: 'Transaksi sedang dalam proses',
@@ -128,7 +135,7 @@ const processing = async () => {
                                 let notifData = {
                                   data: {
                                     id: akun.prl_profile_id,
-                                    title: 'Transfer Akun Gagal',
+                                    title: 'Berhasil Topup',
                                     message: keteranganTrx,
                                     nama_sender: 'Prexux',
                                     menu: 'trx',

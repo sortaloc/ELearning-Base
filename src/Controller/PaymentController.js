@@ -341,11 +341,11 @@ class PaymentController extends MainController {
 
                     if(updateDeposit.state){
                         if(Number(body.status) === 1){
-                            let format_msg = `PAY_TOPUP.DEPOSIT.${deposit.dep_nominal}.${deposit.dep_total}.${body.id}.${refid}.${adminProfile.prl_profile_id}`;
+                            let format_msg = `PAY_TOPUP.DEPOSIT.${deposit.dep_nominal}.${deposit.dep_total}.${body.id}.${deposit.dep_refid}.${adminProfile.prl_profile_id}`;
                             // // `PAY_TOPUP.DEPOSIT.-.[nominal].[id_tujuan].[refid].[admin_profile]`
                             const insertData = {
                                 ibx_refid: deposit.dep_refid,
-                                ibx_id_profile: akun.akun,
+                                ibx_id_profile: akun.prl_profile_id,
                                 ibx_interface: 'H',
                                 ibx_tipe: 'TOPUPDEPOSIT',
                                 ibx_status: 'Q',
@@ -384,6 +384,7 @@ class PaymentController extends MainController {
                     throw response;
                 }
             }catch(err){
+                console.log(err);
                 resolve(err);
             }
         });
