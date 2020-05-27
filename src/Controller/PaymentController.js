@@ -400,6 +400,7 @@ class PaymentController extends MainController {
                         var produk = await database.produk.allSelect({produk_id: body.idproduk, produk_kodeProduk: body.kodeproduk});
                         if(produk.length > 0){
                             produk = produk[0];
+                            let group = await database.produk_group.single({id_group: produk.produk_id_group})
                             // akun.prl_saldo_nexus = 1000;
                             if(Number(akun.prl_saldo_nexus) - Number(produk.produk_harga) > 0){
                                 let refid = `${type}${this.generateID()}`;
@@ -435,7 +436,8 @@ class PaymentController extends MainController {
                                     trx_code_voucher: '',
                                     trx_invoice: trxINV,
                                     trx_refid: refid,
-                                    trx_produk_id: produk.produk_id
+                                    trx_produk_id: produk.produk_id,
+                                    trx_judul: `Pembelian ${group.group_nama} '${produk.produk_namaProduk}' `
                                 }
 
                                 let insertInbox = await database.inbox.insertOne(insertData);
