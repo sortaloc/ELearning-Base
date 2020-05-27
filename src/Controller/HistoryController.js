@@ -100,8 +100,6 @@ class HistoryController extends MainController {
                             kodeproduk: produk.produk_kodeProduk,
                             created: history.trx_created_at,
                             updated: history.trx_updated_at,
-                            // imagecertificate: trxData.certificate,
-                            // linkcertificate: `${URLDATA}api/v${VERSION.split('.')[0]}/Download/Certificate/${trxData.certificate}`,
                             produkcover: produk.produk_cover,
                             linkcover: URLIMAGE+produk.produk_cover,
                             judul: history.trx_judul
@@ -118,24 +116,17 @@ class HistoryController extends MainController {
                             if(history.trx_tipe.toLowerCase().includes('ebook')){
                                 resData = {
                                     ...resData,
-                                    ebook: trxData.ebook,
-                                    linkcertificate: `${URLDATA}api/v${VERSION.split('.')[0]}/Download/Ebook/${trxData.ebook}`,
+                                    produk: trxData.ebook,
+                                    linkproduk: `${URLDATA}api/v${VERSION.split('.')[0]}/Download/Ebook/${trxData.ebook}`,
                                 }
                             }else if(history.trx_tipe.toLowerCase().includes('certificate')){
                                 resData = {
                                     ...resData,
-                                    imagecertificate: trxData.certificate,
-                                    linkcertificate: `${URLDATA}api/v${VERSION.split('.')[0]}/Download/Certificate/${trxData.certificate}`,
+                                    produk: trxData.certificate,
+                                    linkproduk: `${URLDATA}api/v${VERSION.split('.')[0]}/Download/Certificate/${trxData.certificate}`,
                                 }
                             }
                         }
-
-                        
-
-                        console.log(resData)
-
-                        
-
 
                 		response.data = resData;
                         response.message = "Success";
