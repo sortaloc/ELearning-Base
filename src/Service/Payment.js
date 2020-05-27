@@ -15,10 +15,11 @@ module.exports = (router) => {
     router.post('/sendTopup', VerifyMiddleware, async (req, res) => {
         let uploadImage = await PaymentController.uploadImage(req);
         if(uploadImage.state){
-            console.log(uploadImage)
+            // console.log(uploadImage)
             let data = uploadImage.data.fieldData;
-            data.image = uploadImage.data.image
-            let response = await PaymentController.uploadBuktiTransfer(['id', 'image', 'kode_unik'], data);
+            console.log(data);
+            // data.image = uploadImage.data.image
+            let response = await PaymentController.uploadBuktiTransfer(['id', 'file', 'kode_unik'], data);
             return res.send(response);
         }else{
             return res.send({
