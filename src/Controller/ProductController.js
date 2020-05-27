@@ -301,7 +301,7 @@ class ProductController extends MainController {
                     profile.prl_nama as namaadmin,
                     profile.prl_username as adminuseranme,
                     produk_group.group_nama as tipegroup,
-                    CONCAT('${URLIMAGE}', produk.produk_certificate) as produk_link
+                    CONCAT('${URLIMAGE}', produk.produk_certificate) as produk_link,
                     CONCAT('${URLIMAGE}', produk.produk_cover) as produk_link
                     from produk
                     JOIN profile on profile.prl_profile_id = produk.produk_id_profile
