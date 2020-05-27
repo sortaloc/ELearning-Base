@@ -116,7 +116,11 @@ class HistoryController extends MainController {
                             // Ebook
                             let trxData = JSON.parse(history.trx_data)
                             if(history.trx_tipe.toLowerCase().includes('ebook')){
-
+                                resData = {
+                                    ...resData,
+                                    ebook: trxData.ebook,
+                                    linkcertificate: `${URLDATA}api/v${VERSION.split('.')[0]}/Download/Ebook/${trxData.ebook}`,
+                                }
                             }else if(history.trx_tipe.toLowerCase().includes('certificate')){
                                 resData = {
                                     ...resData,
