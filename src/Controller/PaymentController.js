@@ -131,7 +131,8 @@ class PaymentController extends MainController {
                             },
                             update: {
                                 dep_status: 1,
-                                dep_refid: refid
+                                dep_refid: refid,
+                                dep_image: body.file
                             }
                         }
                         let updateDeposit = await database.deposit.updateOne(upd.where, upd.update);
