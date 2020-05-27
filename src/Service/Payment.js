@@ -42,14 +42,15 @@ module.exports = (router) => {
     router.post('/buyCertificate', VerifyMiddleware, async (req, res) => {
         req.body.token = req.headers.authorization.split(' ');
         req.body.token = req.body.token[req.body.token.length - 1];
-        let response = await PaymentController.buyCertificate(['idproduk', 'id', 'password'], req.body);
+        let response = await PaymentController.buyProduct(['idproduk', 'id', 'password'], req.body, 'BUYCERTIFICATE');
         return res.send(response);
     })
 
     router.post('/buyEbook', VerifyMiddleware, async (req, res) => {
         req.body.token = req.headers.authorization.split(' ');
         req.body.token = req.body.token[req.body.token.length - 1];
-        let response = await PaymentController.buyEbook(['idproduk', 'id', 'password'], req.body);
+        // let response = await PaymentController.buyEbook(['idproduk', 'id', 'password'], req.body);
+        let response = await PaymentController.buyProduct(['idproduk', 'id', 'password'], req.body, 'BUYEBOOK');
         return res.send(response);
     })
 
