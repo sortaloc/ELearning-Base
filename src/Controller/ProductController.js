@@ -297,7 +297,7 @@ class ProductController extends MainController {
                     produk.produk_link as linkproduk,
                     produk."produk_namaProduk" as namaproduk,
                     produk.produk_updated_at as updated,
-                    produk.produk_certificate as certificate,
+                    produk.produk_certificate as produk,
                     profile.prl_nama as namaadmin,
                     profile.prl_username as adminuseranme,
                     produk_group.group_nama as tipegroup
