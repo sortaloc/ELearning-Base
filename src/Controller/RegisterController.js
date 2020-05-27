@@ -165,7 +165,6 @@ class RegisterController extends MainController {
             let response = this.structure;
 
             const twiml = new MessagingResponse();
-            console.log(getText);
             getText = getText.trim().toLowerCase();
             console.log(getText);
             if(getText.indexOf('reg') > -1 && getText.indexOf('xux') > -1){ //Jika ada
