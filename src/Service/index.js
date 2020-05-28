@@ -12,21 +12,14 @@ const { VERSION } = require('@Config/Config');
 
 let ver = VERSION.split('.')[0];
 
-// router.use(bodyParser.urlencoded({
-// 	extended: false,
-// 	parameterLimit: 4096,
-// 	limit: '100mb'
-// }));
-
-// router.use(bodyParser.urlencoded({extended: false}))
-
 fs.readdirSync(__dirname)
 .filter((file) => {
-    return (file.indexOf('.') !== 0) && (file !== basename) && (file === file.split('.')[0]+'.js');
+    return (file.indexOf('.') !== 0) && (file !== basename) && (path.extname(file) === '.js');
 }).forEach((file) => {
     let RouteApi = `/v${ver}/${file.substring(0, file.length - 3)}`
     console.log(RouteApi)
-    router.use(RouteApi, require(`@Service/${file}`)(router));
+    let RouterRoute = require(`@Service/${file}`)(router)
+    router.use(RouteApi, RouterRoute);
 })
 
 module.exports = router;

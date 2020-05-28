@@ -17,6 +17,81 @@ class RegisterController extends MainController {
         this.structure = STRUCTURE;
     }
 
+    registerUserDashboard = async (fields, body) => {
+        return new Promise(async (resolve) => {
+            let response = this.structure;
+            let newBody = Object.keys(body);
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+
+            let role = newBody.indexOf('tipe') === -1 ? 'user' : body.tipe;
+            if(Number(role) === 1){
+                role = 'user';
+            }
+
+            // prl_email : body.email,
+            // prl_tanggal_lahir: body.tanggallahir,
+            // prl_tempat_lahir: body.tempatlahir,
+            // prl_alamat: body.alamat,
+            // prl_gender: body.gender,
+            // prl_photo: body.photo
+
+            if(diff.length === 0){
+                const profileData = {
+                    prl_nik: body.nik,
+                    prl_nama: body.nama,
+                    prl_nohp: body.nohp,
+                    prl_username: body.username,
+                    prl_password: this.createPassword(body.password),
+                    prl_isactive: 1,
+                    prl_profile_id: this.generateID(),
+                    prl_role: role,
+                    prl_email : body.email,
+                    prl_tanggal_lahir: body.tanggallahir,
+                    prl_tempat_lahir: body.tempatlahir,
+                    prl_alamat: body.alamat,
+                    prl_gender: body.gender,
+                    prl_photo: body.photo
+                }
+
+                let validate = await database.profile.connection.raw(profileSelect(profileData));
+
+                if(validate.rows.length > 0){
+                    response.data = body
+                    response.message = 'User Exists'
+                    response.state = false;
+                    response.code = 104;
+                    return resolve(response)
+                }else{
+                    let result = await database.profile.insertOne(profileData);
+                    // await database.otp_list.updateOne({otp_nohp: body.nohp, otp_kode: body.otp}, {otp_status: 1})
+                    if(result.state){
+                        response.data = {
+                            username: profileData.prl_username,
+                            nama: profileData.prl_nama
+                        }
+                        // Update Kode OTP Menjadi 1
+                        response.message = `Success to Create user ${profileData.prl_nama}`
+                        response.state = true;
+                        response.code = 100;
+                        resolve(response)
+                    }else{
+                        response.data = {}
+                        response.message = 'Failed to Create Profile'
+                        response.state = false;
+                        response.code = 103;
+                        resolve(response)
+                    }
+                }
+            }else{
+                response.data = {};
+                response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                response.code = 102;
+                response.state = false
+                resolve(response);
+            }
+        })
+    }
+
     registerUser = async (fields, body) => {
         return new Promise(async (resolve) => {
             let response = this.structure;
@@ -147,7 +222,7 @@ class RegisterController extends MainController {
                     }
 
                 }else{
-                    response.code = 104;
+                    response.code = 105;
                     response.state = false;
                     response.data = {};
                     response.message = `Data not Valid`;

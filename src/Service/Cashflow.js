@@ -7,5 +7,10 @@ module.exports = (router) => {
         let response = await CashflowController.getAllCashflow(['id'], req.body);
         res.send(response);
 	})
+
+	router.post('/getSingleCashflow', VerifyMiddleware, async (req, res) => {
+		let response = await CashflowController.getSingleCashflow(['id'], req.body);
+		res.send(response);
+	})
 	return router;
 };
