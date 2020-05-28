@@ -2,7 +2,7 @@
 const RegisterController = require('@Controllers/RegisterController');
 
 module.exports = (router) => {
-    router.post('/', async (req, res) => {
+    router.post('/Register', async (req, res) => {
         let validasiRegister = await RegisterController.registerUser(['nohp', 'nama', 'nik', 'username', 'password', 'tipe', 'otp'], req.body);
         res.send(validasiRegister);
     })

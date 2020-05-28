@@ -114,12 +114,15 @@ const processing = async () => {
                                 ibxSucc.push(inbox.ibx_refid);
                             }else{
                                 /*Cashflow State*/
+                                /*kalau cashflow gagal, balikin saldo akun 1 dan akun 2*/
                             }
                         }else{
                             /*Update Akun 2*/
+                            /*kalau gagal pengurangan akun 2 error, balikin saldo yang pertama*/
                         }
                     }else{
                         /*Update Akun 1*/
+                        /*kalau gagal pengurangan akun, biarin, langsung throw error sadja*/
                     }
                 }
                 console.log(ibxSucc)
