@@ -18,32 +18,13 @@ class LibraryController extends MainController {
             let diff = fields.filter((x) => newBody.indexOf(x) === -1)
             try{
                 if(diff.length === 0){
-                	let library = await database.transaksi.connection.raw(
-                		`
-                		SELECT * FROM transaksi
-                		WHERE trx_id_profile = '${body.id}' AND
-                		trx_data IS NOT NULL
-                		`
-                		)
+                	let library = await database.transaksi.connection.raw(`SELECT * FROM transaksi WHERE trx_id_profile = '${body.id}' AND trx_data IS NOT NULL`)
                 	if(library.rows.length > 0){
                 		library = library.rows;
-
                 		let data = [];
-
                 		for(let idx = 0; idx < library.length; idx++){
-
-                			// cover image (link)
-                			// cover
-                			// image buku (kalau ada)
-                			// bubkunya
-                			// Tanggal pembelian
-                			// count download
-                			// Nama Produk
-
                 			let produk = await database.produk.single({produk_id: library[idx].trx_produk_id});
-
                 			let trxData = JSON.parse(library[idx].trx_data);
-
                 			let lib = {
                 				tipeproduk: library[idx].trx_tipe.substr(3).toLowerCase(),
             					nama: produk.produk_namaProduk,
