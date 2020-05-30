@@ -443,8 +443,8 @@ class PaymentController extends MainController {
                                     trx_judul: `Pembelian ${group.group_nama}`
                                 }
 
-                                let insertInbox = await database.inbox.insertOne(insertData);
                                 let insertTrx = await database.transaksi.insert(transaksi);
+                                let insertInbox = await database.inbox.insertOne(insertData);
 
                                 if(insertInbox.state && insertInbox.state){
                                     response.data = body;
