@@ -405,7 +405,7 @@ class PaymentController extends MainController {
                             produk = produk[0];
                             let group = await database.produk_group.single({id_group: produk.produk_id_group})
                             // akun.prl_saldo_nexus = 1000;
-                            if(Number(akun.prl_saldo_nexus) - Number(produk.produk_harga) > 0){
+                            if(Number(akun.prl_saldo_nexus) - Number(produk.produk_harga) >= 0){
                                 let refid = `${type}${this.generateID()}`;
                                 let format_msg = `PAY_BUY.${produk.produk_kodeProduk}.${produk.produk_id}.${produk.produk_harga}.${akun.prl_profile_id}.${refid}`;
                                 // `PAY_TOPUP.DEPOSIT.-.[nominal].[id_tujuan].[refid]`
@@ -497,6 +497,10 @@ class PaymentController extends MainController {
                 resolve(response)
             }
         })
+    }
+
+    listRequestTopup = (fields, body) => {
+
     }
 
 

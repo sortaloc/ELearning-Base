@@ -12,9 +12,10 @@ module.exports = (router) => {
         return res.send(response);
     })
 
-    // router.post('/listRequestTopup', VerifyMiddleware, async (req, res) => {
-    //     let response = await PaymentController.list
-    // })
+    router.post('/listRequestTopup', VerifyMiddleware, async (req, res) => {
+        let response = await PaymentController.listRequestTopup(['id'], body);
+        return res.send(true);
+    })
 
     router.post('/sendTopup', VerifyMiddleware, async (req, res) => {
         let uploadImage = await PaymentController.uploadImage(req);
