@@ -42,7 +42,7 @@ class LibraryController extends MainController {
                 					linkproduk: `${URLDATA}api/v${VERSION.split('.')[0]}/Download/Certificate/${trxData.ebook}`
                 				}
                 				data.push(lib);
-                			}else if(library[idx].trx_tipe === 'BUYECERTIFICATE'){
+                			}else if(library[idx].trx_tipe === 'BUYCERTIFICATE'){
                 				lib = {
                 					...lib,
                 					produk: trxData.certificate,

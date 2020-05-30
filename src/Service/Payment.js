@@ -12,13 +12,14 @@ module.exports = (router) => {
         return res.send(response);
     })
 
+    // router.post('/listRequestTopup', VerifyMiddleware, async (req, res) => {
+    //     let response = await PaymentController.list
+    // })
+
     router.post('/sendTopup', VerifyMiddleware, async (req, res) => {
         let uploadImage = await PaymentController.uploadImage(req);
         if(uploadImage.state){
-            // console.log(uploadImage)
             let data = uploadImage.data.fieldData;
-            console.log(data);
-            // data.image = uploadImage.data.image
             let response = await PaymentController.uploadBuktiTransfer(['id', 'file', 'kode_unik'], data);
             return res.send(response);
         }else{
