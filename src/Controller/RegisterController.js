@@ -37,7 +37,7 @@ class RegisterController extends MainController {
 
             if(diff.length === 0){
                 const profileData = {
-                    prl_nik: body.nik,
+                    // prl_nik: body.nik,
                     prl_nama: body.nama,
                     prl_nohp: body.nohp,
                     prl_username: body.username,
