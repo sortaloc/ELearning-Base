@@ -36,21 +36,14 @@ class RegisterController extends MainController {
             // prl_photo: body.photo
 
             if(diff.length === 0){
-                const profileData = {
+                let profileData = {
                     // prl_nik: body.nik,
-                    prl_nama: body.nama,
                     prl_nohp: body.nohp,
                     prl_username: body.username,
                     prl_password: this.createPassword(body.password),
-                    prl_isactive: 1,
                     prl_profile_id: this.generateID(),
-                    prl_role: role,
                     prl_email : body.email,
-                    prl_tanggal_lahir: body.tanggallahir,
-                    prl_tempat_lahir: body.tempatlahir,
-                    prl_alamat: body.alamat,
-                    prl_gender: body.gender,
-                    prl_photo: body.photo
+                    prl_isactive: 1,
                 }
 
                 let validate = await database.profile.connection.raw(profileSelect(profileData));
@@ -62,6 +55,16 @@ class RegisterController extends MainController {
                     response.code = 104;
                     return resolve(response)
                 }else{
+                    profileData = {
+                        ...profileData,
+                        prl_nama: body.nama,
+                        prl_role: role,
+                        prl_tanggal_lahir: body.tanggallahir,
+                        prl_tempat_lahir: body.tempatlahir,
+                        prl_alamat: body.alamat,
+                        prl_gender: body.gender,
+                        prl_photo: body.photo
+                    }
                     let result = await database.profile.insertOne(profileData);
                     // await database.otp_list.updateOne({otp_nohp: body.nohp, otp_kode: body.otp}, {otp_status: 1})
                     if(result.state){
