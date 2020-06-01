@@ -70,10 +70,16 @@ class ProfileController extends MainController{
             try{
                 if(diff.length === 0){
                     // Check id and Password
-                    let pwd = this.createPassword(body.password);
+                    let id = this.decipherToken(body.token);
+                    if(id.id !== body.id){
+                        response.data = {};
+                        response.code = 106;
+                        response.state = false;
+                        response.message = 'ID Not Valid';
+                    }
                     let where = {
-                        prl_username: body.username,
-                        prl_password: pwd
+                        prl_profile_id: body.id,
+                        // prl_password: pwd
                     }
                     let profile = await database.profile.allSelect(where);
                     console.log
@@ -86,6 +92,7 @@ class ProfileController extends MainController{
                         }
                         delete update.id;
                         delete update.newPassword;
+                        delete update.token;
                         let moveToDbObj = Object.entries(update);
                         let objUpdate = {};
                         for(let idx = 0; idx < moveToDbObj.length; idx++){

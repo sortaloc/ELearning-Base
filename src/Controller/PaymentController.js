@@ -509,7 +509,6 @@ class PaymentController extends MainController {
                     let data = await database.deposit.allSelect({dep_id_profile: body.id})
                     let akun = await database.profile.single({prl_profile_id: body.id})
                     data = data.map( async (d) => {
-                        let 
                         return {
                             namaakun: akun.prl_nama,
                             deposit: d.dep_total,
@@ -517,7 +516,7 @@ class PaymentController extends MainController {
                             refid: d.dep_refid,
                         }
                     })
-                    response.data = 
+                    // response.data = 
                 }else{
                     response.data = body;
                     response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
