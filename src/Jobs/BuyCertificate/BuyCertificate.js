@@ -34,7 +34,7 @@ const processing = async () => {
 
                     try{
                         let newTrx = new Map(Object.entries(transaksi));
-                        if(!newTrx.has('trx_id') && !newTrx.has('trx_keterangan') && !newTrx.has('trx_refid')){
+                        if(!newTrx.has('trx_id') || !newTrx.has('trx_keterangan') || !newTrx.has('trx_refid')){
                             throw err;
                         }
                     }catch(err){

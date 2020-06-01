@@ -22,7 +22,7 @@ class HistoryController extends MainController {
                 		`SELECT
                 		trx_id as id_history, 
                 		trx_keterangan as keterangan,
-                		FLOOR(trx_harga / 15000) as hargaReal,
+                		FLOOR(trx_harga) as hargaReal,
                         trx_harga as hargaNexus,
                 		trx_tipe as tipetransaksi,
                 		trx_id_tipe as tipe,
@@ -90,7 +90,7 @@ class HistoryController extends MainController {
                             id_history: history.trx_id,
                             keterangan: history.trx_keterangan,
                             hargaReal: Number(history.trx_harga),
-                            hargaNexus: Math.floor(Number(history.trx_harga) / 15000),
+                            hargaNexus: Math.floor(Number(history.trx_harga) /*/ 15000*/),
                             status: history.trx_status,
                             tipetransaksi: history.trx_tipe,
                             profileid: history.trx_id_profile,

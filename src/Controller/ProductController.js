@@ -312,9 +312,17 @@ class ProductController extends MainController {
                     produk."produk_kodeProduk" = '${body.kodeproduk}'
                     `)
                     if(data.rows.length > 0){
-                        data = data.rows[0];
-                        data.kategoriList = kategoriData;
-                        response.data = data;
+                        let retData = data.rows;
+                        let statusbuy = await database.transaksi.allSelect({trx_id_profile: body.id, trx_produk_id : body.produkid});
+                        // console.log(statusbuy.length)
+                        // retData.statusbuy = statusbuy.length;
+                        // console.log(retData)
+                        // data = retData;
+                        // data.kategoriList = kategoriData;
+                        response.data = {
+                            ...retData,
+                            statusbuy: statusbuy.length
+                        };
                         response.code = 100;
                         response.state = true;
                         response.message = "Success get Detail Produk";
