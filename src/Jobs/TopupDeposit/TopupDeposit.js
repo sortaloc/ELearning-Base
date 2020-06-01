@@ -39,12 +39,12 @@ const processing = async () => {
                     let trxID = MainController.generateID();
                     let trxINV = MainController.createInvoice('TOPUP');
 
-                    let trxData = {
-                        certificate: nameCert,
-                        created: MainController.createDate(0),
-                        download: 0,
-                        access: 0
-                    }
+                    // let trxData = {
+                    //     certificate: nameCert,
+                    //     created: MainController.createDate(0),
+                    //     download: 0,
+                    //     access: 0
+                    // }
                     let transaksi = {
                         trx_id: trxID,
                         trx_keterangan: 'Transaksi sedang dalam proses',
