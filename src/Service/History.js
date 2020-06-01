@@ -17,5 +17,10 @@ module.exports = (router) => {
 		let response = await HistoryController.getSingleHistory(['id', 'trx_id', 'trx_refid'], req.body);
 		res.send(response);
 	})
+
+	router.post('/getTopup', VerifyMiddleware, async (req, res) => {
+		let response = await HistoryController.topupList(['id'], req.body);
+		res.send(true)
+	})
 	return router;
 };

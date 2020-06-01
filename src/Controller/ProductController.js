@@ -312,7 +312,7 @@ class ProductController extends MainController {
                     produk."produk_kodeProduk" = '${body.kodeproduk}'
                     `)
                     if(data.rows.length > 0){
-                        let retData = data.rows;
+                        let retData = data.rows[0];
                         let statusbuy = await database.transaksi.allSelect({trx_id_profile: body.id, trx_produk_id : body.produkid});
                         // console.log(statusbuy.length)
                         // retData.statusbuy = statusbuy.length;
