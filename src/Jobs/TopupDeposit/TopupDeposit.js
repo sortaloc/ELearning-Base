@@ -38,13 +38,7 @@ const processing = async () => {
 
                     let trxID = MainController.generateID();
                     let trxINV = MainController.createInvoice('TOPUP');
-
-                    // let trxData = {
-                    //     certificate: nameCert,
-                    //     created: MainController.createDate(0),
-                    //     download: 0,
-                    //     access: 0
-                    // }
+                    
                     let transaksi = {
                         trx_id: trxID,
                         trx_keterangan: 'Transaksi sedang dalam proses',
@@ -53,7 +47,7 @@ const processing = async () => {
                         trx_harga: deposit.dep_nominal,
                         trx_fee: deposit.dep_kode_unik,
                         trx_total_harga: deposit.dep_total,
-                        trx_saldo_before: akun.prl_saldo,
+                        trx_saldo_before: Number(akun.prl_saldo),
                         trx_saldo_after: Number(akun.prl_saldo) + Number(deposit.dep_nominal),
                         trx_status: '1',
                         trx_id_profile: akun.prl_profile_id,
