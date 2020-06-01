@@ -32,6 +32,16 @@ const processing = async () => {
 
                     let transaksi = await database.transaksi.single({trx_refid: inbox.ibx_refid})
 
+                    try{
+                        let newTrx = new Map(Object.entries(transaksi));
+                        if(!newTrx.has('trx_id') && !newTrx.has('trx_keterangan') && !newTrx.has('trx_refid')){
+                            throw err;
+                        }
+                    }catch(err){
+                        console.log(err);
+                        // Error
+                    }
+
                     let realHarga = Number(produk.produk_harga) /** 15000*/
                     let nexus = Number(produk.produk_harga)
 
