@@ -420,7 +420,7 @@ class PaymentController extends MainController {
                                     ibx_raw_data: JSON.stringify(body)
                                 }
 
-                                let harga = Number(produk.produk_harga) * 15000;
+                                let harga = Number(produk.produk_harga) /** 15000*/;
 
                                 let trxID = this.generateID();
                                 let trxINV = this.createInvoice('TOPUP');
@@ -500,7 +500,40 @@ class PaymentController extends MainController {
     }
 
     listRequestTopup = (fields, body) => {
-
+        var response = this.structure;
+        return new Promise(async resolve => {
+            var newBody = Object.keys(body);
+            var diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    let data = await database.deposit.allSelect({dep_id_profile: body.id})
+                    let akun = await database.profile.single({prl_profile_id: body.id})
+                    data = data.map( async (d) => {
+                        let 
+                        return {
+                            namaakun: akun.prl_nama,
+                            deposit: d.dep_total,
+                            status: d.dep_status,
+                            refid: d.dep_refid,
+                        }
+                    })
+                    response.data = 
+                }else{
+                    response.data = body;
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    resolve(response)
+                }
+            }catch(err){
+                console.log(err)
+                response.data = body;
+                response.message = `Something Error`;
+                response.code = 500;
+                response.state = false
+                resolve(response)
+            }
+        });
     }
 
 

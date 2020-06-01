@@ -80,7 +80,7 @@ const processing = async () => {
                     let updateAkun1 = await database.account.connection.raw(query);
 
                     if(updateAkun1.rowCount > 0){
-                        let nexus = Math.floor(deposit.dep_nominal / 15000);
+                        let nexus = Math.floor(deposit.dep_nominal /*/ 15000*/);
 
                         let jurnal2 = {
                             cf_keterangan: `Pengurangan ke Akun ${akun.prl_profile_id} dengan nilai ${deposit.dep_nominal} dengan nilai konversi nexus menjadi '${nexus} Nexus'`,
