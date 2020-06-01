@@ -4,12 +4,12 @@ const VerifyMiddleware = require('@Middleware/VerifyMiddleware');
 
 module.exports = (router) => {
     router.post('/Register', async (req, res) => {
-        let validasiRegister = await RegisterController.registerUser(['nohp', 'nama', 'username', 'password', 'tipe', 'otp'], req.body);
+        let validasiRegister = await RegisterController.registerUser(['nohp', 'email', 'nama', 'username', 'password', 'tipe', 'otp'], req.body);
         res.send(validasiRegister);
     })
 
     router.post('/Register/DashboardAdmin', VerifyMiddleware, async (req, res) => {
-        let validasiRegister = await RegisterController.registerUserDashboard(['nohp', 'nama', 'username', 'password', 'tipe'], req.body);
+        let validasiRegister = await RegisterController.registerUserDashboard(['nohp', 'email', 'nama', 'username', 'password', 'tipe'], req.body);
         res.send(validasiRegister);
     })
 
