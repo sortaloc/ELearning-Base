@@ -189,7 +189,16 @@ class PaymentController extends MainController {
         return new Promise(resolve => {
             let response = this.structure;
             let data = [50000, 100000, 150000, 200000, 250000,300000, 350000, 400000, 450000, 500000];
-            response.data = data;
+            let nexus = 15000;
+            let newData = [];
+            // let nilaiNexus = [];
+            for(let idx = 0; idx < data.length; idx++){
+                newData[idx] = {
+                    nexus: Math.floor(data[idx] / nexus),
+                    rupiah: data[idx]
+                }
+            }
+            response.data = newData;
             response.code = 100;
             response.state = true;
             response.message = "Success get List nominal";
