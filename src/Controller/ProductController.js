@@ -158,8 +158,6 @@ class ProductController extends MainController {
                                 created: transaksi.trx_created_at
                             }
                         }
-                        // let transaksi = statusbuy[0];
-                        // let transaksi = await database.transaksi.allSelect({})
                         let res = {
                             produkid: d.produk_id,
                             nama: d.produk_namaProduk,
