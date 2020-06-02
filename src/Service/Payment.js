@@ -58,7 +58,7 @@ module.exports = (router) => {
         return res.send(response);
     })
 
-    router.post('/buProfisiensi', VerifyMiddleware, async (req, res) => {
+    router.post('/buyProfisiensi', VerifyMiddleware, async (req, res) => {
       req.body.token = req.headers.authorization.split(' ');
         req.body.token = req.body.token[req.body.token.length - 1];
         // let response = await PaymentController.buyEbook(['idproduk', 'id', 'password'], req.body);
