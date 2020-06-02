@@ -32,6 +32,14 @@ const processing = async () => {
 
                     let transaksi = await database.transaksi.single({trx_refid: inbox.ibx_refid})
 
+                    if(transaksi.length === 0){
+                        // update inbox
+                        await database.inbox.updateOne({ibx_refid: inbox.ibx_refid}, {ibx_status: 'G'});
+                        continue;
+                    }
+
+                    transaksi = transaksi[0];
+
                     try{
                         let newTrx = new Map(Object.entries(transaksi));
                         if(!newTrx.has('trx_id') || !newTrx.has('trx_keterangan') || !newTrx.has('trx_refid')){
