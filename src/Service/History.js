@@ -20,7 +20,12 @@ module.exports = (router) => {
 
 	router.post('/getTopup', VerifyMiddleware, async (req, res) => {
 		let response = await HistoryController.topupList(['id'], req.body);
-		res.send(true)
+		res.send(response)
+	})
+
+	router.post('/singleTopup', VerifyMiddleware, async (req, res) => {
+		let response = await HistoryController.singleTopup(['id', 'iddeposit'], req.body);
+		res.send(response)
 	})
 	return router;
 };

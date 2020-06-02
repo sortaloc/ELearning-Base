@@ -155,6 +155,136 @@ class HistoryController extends MainController {
             }
         });
     }
+
+    statusDeposit = (status) => {
+        status = Number(status);
+        switch(status){
+            case 0: {
+                return 'Belum mengirimkan Gambar Bukti Transfer';
+            } break;
+            case 1: {
+                return 'Review oleh Admin';
+            } break;
+            case 2: {
+                return 'Diproses oleh Sistem'
+            } break;
+            case 3: {
+                return 'Topup Expired';
+            } break;
+            case 4: {
+                return 'Berhasil Topup';
+            } break;
+            case 5: {
+                return 'Topup Failed';
+            } break;
+            case 6: {
+                return 'Topup Ditolak oleh Admin';
+            } break;
+        }
+    }
+
+    topupList = (fields, body) => {
+        let response = this.structure;
+        return new Promise(async (resolve) => {
+            let newBody = Object.keys(body);
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    let deposit = await database.deposit.allSelect({dep_id_profile: body.id});
+                    let retData = [];
+                    for(let idx = 0; idx < deposit.length; idx++){
+                        let d = deposit[idx];
+                        let data = {
+                            iddeposit: d.dep_id,
+                            judul: `Topup sebesar ${this.convertToRupiah(d.dep_total)}`,
+                            status: d.dep_status,
+                            keterangan: this.statusDeposit(d.dep_status),
+                            jumlah: d.dep_total,
+                            kode_unik: d.dep_kode_unik,
+                            nominal: d.dep_nominal,
+                            jumlahnominal:this.convertToRupiah(d.dep_nominal), 
+                            jumlahrupiah: this.convertToRupiah(d.dep_total)
+                        }
+                        retData.push(data);
+                    }
+
+                    response.data = retData;
+                    response.code = 100;
+                    response.state = true;
+                    response.message = "Get List Deposit"
+                    resolve(response);
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    resolve(response)
+                }
+            }catch(err){
+                console.log(err);
+                err.state = false
+                err.code = 505;
+                resolve(err);
+            }
+        });
+    }
+
+    singleTopup = (fields, body) => {
+         let response = this.structure;
+        return new Promise(async (resolve) => {
+            let newBody = Object.keys(body);
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    let deposit = await database.deposit.allSelect({dep_id_profile: body.id, dep_id: body.iddeposit});
+                    if(deposit.length > 0){
+                        deposit = deposit[0];
+                        let bank = await database.bank.single({id: deposit.dep_bank_kode});
+                        let d = deposit;
+                        let retData = {
+                            iddeposit: d.dep_id,
+                            judul: `Topup sebesar ${this.convertToRupiah(d.dep_total)}`,
+                            status: d.dep_status,
+                            keterangan: this.statusDeposit(d.dep_status),
+                            jumlah: d.dep_total,
+                            kode_unik: d.dep_kode_unik,
+                            nominal: d.dep_nominal,
+                            jumlahnominal:this.convertToRupiah(d.dep_nominal), 
+                            jumlahrupiah: this.convertToRupiah(d.dep_total),
+                            bankrekening: bank.bank_rekening,
+                            banknama: bank.bank_nama,
+                            bankkode: bank.bank_kode,
+                            bankimage: bank.bank_image,
+                            bankimagelink: URLIMAGE + bank.bank_image,
+                            bankid: bank.id
+                        }
+                        response.data = retData;
+                        response.code = 100;
+                        response.state = true;
+                        response.message = "Get List Deposit"
+                        resolve(response);
+                    }else{
+                        response.data = {};
+                        response.message = `Deposit tidak ditemukan`;
+                        response.code = 103;
+                        response.state = false
+                        resolve(response)    
+                    }
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    resolve(response)
+                }
+            }catch(err){
+                console.log(err);
+                err.state = false
+                err.code = 505;
+                resolve(err);
+            }
+        });
+    }
 }
 
 module.exports = new HistoryController
