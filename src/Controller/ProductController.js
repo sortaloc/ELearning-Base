@@ -321,11 +321,11 @@ class ProductController extends MainController {
                         cprofile.prl_nama as namapemateri,
                         cprofile.prl_username as usernamepemateri,
                         cprofile.prl_photo as photopemateri,
-                        CONCAT('${URLIMAGE}', cprofile.prl_photo) asl prohopematerilink,
+                        CONCAT('${URLIMAGE}', cprofile.prl_photo) as photopematerilink,
                         c.group_nama as tipegroup
                         from produk a
                         JOIN (SELECT prl_profile_id, prl_nama, prl_username FROM profile) bprofile on bprofile.prl_profile_id = a.produk_id_profile
-                        JOIN (SELECT prl_profile_id, prl_nama, prl_username FROM profile, prl_photo) cprofile on cprofile.prl_profile_id = a.produk_id_profile
+                        JOIN (SELECT prl_profile_id, prl_nama, prl_username, prl_photo FROM profile) cprofile on cprofile.prl_profile_id = a.produk_id_profile
                         JOIN (SELECT group_nama, id_group FROM produk_group) c on a.produk_id_group = c.id_group
                         WHERE
                         a.produk_id = '${body.produkid}'
@@ -367,7 +367,7 @@ class ProductController extends MainController {
                 response.state = false;
                 response.data = {};
                 response.message = "Produk tidak Ditemukan";
-                response.code = 102;
+                response.code = 105;
                 return resolve(response);
             }
         })
