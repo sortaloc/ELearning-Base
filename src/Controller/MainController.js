@@ -331,5 +331,32 @@ class MainController {
       return data;
     }
 
+    statusDeposit = (status) => {
+        status = Number(status);
+        switch(status){
+            case 0: {
+                return 'Belum mengirimkan Gambar Bukti Transfer';
+            } break;
+            case 1: {
+                return 'Review oleh Admin';
+            } break;
+            case 2: {
+                return 'Diproses oleh Sistem'
+            } break;
+            case 3: {
+                return 'Topup Expired';
+            } break;
+            case 4: {
+                return 'Berhasil Topup';
+            } break;
+            case 5: {
+                return 'Topup Failed';
+            } break;
+            case 6: {
+                return 'Topup Ditolak oleh Admin';
+            } break;
+        }
+    }
+
 }
 module.exports = MainController;

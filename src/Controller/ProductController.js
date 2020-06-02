@@ -141,8 +141,25 @@ class ProductController extends MainController {
                     let ret = [];
                     for(let idx = 0; idx < data.length; idx++){
                         let d = data[idx];
+                        let dataTrx = {};
                         let statusbuy = await database.transaksi.allSelect({trx_id_profile: body.id, trx_produk_id : d.produk_id});
                         let groupNama = await database.produk_group.single({id_group: d.produk_id_group})
+
+                        if(statusbuy.length > 0){
+                            let transaksi = statusbuy[0];
+                            dataTrx = {
+                                status: transaksi.trx_status,
+                                trxid: transaksi.trx_id,
+                                keterangan: transaksi.trx_keterangan,
+                                trxtipe: transaksi.trx_tipe,
+                                harga: transaksi.trx_harga,
+                                inboice: transaksi.trx_invoice,
+                                refid: transaksi.trx_refid,
+                                created: transaksi.trx_created_at
+                            }
+                        }
+                        // let transaksi = statusbuy[0];
+                        // let transaksi = await database.transaksi.allSelect({})
                         let res = {
                             produkid: d.produk_id,
                             nama: d.produk_namaProduk,
@@ -157,7 +174,8 @@ class ProductController extends MainController {
                             link: d.produk_link,
                             idpembuat: d.produk_id_profile,
                             statusbuy: statusbuy.length,
-                            namagroup: groupNama.group_nama
+                            namagroup: groupNama.group_nama,
+                            statusbuydata: dataTrx
                         }
                         ret.push(res);
                     }

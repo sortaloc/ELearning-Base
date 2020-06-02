@@ -55,7 +55,6 @@ module.exports = (router) => {
 
     router.post('/detail', VerifyMiddleware, async (req, res) => {
         let response = await ProfileController.detailUser(['id', 'profileid'], req.body)
-        // console.log(response)
         res.send(response)
     })
     return router
