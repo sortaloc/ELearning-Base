@@ -32,6 +32,9 @@ const processing = async () => {
 
                     let transaksi = await database.transaksi.single({trx_refid: inbox.ibx_refid})
 
+                    console.log(transaksi, inbox, akun, produk)
+                    process.exit();
+
                     let realHarga = Number(produk.produk_harga) /** 15000*/
                     let nexus = Number(produk.produk_harga)
 
