@@ -30,10 +30,15 @@ const processing = async () => {
                     let produk = await database.produk.single({produk_id: FormatMsg.productid, produk_kodeProduk: FormatMsg.kode});
                     let akun = await database.profile.single({prl_profile_id: FormatMsg.profileid});
 
-                    let transaksi = await database.transaksi.single({trx_refid: inbox.ibx_refid})
+                    let transaksi = await database.transaksi.allSelect({trx_refid: inbox.ibx_refid})
 
-                    console.log(transaksi, inbox, akun, produk)
-                    process.exit();
+                    if(transaksi.length === 0){
+                        // update inbox
+                        await database.inbox.updateOne({ibx_refid: inbox.ibx_refid}, {ibx_status: 'G'});
+                        continue;
+                    }
+
+                    transaksi = transaksi[0];
 
                     let realHarga = Number(produk.produk_harga) /** 15000*/
                     let nexus = Number(produk.produk_harga)
