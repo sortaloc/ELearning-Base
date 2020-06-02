@@ -26,6 +26,7 @@ class LibraryController extends MainController {
                 			let produk = await database.produk.single({produk_id: library[idx].trx_produk_id});
                 			let trxData = JSON.parse(library[idx].trx_data);
                 			let lib = {
+                                idlibrary: library.trx_refid,
                 				tipeproduk: library[idx].trx_tipe.substr(3).toLowerCase(),
             					nama: produk.produk_namaProduk,
             					pembelian: library[idx].created_at,
