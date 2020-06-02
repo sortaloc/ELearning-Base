@@ -321,6 +321,7 @@ class ProductController extends MainController {
                         cprofile.prl_nama as namapemateri,
                         cprofile.prl_username as usernamepemateri,
                         cprofile.prl_photo as photopemateri,
+                        CONCAT('${URLIMAGE}', cprofile.prl_photo) asl prohopematerilink,
                         c.group_nama as tipegroup
                         from produk a
                         JOIN (SELECT prl_profile_id, prl_nama, prl_username FROM profile) bprofile on bprofile.prl_profile_id = a.produk_id_profile
