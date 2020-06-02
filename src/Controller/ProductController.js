@@ -300,32 +300,35 @@ class ProductController extends MainController {
                     `);
                     kategoriData = kategoriData.rows;
                     let data = await database.produk.connection.raw(`
-                    SELECT 
-                    produk.produk_cover as produkcover,
-                    produk.produk_created_at as created,
-                    produk.produk_harga as produkharga,
-                    produk.produk_id as produkid,
-                    produk.produk_id_group as groupid,
-                    produk.produk_id_profile as adminid,
-                    produk.produk_is_active as isactiveproduk,
-                    produk.produk_keterangan as keteranganproduk,
-                    produk."produk_kodeProduk" as kodeproduk,
-                    produk.produk_link as linkproduk,
-                    produk."produk_namaProduk" as namaproduk,
-                    produk.produk_updated_at as updated,
-                    produk.produk_certificate as produk,
-                    profile.prl_nama as namaadmin,
-                    profile.prl_username as adminusername,
-                    produk_group.group_nama as tipegroup,
-                    CONCAT('${URLIMAGE}', produk.produk_certificate) as produk_link,
-                    CONCAT('${URLIMAGE}', produk.produk_cover) as cover_link
-                    from produk
-                    JOIN profile on profile.prl_profile_id = produk.produk_id_profile
-                    join produk_group on produk_group.id_group = produk.produk_id_group
-                    WHERE
-                    produk.produk_id = '${body.produkid}'
-                    AND
-                    produk."produk_kodeProduk" = '${body.kodeproduk}'
+                        SELECT 
+                        a.produk_cover as produkcover,
+                        a.produk_created_at as created,
+                        a.produk_harga as produkharga,
+                        a.produk_id as produkid,
+                        a.produk_id_group as groupid,
+                        a.produk_id_profile as adminid,
+                        a.produk_is_active as isactiveproduk,
+                        a.produk_keterangan as keteranganproduk,
+                        a."produk_kodeProduk" as kodeproduk,
+                        a.produk_link as linkproduk,
+                        a."produk_namaProduk" as namaproduk,
+                        a.produk_updated_at as updated,
+                        a.produk_certificate as produk,
+                        CONCAT('${URLIMAGE}', a.produk_certificate) as produk_link,
+                        CONCAT('${URLIMAGE}', a.produk_cover) as cover_link,
+                        bprofile.prl_nama as namaadmin,
+                        bprofile.prl_username as adminusername,
+                        cprofile.prl_nama as namapemateri,
+                        cprofile.prl_username as usernamepemateri,
+                        c.group_nama as tipegroup
+                        from produk a
+                        JOIN (SELECT prl_profile_id, prl_nama, prl_username FROM profile) bprofile on bprofile.prl_profile_id = a.produk_id_profile
+                        JOIN (SELECT prl_profile_id, prl_nama, prl_username FROM profile) cprofile on cprofile.prl_profile_id = a.produk_id_profile
+                        JOIN (SELECT group_nama, id_group FROM produk_group) c on a.produk_id_group = c.id_group
+                        WHERE
+                        a.produk_id = '${body.produkid}'
+                        AND
+                        a."produk_kodeProduk" = '${body.kodeproduk}'
                     `)
                     if(data.rows.length > 0){
                         let retData = data.rows[0];
