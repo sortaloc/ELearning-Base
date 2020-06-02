@@ -58,6 +58,14 @@ module.exports = (router) => {
         return res.send(response);
     })
 
+    router.post('/buProfisiensi', VerifyMiddleware, async (req, res) => {
+      req.body.token = req.headers.authorization.split(' ');
+        req.body.token = req.body.token[req.body.token.length - 1];
+        // let response = await PaymentController.buyEbook(['idproduk', 'id', 'password'], req.body);
+        let response = await PaymentController.buyProduct(['idproduk', 'id', 'password'], req.body, 'BUYPROFISIENSI');
+        return res.send(response);  
+    })
+
     // Dashboard
     router.post('/getAllDeposit', VerifyMiddleware, async (req, res) => {
         let response = await PaymentController.getAllDeposit(req.body);
