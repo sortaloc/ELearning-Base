@@ -320,10 +320,11 @@ class ProductController extends MainController {
                         bprofile.prl_username as adminusername,
                         cprofile.prl_nama as namapemateri,
                         cprofile.prl_username as usernamepemateri,
+                        cprofile.prl_photo as photopemateri,
                         c.group_nama as tipegroup
                         from produk a
                         JOIN (SELECT prl_profile_id, prl_nama, prl_username FROM profile) bprofile on bprofile.prl_profile_id = a.produk_id_profile
-                        JOIN (SELECT prl_profile_id, prl_nama, prl_username FROM profile) cprofile on cprofile.prl_profile_id = a.produk_id_profile
+                        JOIN (SELECT prl_profile_id, prl_nama, prl_username FROM profile, prl_photo) cprofile on cprofile.prl_profile_id = a.produk_id_profile
                         JOIN (SELECT group_nama, id_group FROM produk_group) c on a.produk_id_group = c.id_group
                         WHERE
                         a.produk_id = '${body.produkid}'

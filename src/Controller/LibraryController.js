@@ -34,6 +34,8 @@ class LibraryController extends MainController {
             					linkcover: URLIMAGE+produk.produk_cover,
             					downloaded: Number(trxData.download),
             					accessed: Number(trxData.access),
+                                kodeproduk: produk.produk_kodeProduk,
+                                produkid: produk.produk_id
                 			}
 
                 			if(library[idx].trx_tipe === 'BUYEBOOK'){
