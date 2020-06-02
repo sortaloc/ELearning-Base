@@ -13,7 +13,7 @@ MainController = new MainController();
 
 const processing = async () => {
     return new Promise(async (resolve) => {
-        let data = await database.inbox.allSelect({ibx_tipe: 'BUYEBOOK', 'ibx_status': 'Q'});
+        let data = await database.inbox.allSelect({ibx_tipe: 'BUYPRESENTASI', 'ibx_status': 'Q'});
 
         let ibxSucc = new Array();
 
@@ -57,6 +57,7 @@ const processing = async () => {
 
                     let query = `UPDATE profile SET prl_saldo_nexus = prl_saldo_nexus - ${nexus}, prl_saldo = prl_saldo - ${realHarga} WHERE prl_profile_id = '${akun.prl_profile_id}'`;
                     let updateSaldo = await database.profile.connection.raw(query);
+
                     if(updateSaldo.rowCount > 0){
                         let penampung = '20200507215106956376'
                         let jurnal2 = {
@@ -81,12 +82,12 @@ const processing = async () => {
                             let nameExport = `../../Source/${nameEbook}`;
                             let exportFile = path.join(__dirname, nameExport);
 
-                            await fs.createReadStream(sourcePath).pipe(fs.createWriteStream(exportFile));
+                            fs.createReadStream(sourcePath).pipe(fs.createWriteStream(exportFile));
 
                             let cashflow = await database.cashflow.insert([jurnal1, jurnal2])
 
                             if(cashflow.state){
-                                let keteranganTrx = `Berhasil membeli E-Book ${produk.produk_namaProduk}, E-Book dapat di download pada halaman History`;
+                                let keteranganTrx = `Berhasil membeli E-Presentasi ${produk.produk_namaProduk}, E-Presentasi dapat di download pada halaman History`;
                                 let trxData = {
                                     ebook: nameEbook,
                                     created: MainController.createDate(0),
@@ -108,7 +109,7 @@ const processing = async () => {
                                 let notifData = {
                                   data: {
                                     id: akun.prl_profile_id,
-                                    title: 'Berhasil membeli E-Book',
+                                    title: 'Berhasil membeli E-Presentasi',
                                     message: keteranganTrx,
                                     nama_sender: 'Prexux',
                                     menu: 'trx',
@@ -123,7 +124,6 @@ const processing = async () => {
                             }else{
                                 /*Cashflow State*/
                                 /*kalau cashflow gagal, balikin saldo akun 1 dan akun 2*/
-                                
                             }
                         }else{
                             /*Update Akun 2*/
