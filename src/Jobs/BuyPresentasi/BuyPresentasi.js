@@ -106,6 +106,7 @@ const processing = async () => {
                                     obx_keterangan: `Berhasil input ke Outbox pada ${MainController.createDate(0)}`,
                                     obx_raw_data: JSON.stringify(transaksi)
                                 }
+                                await database.outbox.insertOne(Outbox)
                                 let notifData = {
                                   data: {
                                     id: akun.prl_profile_id,

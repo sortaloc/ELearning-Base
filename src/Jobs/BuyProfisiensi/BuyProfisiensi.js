@@ -1,7 +1,7 @@
 
 require('module-alias/register')
 
-const { STRUCTURE } = require('@Config/Config');
+const { STRUCTURE, WHATSAPP } = require('@Config/Config');
 const database = require('@Model/index');
 let MainController = require('@Controllers/MainController');
 
@@ -11,9 +11,17 @@ const path = require('path')
 
 MainController = new MainController();
 
+const { accountSid, authToken } = WHATSAPP;
+
+const client = require('twilio')(accountSid, authToken);
+const MessagingResponse = require('twilio').twiml.MessagingResponse;
+
 const processing = async () => {
     return new Promise(async (resolve) => {
         let data = await database.inbox.allSelect({ibx_tipe: 'BUYPROFISIENSI', 'ibx_status': 'Q'});
+
+        // console.log(await database);
+        // process.exit()
 
         let ibxSucc = new Array();
 
@@ -88,16 +96,17 @@ const processing = async () => {
                                 idpemateri: pemateri.prl_profile_id
                             }
 
-                            let profisiensi = {
+                            let prfData = {
                                 prf_id: MainController.generateID(),
                                 prf_raw: JSON.stringify(dataRaw),
                                 prf_profile_id: akun.prl_profile_id,
                                 prf_trx_id: transaksi.trx_id,
                                 prf_username: username,
-                                prf_password: dataRaw.passwordenc
+                                prf_password: dataRaw.passwordenc,
+                                prf_refid: inbox.ibx_refid
                             }
 
-                            let insertProfisiensi = await database.profisiensi.insertOne(profisiensi);
+                            let insertProfisiensi = await database.profisiensi.insertOne(prfData);
 
                             if(insertProfisiensi.state){
                                 let cashflow = await database.cashflow.insert([jurnal1, jurnal2])
@@ -117,6 +126,7 @@ const processing = async () => {
                                         obx_keterangan: `Berhasil input ke Outbox pada ${MainController.createDate(0)}`,
                                         obx_raw_data: JSON.stringify(transaksi)
                                     }
+                                    await database.outbox.insertOne(Outbox)
                                     let notifData = {
                                       data: {
                                         id: akun.prl_profile_id,
@@ -129,6 +139,8 @@ const processing = async () => {
                                         send: 'user'
                                       }
                                     }
+                                    const twiml = new MessagingResponse();
+                                    await twiml.message(`Anda telah terdaftar pada Kelas '${produk.produk_namaProduk}'\nUsername : *${username}*\nPassword : *${password}*`);
                                     await MainController.sendNotif(notifData)
                                     ibxSucc.push(inbox.ibx_refid);
                                 }else{

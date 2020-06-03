@@ -30,7 +30,7 @@ const processing = async () => {
                     let produk = await database.produk.single({produk_id: FormatMsg.productid, produk_kodeProduk: FormatMsg.kode});
                     let akun = await database.profile.single({prl_profile_id: FormatMsg.profileid});
 
-                    let transaksi = await database.transaksi.single({trx_refid: inbox.ibx_refid})
+                    let transaksi = await database.transaksi.allSelect({trx_refid: inbox.ibx_refid})
 
                     if(transaksi.length === 0){
                         // update inbox
@@ -39,16 +39,6 @@ const processing = async () => {
                     }
 
                     transaksi = transaksi[0];
-
-                    try{
-                        let newTrx = new Map(Object.entries(transaksi));
-                        if(!newTrx.has('trx_id') || !newTrx.has('trx_keterangan') || !newTrx.has('trx_refid')){
-                            throw err;
-                        }
-                    }catch(err){
-                        console.log(err);
-                        // Error
-                    }
 
                     let realHarga = Number(produk.produk_harga) /** 15000*/
                     let nexus = Number(produk.produk_harga)
@@ -140,6 +130,7 @@ const processing = async () => {
                                     obx_keterangan: `Berhasil input ke Outbox pada ${MainController.createDate(0)}`,
                                     obx_raw_data: JSON.stringify(transaksi)
                                 }
+                                await database.outbox.insertOne(Outbox)
                                 let notifData = {
                                   data: {
                                     id: akun.prl_profile_id,
