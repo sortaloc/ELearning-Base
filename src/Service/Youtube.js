@@ -10,15 +10,8 @@ const { YOUTUBEKEY } = require('@Config/Config');
 
 module.exports = (router) => {
 
-    router.get('/', async (req, res) => {
+    router.get('/thumbnail', async (req, res) => {
     	res.send(YOUTUBEKEY)
-    	// const x = await request('h
-
-
-
-
-    	// req.pipe(x);
-    	// x.pipe(res);
     })
 
     return router;
