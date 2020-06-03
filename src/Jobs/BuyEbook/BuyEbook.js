@@ -58,7 +58,7 @@ const processing = async () => {
                     let query = `UPDATE profile SET prl_saldo_nexus = prl_saldo_nexus - ${nexus}, prl_saldo = prl_saldo - ${realHarga} WHERE prl_profile_id = '${akun.prl_profile_id}'`;
                     let updateSaldo = await database.profile.connection.raw(query);
                     if(updateSaldo.rowCount > 0){
-                        let penampung = '20200507215106956376'
+                        let penampung = '20200604225121984201'
                         let jurnal2 = {
                             cf_keterangan: `Penambahan ke account Penampungan Sertifikat dengan id: '${penampung}' degan pembelian sertifikat seharga ${nexus} Nexus dikonversikan menjadi ${realHarga} Rupiah`,
                             cf_tipe: 'buy',

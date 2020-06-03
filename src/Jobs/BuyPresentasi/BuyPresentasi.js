@@ -59,9 +59,9 @@ const processing = async () => {
                     let updateSaldo = await database.profile.connection.raw(query);
 
                     if(updateSaldo.rowCount > 0){
-                        let penampung = '20200507215106956376'
+                        let penampung = '20200603190221570472'
                         let jurnal2 = {
-                            cf_keterangan: `Penambahan ke account Penampungan Sertifikat dengan id: '${penampung}' degan pembelian sertifikat seharga ${nexus} Nexus dikonversikan menjadi ${realHarga} Rupiah`,
+                            cf_keterangan: `Penambahan ke account Penampungan Presentasi dengan id: '${penampung}' degan pembelian Presentasi seharga ${nexus} Nexus dikonversikan menjadi ${realHarga} Rupiah`,
                             cf_tipe: 'buy',
                             cf_kredit: 0,
                             cf_debet: realHarga,

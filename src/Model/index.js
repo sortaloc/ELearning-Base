@@ -14,6 +14,7 @@ const db = {};
     'login',
     'otp_list', 
     'outbox', 
+    'profisiensi',
     'produk', 
     'produk_group',
     'profile', 
