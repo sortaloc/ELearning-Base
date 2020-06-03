@@ -52,8 +52,13 @@ class LibraryController extends MainController {
                 					linkproduk: `${URLDATA}api/v${VERSION.split('.')[0]}/Download/Certificate/${trxData.certificate}`
                 				}
                 				data.push(lib);
-                			// }else if(library.trx_tipe === ''){
-
+                			}else if(library.trx_tipe === 'BUYPRESENTASI'){
+                                lib = {
+                                    ...lib,
+                                    produk: trxData.presentasi,
+                                    linkproduk: `${URLDATA}api/v${VERSION.split('.')[0]}/Download/Certificate/${trxData.certificate}`
+                                }
+                                data.push(lib);
                 			}
                 		}
 
