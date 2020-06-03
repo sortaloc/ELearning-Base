@@ -23,7 +23,7 @@ class ProfileController extends MainController{
                     let profile = await database.profile.allSelect({prl_profile_id: body.id});
                     if(profile.length > 0){
                         profile = profile[profile.length - 1];
-                        console.log(profile);
+                        // console.log(profile);
                         const data = {
                             id: profile.prl_profile_id,
                             nama: profile.prl_nama,
@@ -82,7 +82,7 @@ class ProfileController extends MainController{
                         // prl_password: pwd
                     }
                     let profile = await database.profile.allSelect(where);
-                    console.log
+                    // console.log
                     if(profile.length > 0){
                         profile = profile[0];
                         let update = body;
@@ -185,7 +185,7 @@ class ProfileController extends MainController{
                         newKota.push(subData)
                     }else{
                         if(Array.isArray(subData)){
-                            console.log('Array', subData)
+                            // console.log('Array', subData)
                         }else{
                             let sub2 = Object.keys(subData);
                             for(let idv = 0; idv < sub2.length; idv++){

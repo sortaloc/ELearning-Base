@@ -297,7 +297,7 @@ class MainController {
             }
             console.log(newData);
             let sendingNotif = await FCM.sendFCM(newData);
-            console.log(sendingNotif)
+            // console.log(sendingNotif)
             resolve(sendingNotif)
         })
     }

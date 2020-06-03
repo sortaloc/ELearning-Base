@@ -477,7 +477,7 @@ class ProductController extends MainController {
             try{
                 if(diff.length === 0){
                     let result = await database.produk_group.deleteOne({id_group: body.id});
-                    console.log(result);
+                    // console.log(result);
                     if(result.state){
                         response.data = {
                             id: body.id
@@ -564,7 +564,7 @@ class ProductController extends MainController {
             try{
                 if(diff.length === 0){
                     let result = await database.produk.deleteOne({produk_id: body.id});
-                    console.log(result);
+                    // console.log(result);
                     if(result.state){
                         response.data = body;
                         response.message = `Success Delete Produk '${body.id}'`;

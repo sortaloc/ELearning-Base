@@ -237,14 +237,14 @@ class RegisterController extends MainController {
         })
     }
     registerWhatsapp = async (body, res) => {
-        console.log(body)
+        // console.log(body)
         return new Promise(async (resolve) => {
             let getText = body.Body;
             let response = this.structure;
 
             const twiml = new MessagingResponse();
             getText = getText.trim().toLowerCase();
-            console.log(getText);
+            // console.log(getText);
             if(getText.indexOf('reg') > -1 && getText.indexOf('xux') > -1){ //Jika ada
                 let getNumber = (number = body.From) => {
                     number = number.split(':');
@@ -302,6 +302,50 @@ class RegisterController extends MainController {
                 // res.end(twiml.toString());
             }
         })
+    }
+
+    forgotPassword = (fields, body) => {
+         return new Promise(async (resolve) => {
+            let response = this.structure;
+            let newBody = Object.keys(body);
+            try{
+                let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+                if(diff.length === 0){
+                    let data = [];
+                    let email = await database.profile.allSelect({prl_email: body.value});
+                    if(email.length > 0 ){
+                        data = email;
+                    }
+                    let username = await database.profile.allSelect({prl_username: body.value})
+                    if(username.length > 0){
+                        data = username;
+                    }
+                    if(body.value.constructor === number){
+                        let phone = await database.profile.allSelect({prl_nohp: body.value});
+                        if(phone.length > 0){
+                            data = phone;
+                        }
+                    }
+                    data = data[0];
+                    // Generate OTP
+                    // Kirim ke WA,
+                    // Validasi ke 
+                    // Set new Pin Password
+
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    resolve(response);
+                }
+            }catch(err){
+                console.log(err);
+                err.code = 500;
+                err.state = false;
+                resolve(err)
+            }
+        });
     }
 }
 

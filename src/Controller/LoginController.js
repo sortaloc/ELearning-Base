@@ -96,7 +96,7 @@ class LoginController extends MainController {
                         response.message = "Success Login";
                         response.code = 100;
                         response.state = true;
-                        console.log(response)
+                        // console.log(response)
                         return resolve(response)
                     }else{
                         response.data = {};
@@ -158,7 +158,7 @@ class LoginController extends MainController {
         return new Promise(async resolve => {
             let response = STRUCTURE;
             let id = body.id;
-            console.log(id);
+            // console.log(id);
         })
     }
 }
