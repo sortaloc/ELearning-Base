@@ -28,5 +28,9 @@ module.exports = (router) => {
         res.send(true);
     })
 
+    router.post('/validateForgotPassword', async (req, res) => {
+        let response = await RegisterController.validateForgotPassword(['otp', 'value'], req.body);
+        res.send(true);
+    })
     return router;
 }
