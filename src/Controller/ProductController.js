@@ -147,6 +147,7 @@ class ProductController extends MainController {
                         let dataTrx = {};
                         let statusbuy = await database.transaksi.allSelect({trx_id_profile: body.id, trx_produk_id : d.produk_id});
                         let groupNama = await database.produk_group.single({id_group: d.produk_id_group})
+                        let pemateri = await database.profile.single({prl_profile_id: d.produk_pemateri_id})
 
                         if(statusbuy.length > 0){
                             let transaksi = statusbuy[0];
@@ -176,8 +177,16 @@ class ProductController extends MainController {
                             idpembuat: d.produk_id_profile,
                             statusbuy: statusbuy.length,
                             namagroup: groupNama.group_nama,
-                            statusbuydata: dataTrx
+                            statusbuydata: dataTrx,
+                            namapemateri: pemateri.prl_nama,
+                            usernamepemateri: pemateri.prl_username,
+                            photopemateri: pemateri.prl_photo,
+                            photopematerilink: URLIMAGE+pemateri.prl_photo
                         }
+
+                        // cprofile.prl_nama as namapemateri,
+                        // cprofile.prl_username as usernamepemateri,
+                        // cprofile.prl_photo as photopemateri,
                         ret.push(res);
                     }
                     response.state = true;
@@ -197,7 +206,7 @@ class ProductController extends MainController {
                 response.state = false;
                 response.data = [];
                 response.message = "Gagal mendapatkan Produk";
-                response.code = 102;
+                response.code = 106;
                 return resolve(response);
             }
         })

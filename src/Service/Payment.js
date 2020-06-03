@@ -21,7 +21,7 @@ module.exports = (router) => {
         let uploadImage = await PaymentController.uploadImage(req);
         if(uploadImage.state){
             let data = uploadImage.data.fieldData;
-            let response = await PaymentController.uploadBuktiTransfer(['id', 'file', 'kode_unik'], data);
+            let response = await PaymentController.uploadBuktiTransfer(['id', 'file', 'kode_unik', 'nominal'], data);
             return res.send(response);
         }else{
             return res.send({
