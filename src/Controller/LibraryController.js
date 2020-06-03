@@ -68,7 +68,7 @@ class LibraryController extends MainController {
                 		}
 
                 		response.data = data;
-                		response.message = 'Get Library'
+                		response.message = data.length > 0 ? `Success Get Data Library, length : ${data.length}` : 'Data Library is null'
                 		response.code = 100
                 		response.state = true
                 		resolve(response)
