@@ -430,7 +430,7 @@ class PaymentController extends MainController {
                                 let harga = Number(produk.produk_harga) /** 15000*/;
 
                                 let trxID = this.generateID();
-                                let trxINV = this.createInvoice('TOPUP');
+                                let trxINV = this.createInvoice('BUY');
                                 let transaksi = {
                                     trx_id: trxID,
                                     trx_keterangan: 'Transaksi sedang dalam proses',
