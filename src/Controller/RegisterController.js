@@ -173,6 +173,14 @@ class RegisterController extends MainController {
                 //         throw response;
                 //     }
                 // }
+                let newBody = new Map(Object.entries(data));
+                if(!newBody.has('group')){
+                    response.code = 102
+                    response.message = `Missing Parameter Group`
+                    response.state = false;
+                    response.data = {};
+                    throw response;
+                }
                 if(data.tipe === 'nohp'){
                     if(data.value.substring(0,2) !== '62'){
                         response.code = 104;
@@ -208,7 +216,10 @@ class RegisterController extends MainController {
                         }
                     }else{
                         let fields = `prl_${data.tipe}`;
-                        const where = { [fields] : data.value };
+                        const where = { 
+                            [fields] : data.value,
+                            group: data.group
+                        };
                         res = await database.profile.allSelect(where);
                         if(res.length === 0){
                             response.state = true;

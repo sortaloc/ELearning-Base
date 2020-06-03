@@ -14,7 +14,7 @@ module.exports = (router) => {
     })
 
     router.post('/validasi', async (req, res) => {
-        let validasi = await RegisterController.validasi(['nohp', 'username', 'email', 'otp'], req.body);
+        let validasi = await RegisterController.validasi(['nohp', 'username', 'email', 'otp', 'group'], req.body);
         res.send(validasi);
     })
 
