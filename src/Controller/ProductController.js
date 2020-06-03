@@ -61,7 +61,10 @@ class ProductController extends MainController {
         return new Promise(async (resolve) => {
             let response = this.response;
             try{
-                let data = await database.produk_group.all()
+                let data = await database.produk_group.connection.raw(
+                    'SELECT * FROM produk_group ORDER BY group_nama ASC'
+                    )
+                data = data.rows;
                 if(data.length > 0){
                     data = data.map(d => {
                         return {
