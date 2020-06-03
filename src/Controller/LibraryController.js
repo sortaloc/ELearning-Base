@@ -19,6 +19,8 @@ class LibraryController extends MainController {
             try{
                 if(diff.length === 0){
                 	let library = await database.transaksi.connection.raw(`SELECT * FROM transaksi WHERE trx_id_profile = '${body.id}' AND trx_data IS NOT NULL`)
+
+                    // console.log(library)
                 	// if(library.rows.length > 0){
                 		library = library.rows;
                 		let data = [];
@@ -53,7 +55,9 @@ class LibraryController extends MainController {
                 					linkproduk: `${URLDATA}api/v${VERSION.split('.')[0]}/Download/Certificate/${trxData.certificate}`
                 				}
                 				data.push(lib);
-                			}else if(library.trx_tipe === 'BUYPRESENTASI'){
+                			}else if(library[idx].trx_tipe === 'BUYPRESENTASI'){
+                                console.log('presentasi')
+                                console.log(trxData)
                                 lib = {
                                     ...lib,
                                     produk: trxData.presentasi,
