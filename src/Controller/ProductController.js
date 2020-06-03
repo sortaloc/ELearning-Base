@@ -349,14 +349,24 @@ class ProductController extends MainController {
                         let statusbuy = await database.transaksi.allSelect({trx_id_profile: body.id, trx_produk_id : body.produkid});
 
                         await database.produk.connection.raw(`UPDATE produk SET produk_viewed = produk_viewed + 1 WHERE produk_id = '${body.produkid}'`);
-                        // console.log(statusbuy.length)
-                        // retData.statusbuy = statusbuy.length;
-                        // console.log(retData)
-                        // data = retData;
-                        // data.kategoriList = kategoriData;
+                        let dataTrx;
+                        if(statusbuy.length > 0){
+                            let transaksi = statusbuy[0];
+                            dataTrx = {
+                                status: transaksi.trx_status,
+                                trxid: transaksi.trx_id,
+                                keterangan: transaksi.trx_keterangan,
+                                trxtipe: transaksi.trx_tipe,
+                                harga: transaksi.trx_harga,
+                                inboice: transaksi.trx_invoice,
+                                refid: transaksi.trx_refid,
+                                created: transaksi.trx_created_at
+                            }
+                        }
                         response.data = {
                             ...retData,
-                            statusbuy: statusbuy.length
+                            statusbuy: statusbuy.length,
+                            statusbuydata: dataTrx
                         };
                         response.code = 100;
                         response.state = true;

@@ -51,5 +51,9 @@ module.exports = {
 	GEOLOCATION: process.env.GEOLOCATION,
 	FIREBASE: process.env.FIREBASE,
 	YOUTUBEKEY: process.env.YOUTUBEKEY,
-	URLDATA: urlData
+	URLDATA: urlData,
+	BANK: {
+		APIKEY: process.env.BANKAPIKEY,
+		SIGNATURE: process.env.BANKSIGNATURE
+	}
 }
