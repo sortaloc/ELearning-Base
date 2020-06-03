@@ -113,6 +113,25 @@ module.exports = {
         NODE_ENV: 'production',
         TZ: "Asia/Jakarta"
       }
+    },
+    {
+      name: 'Payment Profisiensi',
+      script: './src/Jobs/BuyProfisiensi/BuyProfisiensi.js',
+      args: '',
+      instances: 1,
+      exec_mode: 'fork',
+      log_date_format: 'YYYMMDD HH',
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '1G',
+      env: {
+        NODE_ENV: 'development',
+        TZ: "Asia/Jakarta"
+      },
+      env_production: {
+        NODE_ENV: 'production',
+        TZ: "Asia/Jakarta"
+      }
     }
   ],
   deploy : {
