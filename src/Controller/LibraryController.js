@@ -35,14 +35,15 @@ class LibraryController extends MainController {
             					downloaded: Number(trxData.download),
             					accessed: Number(trxData.access),
                                 kodeproduk: produk.produk_kodeProduk,
-                                produkid: produk.produk_id
+                                produkid: produk.produk_id,
+                                state: true
                 			}
 
                 			if(library[idx].trx_tipe === 'BUYEBOOK'){
                 				lib = {
                 					...lib,
                 					produk: trxData.ebook,
-                					linkproduk: `${URLDATA}api/v${VERSION.split('.')[0]}/Download/Certificate/${trxData.ebook}`
+                					linkproduk: `${URLDATA}api/v${VERSION.split('.')[0]}/Download/Ebook/${trxData.ebook}`
                 				}
                 				data.push(lib);
                 			}else if(library[idx].trx_tipe === 'BUYCERTIFICATE'){
@@ -56,11 +57,13 @@ class LibraryController extends MainController {
                                 lib = {
                                     ...lib,
                                     produk: trxData.presentasi,
-                                    linkproduk: `${URLDATA}api/v${VERSION.split('.')[0]}/Download/Certificate/${trxData.certificate}`
+                                    linkproduk: `${URLDATA}api/v${VERSION.split('.')[0]}/Download/Presentasi/${trxData.certificate}`
                                 }
                                 data.push(lib);
                 			// }else if(library.trx_tipe === 'BUYPROFISIENSI'){
 
+                            }else{
+                                lib.state = false;
                             }
                 		}
 
