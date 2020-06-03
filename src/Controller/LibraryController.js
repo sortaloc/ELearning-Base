@@ -60,8 +60,8 @@ class LibraryController extends MainController {
                                     linkproduk: `${URLDATA}api/v${VERSION.split('.')[0]}/Download/Presentasi/${trxData.presentasi}`
                                 }
                                 data.push(lib);
-                			}else if(library[idx].trx_tipe === 'BUYPROFISIENSI'){
-                                console.log(library, trxData)
+                            }else if(library[idx].trx_tipe === 'BUYPROFISIENSI'){
+                                console.log(trxData)
                                 lib = {
                                     ...lib,
                                     startclass: produk.produk_start,
@@ -70,6 +70,7 @@ class LibraryController extends MainController {
                                     password: trxData.password,
                                     created: trxData.created
                                 }
+                                data.push(lib);
                             }else{
                                 lib.state = false;
                             }

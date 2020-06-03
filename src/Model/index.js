@@ -13,6 +13,7 @@ const db = {};
     'inbox', 
     'login',
     'otp_list', 
+    'mutasi_bank',
     'outbox', 
     'profisiensi',
     'produk', 
