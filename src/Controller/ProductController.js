@@ -338,6 +338,8 @@ class ProductController extends MainController {
                     if(data.rows.length > 0){
                         let retData = data.rows[0];
                         let statusbuy = await database.transaksi.allSelect({trx_id_profile: body.id, trx_produk_id : body.produkid});
+
+                        await database.produk.connection.raw(`UPDATE produk SET produk_viewed = produk_viewed + 1 WHERE produk_id = '${body.produkid}'`);
                         // console.log(statusbuy.length)
                         // retData.statusbuy = statusbuy.length;
                         // console.log(retData)
