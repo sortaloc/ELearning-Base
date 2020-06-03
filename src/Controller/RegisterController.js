@@ -115,7 +115,8 @@ class RegisterController extends MainController {
                     prl_password: this.createPassword(body.password),
                     prl_isactive: 1,
                     prl_profile_id: this.generateID(),
-                    prl_role: role
+                    prl_role: role,
+                    prl_group: body.group
                 }
 
                 let validate = await database.profile.connection.raw(profileSelect(profileData));
