@@ -18,7 +18,7 @@ class LoginController extends MainController {
             let diff = list.filter((x) => newBody.indexOf(x) === -1)
             try{
                 if(diff.length === 0){
-                    let { input, password, ip } = body;
+                    let { input, password, ip, group } = body;
 
                     if(ip === '::1'){
                         ip = '36.88.30.82';
@@ -42,6 +42,8 @@ class LoginController extends MainController {
                             OR
                             prl_email LIKE '%${input}%'
                         )
+                        AND 
+                        prl_group = '${group}'
                         `
                         )
 
