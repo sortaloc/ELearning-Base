@@ -78,8 +78,8 @@ const processing = async () => {
                             let source = `../../Source/${produk.produk_certificate}`;
                             let sourcePath = path.join(__dirname, source);
 
-                            let nameEbook = `${MainController.generateID()}_${akun.prl_profile_id}_${produk.produk_certificate}`;
-                            let nameExport = `../../Source/${nameEbook}`;
+                            let namePresentasi = `${MainController.generateID()}_${akun.prl_profile_id}_${produk.produk_certificate}`;
+                            let nameExport = `../../Source/${namePresentasi}`;
                             let exportFile = path.join(__dirname, nameExport);
 
                             fs.createReadStream(sourcePath).pipe(fs.createWriteStream(exportFile));
@@ -89,7 +89,7 @@ const processing = async () => {
                             if(cashflow.state){
                                 let keteranganTrx = `Berhasil membeli E-Presentasi ${produk.produk_namaProduk}, E-Presentasi dapat di download pada halaman History`;
                                 let trxData = {
-                                    ebook: nameEbook,
+                                    presentasi: namePresentasi,
                                     created: MainController.createDate(0),
                                     download: 0,
                                     access: 0
