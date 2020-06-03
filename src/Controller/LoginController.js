@@ -27,9 +27,6 @@ class LoginController extends MainController {
                     let tipe;
                     
                     password = this.createPassword(password);
-                    // console.log(body, password)
-                    // process.exit()
-                    // let result = await database.profile.allSelect({prl_username: username, prl_password: password});
                     let result = await database.profile.connection.raw(
                         `SELECT * 
                         FROM profile
@@ -81,7 +78,6 @@ class LoginController extends MainController {
                     data.token = Token.token;
                     let geolocation = await this.getLocation(ip);
                     geolocation = geolocation.data;
-                    // const 
                     const insertData = {
                         log_profile_id: result.prl_profile_id,
                         log_token: Token.token,
@@ -98,7 +94,6 @@ class LoginController extends MainController {
                         response.message = "Success Login";
                         response.code = 100;
                         response.state = true;
-                        // console.log(response)
                         return resolve(response)
                     }else{
                         response.data = {};
@@ -160,7 +155,6 @@ class LoginController extends MainController {
         return new Promise(async resolve => {
             let response = STRUCTURE;
             let id = body.id;
-            // console.log(id);
         })
     }
 }

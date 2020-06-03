@@ -53,7 +53,6 @@ module.exports = (router) => {
     router.post('/buyEbook', VerifyMiddleware, async (req, res) => {
         req.body.token = req.headers.authorization.split(' ');
         req.body.token = req.body.token[req.body.token.length - 1];
-        // let response = await PaymentController.buyEbook(['idproduk', 'id', 'password'], req.body);
         let response = await PaymentController.buyProduct(['idproduk', 'id', 'password'], req.body, 'BUYEBOOK');
         return res.send(response);
     })
@@ -61,7 +60,6 @@ module.exports = (router) => {
     router.post('/buyProfisiensi', VerifyMiddleware, async (req, res) => {
         req.body.token = req.headers.authorization.split(' ');
         req.body.token = req.body.token[req.body.token.length - 1];
-        // let response = await PaymentController.buyEbook(['idproduk', 'id', 'password'], req.body);
         let response = await PaymentController.buyProduct(['idproduk', 'id', 'password'], req.body, 'BUYPROFISIENSI');
         return res.send(response);  
     })
@@ -69,7 +67,6 @@ module.exports = (router) => {
     router.post('/buyPresentasi', VerifyMiddleware, async (req, res) => {
         req.body.token = req.headers.authorization.split(' ');
         req.body.token = req.body.token[req.body.token.length - 1];
-        // let response = await PaymentController.buyEbook(['idproduk', 'id', 'password'], req.body);
         let response = await PaymentController.buyProduct(['idproduk', 'id', 'password'], req.body, 'BUYPRESENTASI');
         return res.send(response);  
     })

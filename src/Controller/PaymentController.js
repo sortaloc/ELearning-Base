@@ -115,9 +115,7 @@ class PaymentController extends MainController {
                 let akun = await database.profile.allSelect({prl_profile_id: body.id});
                 if(diff.length === 0 && akun.length > 0){
                     // Update Deposit menjadi 1 = Ready di cek dari dashboard
-
                     akun = akun[0];
-                    
                     let getDataDeposit = await database.deposit.allSelect({dep_id_profile: body.id, dep_kode_unik: body.kode_unik});
                     if(getDataDeposit.length > 0){
                         getDataDeposit = getDataDeposit[0];

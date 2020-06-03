@@ -162,17 +162,17 @@ class RegisterController extends MainController {
         return new Promise(async (resolve) => {
             let response = this.structure;
             try{
-                // if(data.tipe === 'nik'){
-                //     let nik = NIK(data.value);
-                //     let newNik = new Map(Object.entries(nik));
-                //     if(newNik.has('error')){
-                //         response.code = 103
-                //         response.message = `${data.value} tidak Valid`
-                //         response.data = {};
-                //         response.state = false;
-                //         throw response;
-                //     }
-                // }
+               /* if(data.tipe === 'nik'){
+                    let nik = NIK(data.value);
+                    let newNik = new Map(Object.entries(nik));
+                    if(newNik.has('error')){
+                        response.code = 103
+                        response.message = `${data.value} tidak Valid`
+                        response.data = {};
+                        response.state = false;
+                        throw response;
+                    }
+                }*/
                 let newBody = new Map(Object.entries(data));
                 if(!newBody.has('group')){
                     response.code = 102
