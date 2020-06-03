@@ -593,6 +593,72 @@ class ProductController extends MainController {
         // Search on category also
         
     }
+
+    getRecomended = (fields, body) => {
+         let response = this.structure;
+        return new Promise(async (resolve) => {
+            let newBody = Object.keys(body);
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    // Rekomendasi ambil dari yang paling banyak di download
+                    let data = await database.transaksi.connection.raw(
+                        `
+                        select 
+                        count(a.trx_produk_id) as download,
+                        a.trx_produk_id as produkid,
+                        prd."produk_kodeProduk" as kodeproduk,
+                        prd."produk_namaProduk" as namaproduk,
+                        prd.produk_harga as hargaproduk,
+                        prd.produk_id_group as groupid,
+                        prd.produk_cover as produkcover,
+                        prd.produk_keterangan as keteranganproduk,
+                        CONCAT('${URLIMAGE}', prd.produk_certificate) as produk_link,
+                        CONCAT('${URLIMAGE}', prd.produk_cover) as cover_link,
+                        bprofile.prl_nama as namaadmin,
+                        bprofile.prl_username as adminusername,
+                        cprofile.prl_nama as namapemateri,
+                        cprofile.prl_username as usernamepemateri,
+                        cprofile.prl_photo as photopemateri,
+                        CONCAT('${URLIMAGE}', cprofile.prl_photo) as photopematerilink,
+                        prdg.group_nama as tipegroup
+                        from transaksi a
+                        JOIN (SELECT * FROM produk) prd on prd.produk_id = a.trx_produk_id
+                        JOIN (SELECT * FROM produk_group) prdg ON prdg.id_group = prd.produk_id_group
+
+                        JOIN (SELECT prl_profile_id, prl_nama, prl_username FROM profile) bprofile on bprofile.prl_profile_id = prd.produk_id_profile
+                        JOIN (SELECT prl_profile_id, prl_nama, prl_username, prl_photo FROM profile) cprofile on cprofile.prl_profile_id = prd.produk_id_profile
+                                                                        
+                        where a.trx_data LIKE '%download%'
+                        GROUP BY a.trx_produk_id, prd."produk_namaProduk", prd.produk_harga, prd.produk_id_group, prdg.group_nama, prd."produk_kodeProduk",prd.produk_cover, prd.produk_keterangan, prd.produk_certificate, prd.produk_cover, bprofile.prl_nama, bprofile.prl_username, cprofile.prl_nama, cprofile.prl_username, cprofile.prl_photo, photopematerilink
+                        ORDER BY download DESC
+                        `
+                        )
+
+                    response.data = data.rows;
+                    response.code = 100;
+                    response.state = true;
+                    response.message = "Success Get Rekomendasi";
+                    resolve(response)
+                    // console.log(data.rows);
+                    // if(Number(data.rowCount) > 0){
+
+                    // }
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    throw response;
+                }
+            }catch(err){
+                console.log(err)
+                err.code = 503;
+                err.state = false;
+                resolve(err)
+            }
+        });
+    }
     
 
 }

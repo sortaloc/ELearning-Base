@@ -12,7 +12,6 @@ module.exports = (router) => {
     // })
 
     router.post('/upload', async (req, res) => {
-        console.log(req.body)
         let uploadImage = await ProductController.uploadImage(req);
         console.log(uploadImage)
         return res.send(uploadImage);
@@ -36,6 +35,11 @@ module.exports = (router) => {
     router.post('/search', VerifyMiddleware, async (req, res) => {
         let data = await ProductController.search(req.body.search);
         return res.send(true);
+    })
+
+    router.post('/recomended', VerifyMiddleware, async (req, res) => {
+        let response = await ProductController.getRecomended(['id'], req.body);
+        return res.send(response);
     })
 
     // router.post('/getAllGroupedProduct', VerifyMiddleware, async (req, res) => {

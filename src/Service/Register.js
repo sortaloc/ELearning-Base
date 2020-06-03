@@ -23,5 +23,10 @@ module.exports = (router) => {
         res.send(registerWhatsapp);
     })
 
+    router.post('/forgotPassword', async (req, res) => {
+        let response = await RegisterController.forgotPassword(['value'], req.body);
+        res.send(true);
+    })
+
     return router;
 }
