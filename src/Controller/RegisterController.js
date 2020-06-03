@@ -218,7 +218,7 @@ class RegisterController extends MainController {
                         let fields = `prl_${data.tipe}`;
                         const where = { 
                             [fields] : data.value,
-                            group: data.group
+                            prl_group: data.group
                         };
                         res = await database.profile.allSelect(where);
                         if(res.length === 0){
