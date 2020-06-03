@@ -19,7 +19,7 @@ class LibraryController extends MainController {
             try{
                 if(diff.length === 0){
                 	let library = await database.transaksi.connection.raw(`SELECT * FROM transaksi WHERE trx_id_profile = '${body.id}' AND trx_data IS NOT NULL`)
-                	if(library.rows.length > 0){
+                	// if(library.rows.length > 0){
                 		library = library.rows;
                 		let data = [];
                 		for(let idx = 0; idx < library.length; idx++){
@@ -72,13 +72,13 @@ class LibraryController extends MainController {
                 		response.code = 100
                 		response.state = true
                 		resolve(response)
-                	}else{
-                		response.data = []
-                		response.message = 'No Library Found'
-                		response.code = 103
-                		response.state = false
-                		resolve(response)
-                	}
+                	// }else{
+                	// 	response.data = []
+                	// 	response.message = 'No Library Found'
+                	// 	response.code = 103
+                	// 	response.state = false
+                	// 	resolve(response)
+                	// }
                 }else{
                 	response.data = {};
                     response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
@@ -88,6 +88,9 @@ class LibraryController extends MainController {
                 }
             }catch(err){
             	console.log(err)
+                err.state = false;
+                err.code = 503;
+                resolve(err);
             }
         });
     }
