@@ -59,7 +59,9 @@ class LibraryController extends MainController {
                                     linkproduk: `${URLDATA}api/v${VERSION.split('.')[0]}/Download/Certificate/${trxData.certificate}`
                                 }
                                 data.push(lib);
-                			}
+                			// }else if(library.trx_tipe === 'BUYPROFISIENSI'){
+
+                            }
                 		}
 
                 		response.data = data;
