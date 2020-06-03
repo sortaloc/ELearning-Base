@@ -345,7 +345,8 @@ class ProfileController extends MainController{
                     prl_created_at as created,
                     prl_updated_at as updated,
                     prl_isactive as isactive,
-                    prl_photo as photo
+                    prl_photo as photo,
+                    CONCAT('${URLIMAGE}', prl_photo) as photolink
                     FROM
                     profile
                     WHERE
@@ -373,6 +374,57 @@ class ProfileController extends MainController{
                     throw response;
                 }
             }catch(err){
+                resolve(err);
+            }
+        });
+    }
+
+    search = (fields, body) => {
+        let response = this.structure;
+        return new Promise(async (resolve) => {
+            let newBody = Object.keys(body);
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    let data = await database.profile.connection.raw(
+                        `
+                        SELECT 
+                        prl_nama as nama,
+                        prl_nohp as nohp,
+                        prl_username as username,
+                        prl_role as role,
+                        prl_saldo_nexus as saldo_nexus,
+                        prl_profile_id as id,
+                        prl_saldo as saldo
+                        FROM profile
+                        WHERE
+                        UPPER(prl_profile_id) LIKE '%${body.search.toUpperCase()}%'
+                        OR
+                        UPPER(prl_nama) LIKE '%${body.search.toUpperCase()}%'
+                        OR
+                        UPPER(prl_nohp) LIKE '%${body.search.toUpperCase()}%'
+                        OR
+                        UPPER(prl_username) LIKE '%${body.search.toUpperCase()}%'
+                        `
+                        );
+                    response.data = data.rows
+                    response.code = 100;
+                    response.state = true;
+                    response.message = `Success Search, ${data.rows.length} Data Found`
+                    resolve(response);
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    resolve(response)
+                }
+            }catch(err){
+                console.log('Something Error', err);
+                err.code = 503;
+                err.state = false;
+                err.message = 'Something Error';
+                err.data = JSON.stringify(err);
                 resolve(err);
             }
         });

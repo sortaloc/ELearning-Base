@@ -32,11 +32,6 @@ module.exports = (router) => {
         return res.send(data);
     });
 
-    router.post('/search', VerifyMiddleware, async (req, res) => {
-        let data = await ProductController.search(req.body.search);
-        return res.send(true);
-    })
-
     router.post('/recomended', VerifyMiddleware, async (req, res) => {
         let response = await ProductController.getRecomended(['id'], req.body);
         return res.send(response);
@@ -129,6 +124,13 @@ module.exports = (router) => {
         console.log(response)
         return res.send(response);
     })
+
+    router.post('/searchProduk', VerifyMiddleware, async (req, res) => {
+        let response = await ProductController.search(['id', 'search'], req.body);
+        return res.send(response);
+    })
+
+    // router.post('/search')
     
     return router;
 }

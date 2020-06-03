@@ -612,9 +612,103 @@ class ProductController extends MainController {
         });
     }
 
-    search = (value) => {
-        // Search on Produk
-        // Search on category also
+    search = (fields, body) => {
+         let response = this.structure;
+        return new Promise(async (resolve) => {
+            let newBody = Object.keys(body);
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    // let kategoriSearch = await database.produk_group.connection.raw(`SELECT * FROM produk_group WHERE UPPER(group_nama) LIKE '%${body.search.toUpperCase()}%' ORDER BY group_nama ASC`)
+                    let kategoriData = await database.produk_group.connection.raw(`
+                    SELECT 
+                    produk_group.group_nama as nama,
+                    produk_group.is_active as active,
+                    produk_group.gambar_group as gambargroup,
+                    produk_group.id_group as groupid
+                    FROM
+                    produk_group
+                    `);
+                    let data = await database.produk.connection.raw(
+                        `
+                        SELECT * FROM produk 
+                        WHERE 
+                        UPPER(produk."produk_namaProduk") LIKE '%${body.search.toUpperCase()}%'
+                        OR
+                        UPPER(produk."produk_kodeProduk") LIKE '%${body.search.toUpperCase()}%'
+                        `
+                        );
+                    let ret = [];
+                    data = data.rows;
+                    for(let idx = 0; idx < data.length; idx++){
+                        let d = data[idx];
+                        let dataTrx = {};
+                        let statusbuy = await database.transaksi.allSelect({trx_id_profile: body.id, trx_produk_id : d.produk_id});
+                        let groupNama = await database.produk_group.single({id_group: d.produk_id_group})
+                        let pemateri = await database.profile.single({prl_profile_id: d.produk_pemateri_id})
+
+                        if(statusbuy.length > 0){
+                            let transaksi = statusbuy[0];
+                            dataTrx = {
+                                status: transaksi.trx_status,
+                                trxid: transaksi.trx_id,
+                                keterangan: transaksi.trx_keterangan,
+                                trxtipe: transaksi.trx_tipe,
+                                harga: transaksi.trx_harga,
+                                inboice: transaksi.trx_invoice,
+                                refid: transaksi.trx_refid,
+                                created: transaksi.trx_created_at
+                            }
+                        }
+                        let res = {
+                            produkid: d.produk_id,
+                            nama: d.produk_namaProduk,
+                            groupid: d.produk_id_group,
+                            active: Number(d.produk_is_active),
+                            harga: Number(d.produk_harga),
+                            kodeproduk: d.produk_kodeProduk,
+                            keterangan: d.produk_keterangan,
+                            created: d.produk_created_at,
+                            updated: d.produk_updated_at,
+                            cover: URLIMAGE+d.produk_cover,
+                            link: d.produk_link,
+                            idpembuat: d.produk_id_profile,
+                            statusbuy: statusbuy.length,
+                            namagroup: groupNama.group_nama,
+                            statusbuydata: dataTrx,
+                            namapemateri: pemateri.prl_nama,
+                            usernamepemateri: pemateri.prl_username,
+                            photopemateri: pemateri.prl_photo,
+                            photopematerilink: URLIMAGE+pemateri.prl_photo
+                        }
+                        ret.push(res);
+                    }
+
+
+                    response.state = true;
+                    response.data = {
+                        produk: ret,
+                        kategori: kategoriData.rows
+                    };
+                    response.code = 100;
+                    response.message = `Success Search, Produk Found ${ret.length}`
+                    resolve(response);
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    resolve(response)
+                }
+            }catch(err){
+                console.log('Something Error', err);
+                err.code = 503;
+                err.state = false;
+                err.message = 'Something Error';
+                err.data = JSON.stringify(err);
+                resolve(err);
+            }
+        });
         
     }
 
