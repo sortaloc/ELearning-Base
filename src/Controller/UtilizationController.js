@@ -10,39 +10,43 @@ class UtilizationController extends MainController {
         this.structure = STRUCTURE;
     }
 
-    getWA = () => {
+    getNumber = () => {
     	return new Promise(async resolve => {
 	    	let response = this.structure;
 	    	let setting = await database.setting.single({st_kode: 'wa_bot'});
 	        let wa = setting.st_value;
 
-	        response.state = true;
-	        response.code = 100;
-	        response.message = 'Success get Number WA';
-	        response.data = {
-	        	value: wa
-	        }
-
-	        resolve(response);
-    	})
-    }
-
-    getCS = () => {
-    	return new Promise(async resolve => {
-	    	let response = this.structure;
-	    	let setting = await database.setting.single({st_kode: 'cs_number'});
+     		setting = await database.setting.single({st_kode: 'cs_number'});
 	        let csnumber = setting.st_value;
 
 	        response.state = true;
 	        response.code = 100;
-	        response.message = 'Success get Number CS';
+	        response.message = 'Success get Number WA';
 	        response.data = {
-	        	value: csnumber
+	        	whatsapp: wa,
+	        	customerservice: csnumber
 	        }
 
 	        resolve(response);
     	})
     }
+
+    // getCS = () => {
+    // 	return new Promise(async resolve => {
+	   //  	let response = this.structure;
+	   //  	let setting = await database.setting.single({st_kode: 'cs_number'});
+	   //      let csnumber = setting.st_value;
+
+	   //      response.state = true;
+	   //      response.code = 100;
+	   //      response.message = 'Success get Number CS';
+	   //      response.data = {
+	   //      	value: csnumber
+	   //      }
+
+	   //      resolve(response);
+    // 	})
+    // }
 }
 
 module.exports = new UtilizationController;

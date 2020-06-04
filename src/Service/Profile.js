@@ -47,6 +47,16 @@ module.exports = (router) => {
         res.send(response)
     })
 
+    router.post('/changePassword', VerifyMiddleware, async (req, res) => {
+        let response = await ProfileController.changePassword(['id', 'password'], req.body);
+        res.send(true);
+    })
+
+    router.post('/verityOTPchangePassword', VerifyMiddleware, async (req, res) => {
+        let response = await ProfileController.verifyOTPChangePassword(['id', 'otp'], req.body);
+        res.send(true);
+    })
+
     // Dashboard
     router.post('/all', VerifyMiddleware, async(req, res) => {
         let response = await ProfileController.getAll()

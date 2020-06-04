@@ -277,28 +277,13 @@ class RegisterController extends MainController {
                     res.writeHead(200, {'Content-Type': 'text/xml'});
                     res.end(twiml.toString());
                 }else{
-                    const getKodeOTP = async () => {
-                        const numberPhone = getNumber;
-                        const kode = this.generateOTP();
-                        const query = kodeOtpSelect(kode, numberPhone, this.getToday())
-                        let OTPDatabase = await database.otp_list.connection.raw(query)
-                        if(OTPDatabase.rows > 0){
-                            getKodeOTP()
-                        }
-                        const otp_listStructure = {
-                            otp_nohp: numberPhone,
-                            otp_kode: kode,
-                            otp_status: 0
-                        }
-                        const result = await database.otp_list.insertOne(otp_listStructure);
-                        if(result){
-                            return kode;
-                        }else{
-                            res.writeHead(500, {'Content-Type': 'text/xml'});
-                            res.end(twiml.toString());
-                        }
+                    
+                    let OTP = await this.getKodeOTP(getNumber);
+                    if(!OTP){
+                        res.writeHead(500, {'Content-Type': 'text/xml'});
+                        res.end(twiml.toString());
                     }
-                    let OTP = await getKodeOTP();
+                    OTP = OTP.kode;
                     const message = `Kode OTP anda adalah : \n${OTP}`
                     twiml.message(message);
                     res.writeHead(200, {'Content-Type': 'text/xml'});

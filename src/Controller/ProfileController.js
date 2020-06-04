@@ -1,11 +1,16 @@
 const database = require('@Model/index');
 const MainController = require('@Controllers/MainController');
-const { STRUCTURE, URLIMAGE } = require('@Config/Config');
+const { STRUCTURE, URLIMAGE, WHATSAPP } = require('@Config/Config');
 
 const fs = require('fs-extra');
 const path = require('path')
 
 const kota = require('@Util/KotaIndonesia.json');
+
+const { accountSid, authToken } = WHATSAPP;
+
+const client = require('twilio')(accountSid, authToken);
+const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
 class ProfileController extends MainController{
     structure = STRUCTURE;
