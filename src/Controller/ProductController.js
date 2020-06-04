@@ -362,7 +362,7 @@ class ProductController extends MainController {
                                 refid: transaksi.trx_refid,
                                 created: transaksi.trx_created_at
                             }
-                            if(statusbuy.trx_tipe === 'BUYPROFISIENSI'){
+                            if(transaksi.trx_tipe === 'BUYPROFISIENSI'){
                                 let parse = JSON.parse(statusbuy.trx_data);
                                 dataTrx = {
                                     ...dataTrx,
