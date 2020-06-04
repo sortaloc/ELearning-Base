@@ -43,7 +43,8 @@ module.exports = {
 	STRUCTURE: ResponseStructure,
 	WHATSAPP: {
 		accountSid: process.env.ACCOUNTSID,
-		authToken: process.env.AUTHTOKEN
+		authToken: process.env.AUTHTOKEN,
+		number: process.env.TWLNUMBER
 	},
 	CIPHERID: process.env.CIPHERID,
 	SLEEP: 750,

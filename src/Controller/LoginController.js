@@ -40,7 +40,7 @@ class LoginController extends MainController {
                             prl_email LIKE '%${input}%'
                         )
                         AND 
-                        prl_group = '${group}',
+                        prl_group = '${group}'
                         AND
                         prl_isactive = 1
                         `
@@ -74,7 +74,9 @@ class LoginController extends MainController {
                         id: result.prl_profile_id,
                         nama: result.prl_nama,
                         username: result.prl_username,
-                        nohp: result.prl_nohp
+                        nohp: result.prl_nohp,
+                        role: result.prl_role,
+                        group: result.prl_group
                     }
                     const Token = this.createToken(data);
                     data.token = Token.token;
