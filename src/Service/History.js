@@ -25,5 +25,10 @@ module.exports = (router) => {
 	})
 
 	/*Dashboard*/
+
+	router.post('/getAllTrx', VerifyMiddleware, async (req, res) => {
+		let response = await HistoryController.allTransaction(['id'], req.body);
+		res.send(response);
+	})
 	return router;
 };

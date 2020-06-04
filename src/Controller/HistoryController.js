@@ -207,7 +207,7 @@ class HistoryController extends MainController {
     }
 
     singleTopup = (fields, body) => {
-         let response = this.structure;
+        let response = this.structure;
         return new Promise(async (resolve) => {
             let newBody = Object.keys(body);
             let diff = fields.filter((x) => newBody.indexOf(x) === -1)
@@ -247,6 +247,58 @@ class HistoryController extends MainController {
                         response.state = false
                         resolve(response)    
                     }
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    resolve(response)
+                }
+            }catch(err){
+                console.log(err);
+                err.state = false
+                err.code = 505;
+                resolve(err);
+            }
+        });
+    }
+
+    allTransaction = (fields, body) => {
+        let response = this.structure;
+        return new Promise(async (resolve) => {
+            let newBody = Object.keys(body);
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    // let data = await database.transaksi.all();
+                    let data = await database.transaksi.connection.raw(
+                        `SELECT
+                        a.trx_id,
+                        a.trx_tipe,
+                        a.trx_invoice,
+                        a.trx_status,
+                        a.trx_judul,
+                        a.trx_refid,
+                        a.trx_id_profile,
+                        a.trx_produk_id,
+                        a.trx_created_at,
+                        a.trx_updated_at,
+                        a.trx_saldo_before,
+                        a.trx_saldo_after,
+                        a.trx_harga,
+                        prf.prl_nama as trx_namauser,
+                        prd."produk_kodeProduk" as trx_kodeproduk,
+                        prd."produk_namaProduk" as trx_namaproduk
+                        FROM transaksi a
+                        JOIN (SELECT prl_profile_id, prl_nama FROM profile WHERE prl_isactive = 1) prf on prf.prl_profile_id = a.trx_id_profile
+                        JOIN (SELECT "produk_kodeProduk", "produk_namaProduk", produk_id FROM produk) prd on prd.produk_id = a.trx_produk_id
+                        `
+                        )
+                    response.data = data.rows;
+                    response.message = `Success get Transaction`;
+                    response.code = 100;
+                    response.state = true
+                    resolve(response)
                 }else{
                     response.data = {};
                     response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
