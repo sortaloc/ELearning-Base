@@ -140,10 +140,11 @@ const processing = async () => {
                                       }
                                     }
                                     // const twiml = new MessagingResponse();
-                                    client.messages.create({
+                                    let msg = await client.messages.create({
                                         body: `Anda telah terdaftar pada Kelas '${produk.produk_namaProduk}'\nUsername : *${username}*\nPassword : *${password}*`,
                                         to: `whatsapp:+${akun.prl_nohp}`
                                     })
+                                    console.log(msg);
                                     // await twiml.message(`Anda telah terdaftar pada Kelas '${produk.produk_namaProduk}'\nUsername : *${username}*\nPassword : *${password}*`);
                                     await MainController.sendNotif(notifData)
                                     ibxSucc.push(inbox.ibx_refid);
