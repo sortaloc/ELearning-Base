@@ -27,7 +27,7 @@ class PaymentController extends MainController {
                 let newBody = Object.keys(body);
                 let diff = fields.filter((x) => newBody.indexOf(x) === -1)
                 if(diff.length === 0){
-                    let profile = await database.profile.allSelect({prl_profile_id: String(body.id)});
+                    let profile = await database.profile.allSelect({prl_profile_id: String(body.id), prl_isactive: 1});
                     // console.log(profile)
                     if(Number(profile.length) > 0){
                         const codeUnique = async () => {
@@ -112,7 +112,7 @@ class PaymentController extends MainController {
                 let newBody = Object.keys(body);
                 let diff = fields.filter((x) => newBody.indexOf(x) === -1)
                 // Validasi ID
-                let akun = await database.profile.allSelect({prl_profile_id: body.id});
+                let akun = await database.profile.allSelect({prl_profile_id: body.id, prl_isactive: 1});
                 if(diff.length === 0 && akun.length > 0){
                     // Update Deposit menjadi 1 = Ready di cek dari dashboard
                     akun = akun[0];
@@ -320,9 +320,9 @@ class PaymentController extends MainController {
             try{
                 if(diff.length === 0){
                     // get Table Akun
-                    let adminProfile = await database.profile.single({prl_profile_id: body.adminid});
+                    let adminProfile = await database.profile.single({prl_profile_id: body.adminid, prl_isactive: 1});
                     let deposit = await database.deposit.single({dep_id: body.id});
-                    let akun = await database.profile.single({prl_profile_id: deposit.dep_id_profile});
+                    let akun = await database.profile.single({prl_profile_id: deposit.dep_id_profile, prl_isactive: 1});
 
                     // Deteksi dulu statusnya
                     // let refid = `TOPUPDEPO${this.generateID()}`;
@@ -404,7 +404,7 @@ class PaymentController extends MainController {
             var diff = fields.filter((x) => newBody.indexOf(x) === -1)
             try{
                 if(diff.length === 0){
-                    var akun = await database.profile.allSelect({prl_profile_id: body.id, prl_password: this.createPassword(body.password)});
+                    var akun = await database.profile.allSelect({prl_profile_id: body.id, prl_password: this.createPassword(body.password), prl_isactive: 1});
                     if(akun.length > 0){
                         akun = akun[0];
                         var produk = await database.produk.allSelect({produk_id: body.idproduk, produk_kodeProduk: body.kodeproduk});
@@ -514,7 +514,7 @@ class PaymentController extends MainController {
             try{
                 if(diff.length === 0){
                     let data = await database.deposit.allSelect({dep_id_profile: body.id})
-                    let akun = await database.profile.single({prl_profile_id: body.id})
+                    let akun = await database.profile.single({prl_profile_id: body.id, prl_isactive: 1})
                     data = data.map( async (d) => {
                         return {
                             namaakun: akun.prl_nama,

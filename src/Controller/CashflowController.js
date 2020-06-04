@@ -41,7 +41,7 @@ class CashflowController extends MainController {
             			let d = data.rows[0]
 
             			let cond = Number(d.kredit) !== Number(d.debet) ? false : true
-            			let akun = await database.profile.single({prl_profile_id: d.cf_profile_id});
+            			let akun = await database.profile.single({prl_profile_id: d.cf_profile_id, prl_isactive: 1});
             			if(cond) ok++;
             			if(!cond) fail++;
             			let newD = {
@@ -89,7 +89,7 @@ class CashflowController extends MainController {
                 	if(cashflow.length > 0){
                 		for(let idx = 0; idx < cashflow.length; idx++){
                 			let d = cashflow[idx];
-                			let akun = await database.profile.single({prl_profile_id: d.cf_profile_id});
+                			let akun = await database.profile.single({prl_profile_id: d.cf_profile_id, prl_isactive: 1});
 
                 			d.nama_profil = akun.prl_nama;
                 			d.account_state = false;

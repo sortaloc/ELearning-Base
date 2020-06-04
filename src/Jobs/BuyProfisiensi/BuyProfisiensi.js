@@ -33,7 +33,7 @@ const processing = async () => {
                     let inbox = data[idx];
                     let FormatMsg = MainController.FormatMsg(inbox.ibx_format_msg.split('.'));
                     let produk = await database.produk.allSelect({produk_id: FormatMsg.productid, produk_kodeProduk: FormatMsg.kode});
-                    let akun = await database.profile.single({prl_profile_id: FormatMsg.profileid});
+                    let akun = await database.profile.single({prl_profile_id: FormatMsg.profileid, prl_isactive: 1});
                     let transaksi = await database.transaksi.allSelect({trx_refid: inbox.ibx_refid})
 
                     if(transaksi.length === 0 || produk.length === 0){
@@ -49,7 +49,7 @@ const processing = async () => {
                     let keuntunganUser = realHarga - fee;
                     let keuntunganUserNexus = nexus - feeNexus;
 
-                    let pemateri = await database.profile.single({prl_profile_id: produk.produk_pemateri_id})
+                    let pemateri = await database.profile.single({prl_profile_id: produk.produk_pemateri_id, prl_isactive: 1})
 
                     var globalData = {
                         transaksi, pemateri, produk, akun, inbox
@@ -70,7 +70,7 @@ const processing = async () => {
                         cf_mode: 'min_user'
                     }
 
-                    let query = `UPDATE profile SET prl_saldo_nexus = prl_saldo_nexus - ${nexus}, prl_saldo = prl_saldo - ${realHarga} WHERE prl_profile_id = '${akun.prl_profile_id}'`;
+                    let query = `UPDATE profile SET prl_saldo_nexus = prl_saldo_nexus - ${nexus}, prl_saldo = prl_saldo - ${realHarga} WHERE prl_profile_id = '${akun.prl_profile_id}' AND prl_isactive = 1`;
                     let updateSaldo = await database.profile.connection.raw(query);
 
                     if(updateSaldo.rowCount > 0){

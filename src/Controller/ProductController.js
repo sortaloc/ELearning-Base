@@ -147,7 +147,7 @@ class ProductController extends MainController {
                         let dataTrx = {};
                         let statusbuy = await database.transaksi.allSelect({trx_id_profile: body.id, trx_produk_id : d.produk_id});
                         let groupNama = await database.produk_group.single({id_group: d.produk_id_group})
-                        let pemateri = await database.profile.single({prl_profile_id: d.produk_pemateri_id})
+                        let pemateri = await database.profile.single({prl_profile_id: d.produk_pemateri_id, prl_isactive: 1})
 
                         if(statusbuy.length > 0){
                             let transaksi = statusbuy[0];
@@ -341,8 +341,8 @@ class ProductController extends MainController {
                         CONCAT('${URLIMAGE}', cprofile.prl_photo) as photopematerilink,
                         c.group_nama as tipegroup
                         from produk a
-                        JOIN (SELECT prl_profile_id, prl_nama, prl_username FROM profile) bprofile on bprofile.prl_profile_id = a.produk_id_profile
-                        JOIN (SELECT prl_profile_id, prl_nama, prl_username, prl_photo FROM profile) cprofile on cprofile.prl_profile_id = a.produk_id_profile
+                        JOIN (SELECT prl_profile_id, prl_nama, prl_username FROM profile WHERE prl_isactive = 1) bprofile on bprofile.prl_profile_id = a.produk_id_profile
+                        JOIN (SELECT prl_profile_id, prl_nama, prl_username, prl_photo FROM profile WHERE prl_isactive = 1) cprofile on cprofile.prl_profile_id = a.produk_id_profile
                         JOIN (SELECT group_nama, id_group FROM produk_group) c on a.produk_id_group = c.id_group
                         WHERE
                         a.produk_id = '${body.produkid}'
@@ -658,7 +658,7 @@ class ProductController extends MainController {
                         let dataTrx = {};
                         let statusbuy = await database.transaksi.allSelect({trx_id_profile: body.id, trx_produk_id : d.produk_id});
                         let groupNama = await database.produk_group.single({id_group: d.produk_id_group})
-                        let pemateri = await database.profile.single({prl_profile_id: d.produk_pemateri_id})
+                        let pemateri = await database.profile.single({prl_profile_id: d.produk_pemateri_id, prl_isactive: 1})
 
                         if(statusbuy.length > 0){
                             let transaksi = statusbuy[0];
@@ -757,8 +757,8 @@ class ProductController extends MainController {
                         JOIN (SELECT * FROM produk) prd on prd.produk_id = a.trx_produk_id
                         JOIN (SELECT * FROM produk_group) prdg ON prdg.id_group = prd.produk_id_group
 
-                        JOIN (SELECT prl_profile_id, prl_nama, prl_username FROM profile) bprofile on bprofile.prl_profile_id = prd.produk_id_profile
-                        JOIN (SELECT prl_profile_id, prl_nama, prl_username, prl_photo FROM profile) cprofile on cprofile.prl_profile_id = prd.produk_id_profile
+                        JOIN (SELECT prl_profile_id, prl_nama, prl_username FROM profile WHERE prl_isactive = 1) bprofile on bprofile.prl_profile_id = prd.produk_id_profile
+                        JOIN (SELECT prl_profile_id, prl_nama, prl_username, prl_photo FROM profile WHERE prl_isactive = 1) cprofile on cprofile.prl_profile_id = prd.produk_id_profile
                                                                         
                         where a.trx_data LIKE '%download%'
                         GROUP BY a.trx_produk_id, prd."produk_namaProduk", prd.produk_harga, prd.produk_id_group, prdg.group_nama, prd."produk_kodeProduk",prd.produk_cover, prd.produk_keterangan, prd.produk_certificate, prd.produk_cover, bprofile.prl_nama, bprofile.prl_username, cprofile.prl_nama, cprofile.prl_username, cprofile.prl_photo, photopematerilink

@@ -17,7 +17,7 @@ class DownloadController extends MainController {
     Download = (body) => {
     	return new Promise(async resolve => {
     		let dataToken = await this.decipherToken(body.token);
-			let akun = await database.profile.single({prl_profile_id: dataToken.id});
+			let akun = await database.profile.single({prl_profile_id: dataToken.id, prl_isactive: 1});
 			try{
 				// Ambil data transaksi
 				let transaksi = await database.transaksi.connection.raw(

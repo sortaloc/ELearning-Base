@@ -34,7 +34,7 @@ const processing = async () => {
 
                     let deposit = await database.deposit.single({dep_refid: inbox.ibx_refid});
 
-                    let akun = await database.profile.single({prl_profile_id: inbox.ibx_id_profile})
+                    let akun = await database.profile.single({prl_profile_id: inbox.ibx_id_profile, prl_isactive: 1})
 
                     let trxID = MainController.generateID();
                     let trxINV = MainController.createInvoice('TOPUP');
@@ -87,7 +87,7 @@ const processing = async () => {
                             cf_profile_id: akun.prl_profile_id
                         }
 
-                        query = `UPDATE profile SET prl_saldo = prl_saldo + ${deposit.dep_nominal}, prl_saldo_nexus = prl_saldo_nexus + ${nexus} WHERE prl_profile_id = '${akun.prl_profile_id}'`;
+                        query = `UPDATE profile SET prl_saldo = prl_saldo + ${deposit.dep_nominal}, prl_saldo_nexus = prl_saldo_nexus + ${nexus} WHERE prl_profile_id = '${akun.prl_profile_id}' AND prl_isactive = 1`;
                         let updateAkun2 = await database.account.connection.raw(query);
                         if(updateAkun2.rowCount > 0){
                             let jurnal3 = {

@@ -25,7 +25,7 @@ class ProfileController extends MainController{
             let diff = fields.filter((x) => newBody.indexOf(x) === -1)
             try{
                 if(diff.length === 0){
-                    let profile = await database.profile.allSelect({prl_profile_id: body.id});
+                    let profile = await database.profile.allSelect({prl_profile_id: body.id, prl_isactive: 1});
                     if(profile.length > 0){
                         profile = profile[profile.length - 1];
                         // console.log(profile);
@@ -84,6 +84,7 @@ class ProfileController extends MainController{
                     }
                     let where = {
                         prl_profile_id: body.id,
+                        prl_isactive: 1
                         // prl_password: pwd
                     }
                     let profile = await database.profile.allSelect(where);
@@ -148,7 +149,7 @@ class ProfileController extends MainController{
             let diff = fields.filter((x) => newBody.indexOf(x) === -1)
             try{
                 if(diff.length === 0){
-                    let profile = await database.profile.connection.raw(`SELECT * FROM profile WHERE prl_username = '${body.username}'`);
+                    let profile = await database.profile.connection.raw(`SELECT * FROM profile WHERE prl_username = '${body.username}' AND prl_isactive = 1`);
                     if(profile.rows.length === 0){
                         response.data = body;
                         response.message = "Username not found";
@@ -258,7 +259,7 @@ class ProfileController extends MainController{
             let diff = fields.filter((x) => newBody.indexOf(x) === -1)
             try{
                 if(diff.length === 0){
-                    let data = await database.profile.allSelect({prl_profile_id: body.id});
+                    let data = await database.profile.allSelect({prl_profile_id: body.id, prl_isactive: 1});
                     // console.log(data)
                     if(data.length > 0){
                         data = data[0];
@@ -306,6 +307,8 @@ class ProfileController extends MainController{
                 prl_saldo as saldo
                 FROM
                 profile
+                WHERE
+                prl_isactive = 1
                 `)
                 response.data = data.rows
                 response.code = 100;
@@ -356,6 +359,8 @@ class ProfileController extends MainController{
                     profile
                     WHERE
                     profile.prl_profile_id = '${body.profileid}'
+                    AND
+                    profile.prl_isactive = 1
                     `)
 
                     if(data.rows.length > 0){
@@ -410,6 +415,8 @@ class ProfileController extends MainController{
                         UPPER(prl_nohp) LIKE '%${body.search.toUpperCase()}%'
                         OR
                         UPPER(prl_username) LIKE '%${body.search.toUpperCase()}%'
+                        AND
+                        prl_isactive = 1
                         `
                         );
                     response.data = data.rows
@@ -417,6 +424,62 @@ class ProfileController extends MainController{
                     response.state = true;
                     response.message = `Success Search, ${data.rows.length} Data Found`
                     resolve(response);
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    resolve(response)
+                }
+            }catch(err){
+                console.log('Something Error', err);
+                err.code = 503;
+                err.state = false;
+                err.message = 'Something Error';
+                err.data = JSON.stringify(err);
+                resolve(err);
+            }
+        });
+    }
+
+    changePassword = (fields, body) => {
+        let response = this.structure;
+        return new Promise(async (resolve) => {
+            let newBody = Object.keys(body);
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    let akun = await database.profile.allSelect({prl_profile_id: body.id, prl_password: this.createPassword(body.password), prl_isactive: 1});
+                    if(akun.length > 0){
+
+                        let OTP = this.getKodeOTP(akun.prl_nohp);
+                        if(!OTP.state){
+                            response.data = {};
+                            response.message = 'Gagal Mendapatkan Kode OTP, silahkan tunggu beberapa saat lagi';
+                            response.code = 104;
+                            response.state = false;
+                            resolve(response);
+                        }
+
+                        OTP = OTP.kode;
+
+
+
+                        // let data = await client.messages
+                        // .create({
+                        //     from: 'whatsapp:+14155238886',
+                        //     body: `Kode OTP untuk merubah password ialah`,
+                        //     to: `whatsapp:+${akun.prl_nohp}`
+                        // })
+                        // .then(message => console.log(message));
+                    }else{
+                        response.data = body;
+                        response.message = `Profile tidak ditemukan, cek kembali password yang dikirimkan`;
+                        response.code = 103;
+                        response.state = false
+                        resolve(response)
+                    }
+                    // console.log(akun)
                 }else{
                     response.data = {};
                     response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;

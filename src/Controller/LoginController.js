@@ -40,7 +40,9 @@ class LoginController extends MainController {
                             prl_email LIKE '%${input}%'
                         )
                         AND 
-                        prl_group = '${group}'
+                        prl_group = '${group}',
+                        AND
+                        prl_isactive = 1
                         `
                         )
 
