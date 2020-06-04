@@ -359,6 +359,20 @@ class RegisterController extends MainController {
             }
         });
     }
+
+    testSendWa = () => {
+        return new Promise(async resolve => {
+            let data = await client.messages
+            .create({
+                from: 'whatsapp:+14155238886',
+                body: `It's taco time!`,
+                to: 'whatsapp:+6282210072854'
+            })
+            // .then(message => console.log(message));
+            resolve(data)
+
+        })
+    }
 }
 
 module.exports = new RegisterController;

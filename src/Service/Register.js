@@ -32,5 +32,14 @@ module.exports = (router) => {
         let response = await RegisterController.validateForgotPassword(['otp', 'value'], req.body);
         res.send(true);
     })
+
+    router.get('/testingsendWhatsapp', async (req, res) => {
+        let response = await RegisterController.testSendWa();
+        res.send(response);
+    })
+
+    // router.get('/', async (req, res) => {
+    //     res.send(false);
+    // })
     return router;
 }

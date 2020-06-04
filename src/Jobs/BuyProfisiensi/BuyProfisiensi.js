@@ -140,7 +140,13 @@ const processing = async () => {
                                       }
                                     }
                                     // const twiml = new MessagingResponse();
-                                    let msg = await client.messages.create({
+                                    // let msg = await client.messages.create({
+                                    //     body: `Anda telah terdaftar pada Kelas '${produk.produk_namaProduk}'\nUsername : *${username}*\nPassword : *${password}*`,
+                                    //     to: `whatsapp:+${akun.prl_nohp}`
+                                    // })
+                                    let msg = await client.messages
+                                    .create({
+                                        from: 'whatsapp:+14155238886',
                                         body: `Anda telah terdaftar pada Kelas '${produk.produk_namaProduk}'\nUsername : *${username}*\nPassword : *${password}*`,
                                         to: `whatsapp:+${akun.prl_nohp}`
                                     })
