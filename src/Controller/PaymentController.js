@@ -186,7 +186,7 @@ class PaymentController extends MainController {
     getListNominal = () => {
         return new Promise(resolve => {
             let response = this.structure;
-            let data = [50000, 100000, 150000, 200000, 250000,300000, 350000, 400000, 450000, 500000];
+            let data = [5000, 10000, 20000, 50000, 100000, 150000, 200000, 250000,300000, 350000, 400000, 450000, 500000];
             let nexus = 1;
             let newData = [];
             // let nilaiNexus = [];
@@ -523,7 +523,43 @@ class PaymentController extends MainController {
                             refid: d.dep_refid,
                         }
                     })
-                    // response.data = 
+                    response.data = data;
+                    response.code = 100;
+                    response.state = true;
+                    response.message = 'Success';
+                    resolve(response)
+                }else{
+                    response.data = body;
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    resolve(response)
+                }
+            }catch(err){
+                console.log(err)
+                response.data = body;
+                response.message = `Something Error`;
+                response.code = 500;
+                response.state = false
+                resolve(response)
+            }
+        });
+    }
+
+    depositNotif = (fields, body) => {
+        var response = this.structure;
+        return new Promise(async resolve => {
+            var newBody = Object.keys(body);
+            var diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    let data = await database.deposit.connection.raw('SELECT count(dep_status) as deposit_notif from deposit WHERE dep_status = 1');
+                    data = data.rows[0];
+                    response.data = data;
+                    response.message = `Success Get Notif Data`;
+                    response.code = 100;
+                    response.state = true
+                    resolve(response)
                 }else{
                     response.data = body;
                     response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;

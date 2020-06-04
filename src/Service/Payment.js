@@ -86,5 +86,10 @@ module.exports = (router) => {
         let response = await PaymentController.processDeposit(['id', 'status', 'adminid'], req.body);
         return res.send(response);
     })
+
+    router.post('/depositNotif', VerifyMiddleware, async (req, res) => {
+        let response = await PaymentController.depositNotif(['id'], req.body);
+        return res.send(response);
+    })
     return router;
 }
