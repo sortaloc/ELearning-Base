@@ -32,6 +32,8 @@ const processing = async () => {
                 for(let idx = 0; idx < data.length; idx++){
                     let inbox = data[idx];
 
+                    await database.inbox.updateOne({ibx_refid: inbox.ibx_refid}, {ibx_status: 'P'});
+
                     let deposit = await database.deposit.single({dep_refid: inbox.ibx_refid});
 
                     let akun = await database.profile.single({prl_profile_id: inbox.ibx_id_profile, prl_isactive: 1})

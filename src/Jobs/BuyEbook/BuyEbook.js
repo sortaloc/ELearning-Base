@@ -28,6 +28,8 @@ const processing = async () => {
                 for(let idx = 0; idx < data.length; idx++){
                     let inbox = data[idx];
 
+                    await database.inbox.updateOne({ibx_refid: inbox.ibx_refid}, {ibx_status: 'P'});
+
                     let FormatMsg = MainController.FormatMsg(inbox.ibx_format_msg.split('.'));
                     
                     let produk = await database.produk.allSelect({produk_id: FormatMsg.productid, produk_kodeProduk: FormatMsg.kode});

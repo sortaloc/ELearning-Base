@@ -72,5 +72,10 @@ module.exports = (router) => {
         let response = await ProfileController.search(['id', 'search'], req.body);
         res.send(response)
     })
+
+    router.post('/suspendUser', VerifyMiddleware, async (req, res) => {
+        let response = await ProfileController.suspend(['id', 'profileid'], req.body);
+        res.send(true);
+    })
     return router
 }

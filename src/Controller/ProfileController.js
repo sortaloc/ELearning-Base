@@ -497,6 +497,32 @@ class ProfileController extends MainController{
             }
         });
     }
+
+    suspend = (fields, body) => {
+        let response = this.structure;
+        return new Promise(async (resolve) => {
+            let newBody = Object.keys(body);
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    // 
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    resolve(response)
+                }
+            }catch(err){
+                console.log('Something Error', err);
+                err.code = 503;
+                err.state = false;
+                err.message = 'Something Error';
+                err.data = JSON.stringify(err);
+                resolve(err);
+            }
+        });
+    }
 }
 
 module.exports = new ProfileController
