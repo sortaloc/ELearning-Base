@@ -86,6 +86,7 @@ class CashflowController extends MainController {
             try{
                 if(diff.length === 0){
                 	let cashflow = await database.cashflow.allSelect({cf_refid: body.id});
+                    console.log(cashflow);
                 	if(cashflow.length > 0){
                 		for(let idx = 0; idx < cashflow.length; idx++){
                 			let d = cashflow[idx];

@@ -286,15 +286,24 @@ class HistoryController extends MainController {
                         a.trx_saldo_before,
                         a.trx_saldo_after,
                         a.trx_harga,
-                        prf.prl_nama as trx_namauser,
-                        prd."produk_kodeProduk" as trx_kodeproduk,
-                        prd."produk_namaProduk" as trx_namaproduk
+                        prf.prl_nama as trx_namauser
                         FROM transaksi a
                         JOIN (SELECT prl_profile_id, prl_nama FROM profile WHERE prl_isactive = 1) prf on prf.prl_profile_id = a.trx_id_profile
-                        JOIN (SELECT "produk_kodeProduk", "produk_namaProduk", produk_id FROM produk) prd on prd.produk_id = a.trx_produk_id
                         `
                         )
-                    response.data = data.rows;
+                    
+                    // prd."produk_kodeProduk" as trx_kodeproduk,
+                    // prd."produk_namaProduk" as trx_namaproduk
+                    
+                    // JOIN (SELECT "produk_kodeProduk", "produk_namaProduk", produk_id FROM produk) prd on prd.produk_id = a.trx_produk_id
+                    let trxSukses = await database.transaksi.allSelect({trx_status: 'S'});
+                    let pending = await database.transaksi.connection.raw(`SELECT COUNT(trx_id) as pending FROM transaksi WHERE trx_status IN ('P', 'W', 'Q')`)
+                    let retData = {
+                        sukses: trxSukses.length,
+                        data: data.rows,
+                        proses: pending.rows[0].pending
+                    }
+                    response.data = retData;
                     response.message = `Success get Transaction`;
                     response.code = 100;
                     response.state = true
