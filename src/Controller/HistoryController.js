@@ -165,7 +165,11 @@ class HistoryController extends MainController {
             let diff = fields.filter((x) => newBody.indexOf(x) === -1)
             try{
                 if(diff.length === 0){
-                    let deposit = await database.deposit.allSelect({dep_id_profile: body.id});
+                    // let deposit = await database.deposit.allSelect({dep_id_profile: body.id});
+                    let deposit = await database.deposit.connection.raw(
+                        `SELECT * FROM deposit WHERE dep_id_profile = '${body.id}' AND dep_status IN (0, 1)`
+                        )
+                    deposit = deposit.rows;
                     let retData = [];
                     for(let idx = 0; idx < deposit.length; idx++){
                         let d = deposit[idx];

@@ -231,8 +231,13 @@ class ProductController extends MainController {
                         produk_id: this.generateID(),
                         produk_link: body.link,
                         produk_id_profile: body.id,
-                        produk_certificate: body.certificate
+                        produk_certificate: body.certificate,
+                        produk_pemateri_id: body.pemateri,
+                        produk_start: body.startDate,
+                        produk_end: body.endDate
                     }
+
+                    console.log(insertData)
 
                     let insert = await database.produk.insertOne(insertData);
                     if(insert.state){

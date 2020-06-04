@@ -15,6 +15,9 @@ const processing = async () => {
     return new Promise(async (resolve) => {
         let data = await database.inbox.allSelect({ibx_tipe: 'BUYCERTIFICATE', 'ibx_status': 'Q'});
 
+        let setting = await database.setting.single({st_kode: 'fee_produk'});
+        let feepersen = Number(setting.st_value);
+
         let ibxSucc = new Array();
 
         if(data.length === 0){
@@ -43,6 +46,11 @@ const processing = async () => {
                     let realHarga = Number(produk.produk_harga) /** 15000*/
                     let nexus = Number(produk.produk_harga)
 
+                    let fee = realHarga * (feepersen / 100)
+                    let feeNexus = nexus * (feepersen / 100);
+                    let keuntunganUser = realHarga - fee;
+                    let keuntunganUserNexus = nexus - feeNexus;
+
                     let jurnal1 = {
                         cf_keterangan: `Pengurangan Nexus dari profile ${akun.prl_profile_id} sebesar ${produk.produk_harga} Nexus seharga ${realHarga} Rupiah`,
                         cf_tipe: 'buy',
@@ -51,7 +59,8 @@ const processing = async () => {
                         cf_nominal: produk.produk_harga + ' Nexus',
                         cf_refid: inbox.ibx_refid,
                         cf_internal_acc: '',
-                        cf_profile_id: akun.prl_profile_id
+                        cf_profile_id: akun.prl_profile_id,
+                        cf_mode: 'min_user'
                     }
 
                     let query = `UPDATE profile SET prl_saldo_nexus = prl_saldo_nexus - ${nexus}, prl_saldo = prl_saldo - ${realHarga} WHERE prl_profile_id = '${akun.prl_profile_id}'`;
@@ -60,19 +69,36 @@ const processing = async () => {
                     if(updateSaldo.rowCount > 0){
                         let penampung = '20200507215106956376'
                         let jurnal2 = {
-                            cf_keterangan: `Penambahan ke account Penampungan Sertifikat dengan id: '${penampung}' degan pembelian sertifikat seharga ${nexus} Nexus dikonversikan menjadi ${realHarga} Rupiah`,
+                            cf_keterangan: `Penambahan ke account Penampungan Sertifikat dengan id penampung: '${penampung}' degan pembelian Sertifikat seharga ${nexus} Nexus, dengan keuntungan sebesar ${keuntunganUserNexus} Nexus dikonversikan menjadi ${keuntunganUser} Rupiah`,
                             cf_tipe: 'buy',
                             cf_kredit: 0,
-                            cf_debet: realHarga,
+                            cf_debet: keuntunganUser,
                             cf_nominal: nexus + ' Nexus',
                             cf_refid: inbox.ibx_refid,
                             cf_internal_acc: penampung,
-                            cf_profile_id: akun.prl_profile_id
+                            cf_profile_id: akun.prl_profile_id,
+                            cf_mode: 'add_internal'
                         }
-                        query = `UPDATE account SET acc_saldo = acc_saldo + ${realHarga} WHERE acc_noakun = '${penampung}'`
+                        query = `UPDATE account SET acc_saldo = acc_saldo + ${keuntunganUser} WHERE acc_noakun = '${penampung}'`
                         updateSaldo = await database.account.connection.raw(query);
 
                         if(updateSaldo.rowCount > 0){
+
+                            penampung = '20200605171724213363'
+                            let jurnal3 = {
+                                cf_keterangan: `Penambahan ke account Penampungan Keuntungan Sertifikat dengan id penampung: '${penampung}' degan pembelian Sertifikat seharga ${nexus} Nexus dengan keuntungan sebesar ${feeNexus} dikonversikan menjadi ${fee} Rupiah`,
+                                cf_tipe: 'buy',
+                                cf_kredit: 0,
+                                cf_debet: fee,
+                                cf_nominal: nexus + ' Nexus',
+                                cf_refid: inbox.ibx_refid,
+                                cf_internal_acc: penampung,
+                                cf_profile_id: akun.prl_profile_id,
+                                cf_mode: 'add_profit'
+                            }
+                            query = `UPDATE account SET acc_saldo = acc_saldo + ${fee} WHERE acc_noakun = '${penampung}'`
+                            await database.account.connection.raw(query);
+
                             let imgSource = `../../Source/${produk.produk_certificate}`;
                             let fontSource = '../../Source/Taniya.fnt'
                             let imgPath = path.join(__dirname, imgSource);
@@ -108,7 +134,7 @@ const processing = async () => {
                             }, textWidth, textHeight);
                             await image.writeAsync(exportFile); //End
 
-                            let cashflow = await database.cashflow.insert([jurnal1, jurnal2])
+                            let cashflow = await database.cashflow.insert([jurnal1, jurnal2, jurnal3])
 
                             if(cashflow.state){
                                 let keteranganTrx = `Berhasil membeli Sertifikat ${produk.produk_namaProduk}, sertifikat dapat di download pada halaman History`;

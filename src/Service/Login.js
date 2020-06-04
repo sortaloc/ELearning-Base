@@ -21,7 +21,11 @@ module.exports = (router) => {
         console.log('reset password, with username, email, or number phone');
         let response = await LoginController.forgotPassword(req.body);
         res.send(true);
+    })
 
+    router.get('/testLogout', async (req, res) => {
+        let response = await LoginController.testLogout();
+        res.send(response);
     })
 
     return router;

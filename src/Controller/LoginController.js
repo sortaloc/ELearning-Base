@@ -157,6 +157,22 @@ class LoginController extends MainController {
             let id = body.id;
         })
     }
+
+    testLogout = () => {
+        return new Promise(async resolve => {
+            let notifData = {
+              data: {
+                nama_sender: 'Prexux',
+                tipe: 'force_logout',
+
+                send: 'global'
+              }
+            }
+            let data = await this.sendNotif(notifData)
+            resolve(data);
+        })
+        // console.log(data);
+    }
 }
 
 module.exports = new LoginController;

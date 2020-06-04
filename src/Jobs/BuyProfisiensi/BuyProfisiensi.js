@@ -20,8 +20,8 @@ const processing = async () => {
     return new Promise(async (resolve) => {
         let data = await database.inbox.allSelect({ibx_tipe: 'BUYPROFISIENSI', 'ibx_status': 'Q'});
 
-        // console.log(await database);
-        // process.exit()
+        let setting = await database.setting.single({st_kode: 'fee_produk'});
+        let feepersen = Number(setting.st_value);
 
         let ibxSucc = new Array();
 
@@ -44,6 +44,11 @@ const processing = async () => {
                     transaksi = transaksi[0];
                     produk = produk[0];
 
+                    let fee = realHarga * (feepersen / 100)
+                    let feeNexus = nexus * (feepersen / 100);
+                    let keuntunganUser = realHarga - fee;
+                    let keuntunganUserNexus = nexus - feeNexus;
+
                     let pemateri = await database.profile.single({prl_profile_id: produk.produk_pemateri_id})
 
                     var globalData = {
@@ -61,7 +66,8 @@ const processing = async () => {
                         cf_nominal: produk.produk_harga + ' Nexus',
                         cf_refid: inbox.ibx_refid,
                         cf_internal_acc: '',
-                        cf_profile_id: akun.prl_profile_id
+                        cf_profile_id: akun.prl_profile_id,
+                        cf_mode: 'min_user'
                     }
 
                     let query = `UPDATE profile SET prl_saldo_nexus = prl_saldo_nexus - ${nexus}, prl_saldo = prl_saldo - ${realHarga} WHERE prl_profile_id = '${akun.prl_profile_id}'`;
@@ -70,19 +76,35 @@ const processing = async () => {
                     if(updateSaldo.rowCount > 0){
                         let penampung = '20200604225152852310'
                         let jurnal2 = {
-                            cf_keterangan: `Penambahan ke account Penampungan Profisiensi dengan id: '${penampung}' degan pembelian Profisiensi seharga ${nexus} Nexus dikonversikan menjadi ${realHarga} Rupiah`,
+                            cf_keterangan: `Penambahan ke account Penampungan Profisiensi dengan id penampung: '${penampung}' degan pembelian Profisiensi seharga ${nexus} Nexus, dengan keuntungan sebesar ${keuntunganUserNexus} Nexus dikonversikan menjadi ${keuntunganUser} Rupiah`,
                             cf_tipe: 'buy',
                             cf_kredit: 0,
-                            cf_debet: realHarga,
+                            cf_debet: keuntunganUser,
                             cf_nominal: nexus + ' Nexus',
                             cf_refid: inbox.ibx_refid,
                             cf_internal_acc: penampung,
-                            cf_profile_id: akun.prl_profile_id
+                            cf_profile_id: akun.prl_profile_id,
+                            cf_mode: 'add_internal'
                         }
-                        query = `UPDATE account SET acc_saldo = acc_saldo + ${realHarga} WHERE acc_noakun = '${penampung}'`
+                        query = `UPDATE account SET acc_saldo = acc_saldo + ${keuntunganUser} WHERE acc_noakun = '${penampung}'`
                         updateSaldo = await database.account.connection.raw(query);
 
                         if(updateSaldo.rowCount > 0){
+
+                            penampung = '20200605171803213745'
+                            let jurnal3 = {
+                                cf_keterangan: `Penambahan ke account Penampungan Keuntungan Profisiensi dengan id penampung: '${penampung}' degan pembelian Profisiensi seharga ${nexus} Nexus dengan keuntungan sebesar ${feeNexus} dikonversikan menjadi ${fee} Rupiah`,
+                                cf_tipe: 'buy',
+                                cf_kredit: 0,
+                                cf_debet: fee,
+                                cf_nominal: nexus + ' Nexus',
+                                cf_refid: inbox.ibx_refid,
+                                cf_internal_acc: penampung,
+                                cf_profile_id: akun.prl_profile_id,
+                                cf_mode: 'add_profit'
+                            }
+                            query = `UPDATE account SET acc_saldo = acc_saldo + ${fee} WHERE acc_noakun = '${penampung}'`
+                            await database.account.connection.raw(query);
 
                             let username = `PREXUX${akun.prl_nohp}${MainController.makeid(5)}`
                             let password = produk.produk_kodeProduk + MainController.makeid(15)
@@ -109,7 +131,7 @@ const processing = async () => {
                             let insertProfisiensi = await database.profisiensi.insertOne(prfData);
 
                             if(insertProfisiensi.state){
-                                let cashflow = await database.cashflow.insert([jurnal1, jurnal2])
+                                let cashflow = await database.cashflow.insert([jurnal1, jurnal2, jurnal3])
                                 dataRaw.acccess = 0;
                                 dataRaw.created = MainController.createDate(0);
                                 if(cashflow.state){
@@ -139,11 +161,6 @@ const processing = async () => {
                                         send: 'user'
                                       }
                                     }
-                                    // const twiml = new MessagingResponse();
-                                    // let msg = await client.messages.create({
-                                    //     body: `Anda telah terdaftar pada Kelas '${produk.produk_namaProduk}'\nUsername : *${username}*\nPassword : *${password}*`,
-                                    //     to: `whatsapp:+${akun.prl_nohp}`
-                                    // })
                                     let msg = await client.messages
                                     .create({
                                         from: 'whatsapp:+14155238886',
