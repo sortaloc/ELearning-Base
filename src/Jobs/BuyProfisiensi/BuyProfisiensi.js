@@ -14,7 +14,7 @@ MainController = new MainController();
 const { accountSid, authToken } = WHATSAPP;
 
 const client = require('twilio')(accountSid, authToken);
-const MessagingResponse = require('twilio').twiml.MessagingResponse;
+// const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
 const processing = async () => {
     return new Promise(async (resolve) => {
@@ -139,8 +139,12 @@ const processing = async () => {
                                         send: 'user'
                                       }
                                     }
-                                    const twiml = new MessagingResponse();
-                                    await twiml.message(`Anda telah terdaftar pada Kelas '${produk.produk_namaProduk}'\nUsername : *${username}*\nPassword : *${password}*`);
+                                    // const twiml = new MessagingResponse();
+                                    client.messages.create({
+                                        body: `Anda telah terdaftar pada Kelas '${produk.produk_namaProduk}'\nUsername : *${username}*\nPassword : *${password}*`,
+                                        to: `whatsapp:+${akun.prl_nohp}`
+                                    })
+                                    // await twiml.message(`Anda telah terdaftar pada Kelas '${produk.produk_namaProduk}'\nUsername : *${username}*\nPassword : *${password}*`);
                                     await MainController.sendNotif(notifData)
                                     ibxSucc.push(inbox.ibx_refid);
                                 }else{
