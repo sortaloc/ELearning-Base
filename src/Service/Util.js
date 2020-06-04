@@ -7,10 +7,5 @@ module.exports = (router) => {
     	res.send(response).status(200);
     })
 
-    // router.get('/getCS', async (req, res) => {
-    // 	let response = await UtilizationController.getCS();
-    // 	res.send(response).status(200);
-    // })
-
     return router;
 }
