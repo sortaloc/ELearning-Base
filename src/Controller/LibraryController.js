@@ -24,6 +24,7 @@ class LibraryController extends MainController {
                 		let data = [];
                 		for(let idx = 0; idx < library.length; idx++){
                 			let produk = await database.produk.single({produk_id: library[idx].trx_produk_id});
+                            let pemateri = await database.profile.single({prl_profile_id: produk.produk_pemateri_id})
                 			let trxData = JSON.parse(library[idx].trx_data);
                 			let lib = {
                                 idlibrary: library.trx_refid,
@@ -36,7 +37,11 @@ class LibraryController extends MainController {
             					accessed: Number(trxData.access),
                                 kodeproduk: produk.produk_kodeProduk,
                                 produkid: produk.produk_id,
-                                state: true
+                                state: true,
+                                namapemateri: pemateri.prl_nama,
+                                usernamepemateri: pemateri.prl_username,
+                                photopemateri: pemateri.prl_photo,
+                                photopematerilink: URLIMAGE+pemateri.prl_photo
                 			}
 
                 			if(library[idx].trx_tipe === 'BUYEBOOK'){

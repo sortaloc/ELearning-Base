@@ -363,7 +363,7 @@ class ProductController extends MainController {
                                 created: transaksi.trx_created_at
                             }
                             if(transaksi.trx_tipe === 'BUYPROFISIENSI'){
-                                let parse = JSON.parse(statusbuy.trx_data);
+                                let parse = JSON.parse(transaksi.trx_data);
                                 dataTrx = {
                                     ...dataTrx,
                                     username: parse.username,
