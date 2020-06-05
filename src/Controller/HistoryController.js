@@ -36,7 +36,7 @@ class HistoryController extends MainController {
                 		transaksi
                 		WHERE
                 		trx_id_profile = '${body.id}'
-                        WHERE 
+                        AND
                         trx_status = 'S'
                         ORDER BY trx_created_at DESC
                 		`
