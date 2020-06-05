@@ -52,8 +52,8 @@ class PaymentController extends MainController {
                         }
                         let kode = await codeUnique();
 
-                        let trxID = MainController.generateID();
-                        let trxINV = MainController.createInvoice('TOPUP');
+                        let trxID = this.generateID();
+                        let trxINV = this.createInvoice('TOPUP');
                         let refid = `TOPUPDEPO${this.generateID()}`;
                         
                         const deposit = {
