@@ -12,10 +12,10 @@ class MutasiBankController extends MainController {
     insertMutasi = (fields, body) => {
     	let response = this.structure;
         return new Promise(async (resolve) => {
-            let newBody = Object.keys(body);
-            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            // let newBody = Object.keys(body);
+            // let diff = fields.filter((x) => newBody.indexOf(x) === -1)
             try{
-            	if(diff.length === 0){
+            	// if(diff.length === 0){
 
             		console.log(body);
 
@@ -26,13 +26,13 @@ class MutasiBankController extends MainController {
             		response.code = 100;
             		response.state = true;
             		resolve(response);
-            	}else{
-            		response.data = {};
-                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
-                    response.code = 102;
-                    response.state = false
-                    resolve(response)
-            	}
+            	// }else{
+            	// 	response.data = {};
+             //        response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+             //        response.code = 102;
+             //        response.state = false
+             //        resolve(response)
+            	// }
             }catch(err){
             	err.code = 503;
             	err.state = false;
