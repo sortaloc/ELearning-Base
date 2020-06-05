@@ -77,13 +77,12 @@ class HistoryController extends MainController {
                 	if(history.length > 0){
                         history = history[0];
                         let produk = await database.produk.single({produk_id: history.trx_produk_id})
-                        let tipeproduk = await database.produk_group.single({id_group: produk.produk_id_group})
+                        let tipeproduk;
 
                         // Check Status
                         // Q
                         // W
                         // S
-
                         let resData = {
                             id_history: history.trx_id,
                             keterangan: history.trx_keterangan,
@@ -94,13 +93,19 @@ class HistoryController extends MainController {
                             profileid: history.trx_id_profile,
                             invoice: history.trx_invoice,
                             refid: history.trx_refid,
-                            namaproduk: produk.produk_namaProduk,
-                            kodeproduk: produk.produk_kodeProduk,
                             created: history.trx_created_at,
                             updated: history.trx_updated_at,
-                            produkcover: produk.produk_cover,
-                            linkcover: URLIMAGE+produk.produk_cover,
                             judul: history.trx_judul
+                        }
+                        if(produk){
+                            tipeproduk  = await database.produk_group.single({id_group: produk.produk_id_group});
+                            resData = {
+                                ...resData,
+                                produkcover: produk.produk_cover,
+                                linkcover: URLIMAGE+produk.produk_cover,
+                                namaproduk: produk.produk_namaProduk,
+                                kodeproduk: produk.produk_kodeProduk,
+                            }
                         }
 
                         if(history.trx_status === 'Q'){
