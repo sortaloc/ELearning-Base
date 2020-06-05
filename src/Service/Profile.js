@@ -16,7 +16,7 @@ module.exports = (router) => {
         req.body.token = req.headers.authorization.split(' ');
         req.body.token = req.body.token[req.body.token.length - 1];
         // let response = await ProfileController.updateProfile(['nama', 'tanggal_lahir', 'tempat_lahir', 'gender', 'username', 'gelar', 'gelar_profesi', 'password'], req.body)
-        let response = await ProfileController.updateProfile(['id'], req.body)
+        let response = await ProfileController.updateProfile(['id', 'password'], req.body)
         return res.send(response)
     })
 

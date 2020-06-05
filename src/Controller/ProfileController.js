@@ -84,8 +84,8 @@ class ProfileController extends MainController{
                     }
                     let where = {
                         prl_profile_id: body.id,
-                        prl_isactive: 1
-                        // prl_password: pwd
+                        prl_isactive: 1,
+                        prl_password: this.createPassword(body.password)
                     }
                     let profile = await database.profile.allSelect(where);
                     // console.log

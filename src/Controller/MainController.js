@@ -227,6 +227,7 @@ class MainController {
                 let typeFiles = mime.split('/')
                 // name[0] = name[0].replace('/ /gi', '_');
                 name[0] = name[0].replace(/\s/g,'');
+                name[0] = name[0].replace(/[^0-9a-z]/gi, '');
                 name = `${this.generateID()}_${name[0]}.${name[name.length-1]}`;
     
                 const fstream = fs.createWriteStream(path.join(uploadPath, name))
