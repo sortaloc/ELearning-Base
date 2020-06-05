@@ -47,11 +47,6 @@ const processing = async () => {
                     transaksi = transaksi[0];
                     produk = produk[0];
 
-                    let fee = realHarga * (feepersen / 100)
-                    let feeNexus = nexus * (feepersen / 100);
-                    let keuntunganUser = realHarga - fee;
-                    let keuntunganUserNexus = nexus - feeNexus;
-
                     let pemateri = await database.profile.single({prl_profile_id: produk.produk_pemateri_id, prl_isactive: 1})
 
                     var globalData = {
@@ -60,6 +55,11 @@ const processing = async () => {
 
                     let realHarga = Number(produk.produk_harga) /** 15000*/
                     let nexus = Number(produk.produk_harga)
+
+                    let fee = realHarga * (feepersen / 100)
+                    let feeNexus = nexus * (feepersen / 100);
+                    let keuntunganUser = realHarga - fee;
+                    let keuntunganUserNexus = nexus - feeNexus;
 
                     let jurnal1 = {
                         cf_keterangan: `Pengurangan Nexus dari profile ${akun.prl_profile_id} sebesar ${produk.produk_harga} Nexus seharga ${realHarga} Rupiah`,
