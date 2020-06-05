@@ -170,7 +170,7 @@ class HistoryController extends MainController {
                 if(diff.length === 0){
                     // let deposit = await database.deposit.allSelect({dep_id_profile: body.id});
                     let deposit = await database.deposit.connection.raw(
-                        `SELECT * FROM deposit WHERE dep_id_profile = '${body.id}' AND dep_status IN (0, 1)`
+                        `SELECT * FROM deposit WHERE dep_id_profile = '${body.id}' AND dep_status IN (0, 1) ORDER BY dep_created_at DESC`
                         )
                     deposit = deposit.rows;
                     let retData = [];
