@@ -48,12 +48,26 @@ const processing = async () => {
                             service_id: mlist.id,
                         }
                         delete listMutasi.id;
+
+                        listMutasi.amount = listMutasi.amount.split('.')[0];
+
+                        let kodeUnik = listMutasi.amount.substr(-3);
+
                         let insert = await database.list_mutasi.insertOne(listMutasi);
 
                         if(insert.state){
-                            // Update row Mutasi
-                            mutasiSuccess.push(listMutasi.service_id);
-                            continue;
+                            let validasiDeposit = await database.deposit.allSelect({dep_kode_unik: kodeUnik, dep_total: listMutasi.amount, dep_status: 0});
+                            if(validasiDeposit.length > 0){
+                                validasiDeposit = validasiDeposit[0];
+                                await database.deposit.updateOne({dep_id: validasiDeposit.dep_id, dep_refid: validasiDeposit.dep_refid}, {dep_status: 1});
+                                await database.list_mutasi.updateOne({service_id: listMutasi.service_id}, {mutasi_status: 1, refid_trx: validasiDeposit.dep_refid});
+
+                                mutasiSuccess.push(listMutasi.service_id);
+                                continue;
+                            }else{
+                                // Deposit tidak ada
+                                continue;
+                            }
                         }else{
                             // Gagal Insert
                             // Ubah status row mutasi_bank jadi 0 => mengulang lagi

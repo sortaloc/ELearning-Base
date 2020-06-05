@@ -38,27 +38,7 @@ const processing = async () => {
 
                     let akun = await database.profile.single({prl_profile_id: inbox.ibx_id_profile, prl_isactive: 1})
 
-                    let trxID = MainController.generateID();
-                    let trxINV = MainController.createInvoice('TOPUP');
-                    
-                    let transaksi = {
-                        trx_id: trxID,
-                        trx_keterangan: 'Transaksi sedang dalam proses',
-                        trx_tipe: inbox.ibx_tipe,
-                        trx_id_tipe: 'TOPUP',
-                        trx_harga: deposit.dep_nominal,
-                        trx_fee: deposit.dep_kode_unik,
-                        trx_total_harga: deposit.dep_total,
-                        trx_saldo_before: Number(akun.prl_saldo),
-                        trx_saldo_after: Number(akun.prl_saldo) + Number(deposit.dep_nominal),
-                        trx_status: '1',
-                        trx_id_profile: akun.prl_profile_id,
-                        trx_code_voucher: '',
-                        trx_invoice: trxINV,
-                        trx_refid: inbox.ibx_refid,
-                    }
-
-                    let insertTrx = await database.transaksi.insert(transaksi);
+                    let transaksi = await database.transaksi.single({trx_refid: inbox.ibx_refid});
 
                     let internal1 = '20200506045039801303';
                     let jurnal1 = {
@@ -113,7 +93,7 @@ const processing = async () => {
                                 let updateDeposit = await database.deposit.updateOne({dep_id: deposit.dep_id}, {dep_status: 4});
                                 let updateInbox = await database.inbox.updateOne({ibx_refid: inbox.ibx_refid}, {ibx_status: 'S'});
                                 let keteranganTrx = `Berhasil Topup sebesar Rp.${deposit.dep_nominal} menjadi ${nexus} Nexus Poin`;
-                                let updateTransaksi = await database.transaksi.updateOne({trx_id: trxID, trx_invoice: trxINV, trx_refid: inbox.ibx_refid}, {trx_saldo_after: deposit.dep_nominal, trx_status: 'S', trx_keterangan: keteranganTrx, trx_updated_at: MainController.createDate(0)})
+                                let updateTransaksi = await database.transaksi.updateOne({trx_id: transaksi.trx_id, trx_invoice: transaksi.trx_invoice, trx_refid: inbox.ibx_refid}, {trx_saldo_after: deposit.dep_nominal, trx_status: 'S', trx_keterangan: keteranganTrx, trx_updated_at: MainController.createDate(0)})
 
                                 let Outbox = {
                                     obx_refid: inbox.ibx_refid,

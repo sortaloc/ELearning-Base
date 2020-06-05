@@ -52,6 +52,8 @@ class PaymentController extends MainController {
                         }
                         let kode = await codeUnique();
 
+                        // let group = await database.produk_group.single({id_group: produk.produk_id_group})
+
                         let trxID = this.generateID();
                         let trxINV = this.createInvoice('TOPUP');
                         let refid = `TOPUPDEPO${this.generateID()}`;
@@ -78,11 +80,12 @@ class PaymentController extends MainController {
                             trx_total_harga: deposit.dep_total,
                             trx_saldo_before: Number(profile.prl_saldo_nexus),
                             trx_saldo_after: Number(profile.prl_saldo_nexus) + Number(deposit.dep_nominal),
-                            trx_status: '1',
+                            trx_status: 'Q',
                             trx_id_profile: profile.prl_profile_id,
                             trx_code_voucher: '',
                             trx_invoice: trxINV,
                             trx_refid: refid,
+                            trx_judul: `Topup ${deposit.dep_nominal}`
                         }
 
                         let insertTrx = await database.transaksi.insertOne(transaksi);
@@ -212,9 +215,14 @@ class PaymentController extends MainController {
     }
 
     getListNominal = () => {
-        return new Promise(resolve => {
+        return new Promise(async resolve => {
             let response = this.structure;
-            let data = [5000, 10000, 20000, 50000, 100000, 150000, 200000, 250000,300000, 350000, 400000, 450000, 500000];
+
+            let topupData = await database.setting.allSelect({st_kode: 'topup_nominal'});
+            topupData = topupData[0];
+            topupData = JSON.parse(topupData.st_value);
+            // let data = [5000, 10000, 20000, 50000, 100000, 150000, 200000, 250000,300000, 350000, 400000, 450000, 500000];
+            let data = topupData;
             let nexus = 1;
             let newData = [];
             // let nilaiNexus = [];
