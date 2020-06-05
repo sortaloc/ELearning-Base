@@ -28,8 +28,10 @@ class PaymentController extends MainController {
                 let diff = fields.filter((x) => newBody.indexOf(x) === -1)
                 if(diff.length === 0){
                     let profile = await database.profile.allSelect({prl_profile_id: String(body.id), prl_isactive: 1});
-                    // console.log(profile)
                     if(Number(profile.length) > 0){
+
+                        profile = profile[0];
+
                         const codeUnique = async () => {
                             return new Promise(async retData => {
                                 let kode = this.generateKodeUnik();
@@ -49,6 +51,11 @@ class PaymentController extends MainController {
                             })
                         }
                         let kode = await codeUnique();
+
+                        let trxID = MainController.generateID();
+                        let trxINV = MainController.createInvoice('TOPUP');
+                        let refid = `TOPUPDEPO${this.generateID()}`;
+                        
                         const deposit = {
                             dep_id: this.generateID(),
                             dep_kode_unik: kode,
@@ -56,10 +63,31 @@ class PaymentController extends MainController {
                             dep_id_profile: body.id,
                             dep_total: Number(body.nominal) + Number(kode),
                             dep_expired: this.createDate(),
-                            dep_bank_kode: Number(body.id_bank)
+                            dep_bank_kode: Number(body.id_bank),
+                            dep_refid: refid
                         }
                         let insert = await database.deposit.insertOne(deposit);
-                        if(insert.state){
+
+                        let transaksi = {
+                            trx_id: trxID,
+                            trx_keterangan: 'Transaksi sedang dalam proses',
+                            trx_tipe: 'TOPUPDEPOSIT',
+                            trx_id_tipe: 'TOPUP',
+                            trx_harga: deposit.dep_nominal,
+                            trx_fee: deposit.dep_kode_unik,
+                            trx_total_harga: deposit.dep_total,
+                            trx_saldo_before: Number(profile.prl_saldo_nexus),
+                            trx_saldo_after: Number(profile.prl_saldo_nexus) + Number(deposit.dep_nominal),
+                            trx_status: '1',
+                            trx_id_profile: profile.prl_profile_id,
+                            trx_code_voucher: '',
+                            trx_invoice: trxINV,
+                            trx_refid: refid,
+                        }
+
+                        let insertTrx = await database.transaksi.insertOne(transaksi);
+
+                        if(insert.state && insertTrx.state){
                             response.data = {
                                 id_deposit: deposit.dep_id,
                                 total: deposit.dep_total,
@@ -312,90 +340,90 @@ class PaymentController extends MainController {
         });
     }
 
-    processDeposit = (fields, body) => {
-        let response = this.structure;
-        return new Promise(async (resolve) => {
-            let newBody = Object.keys(body);
-            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
-            try{
-                if(diff.length === 0){
-                    // get Table Akun
-                    let adminProfile = await database.profile.single({prl_profile_id: body.adminid, prl_isactive: 1});
-                    let deposit = await database.deposit.single({dep_id: body.id});
-                    let akun = await database.profile.single({prl_profile_id: deposit.dep_id_profile, prl_isactive: 1});
+    // processDeposit = (fields, body) => {
+    //     let response = this.structure;
+    //     return new Promise(async (resolve) => {
+    //         let newBody = Object.keys(body);
+    //         let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+    //         try{
+    //             if(diff.length === 0){
+    //                 // get Table Akun
+    //                 let adminProfile = await database.profile.single({prl_profile_id: body.adminid, prl_isactive: 1});
+    //                 let deposit = await database.deposit.single({dep_id: body.id});
+    //                 let akun = await database.profile.single({prl_profile_id: deposit.dep_id_profile, prl_isactive: 1});
 
-                    // Deteksi dulu statusnya
-                    // let refid = `TOPUPDEPO${this.generateID()}`;
+    //                 // Deteksi dulu statusnya
+    //                 // let refid = `TOPUPDEPO${this.generateID()}`;
 
-                    let update = {
-                        where: {
-                            dep_id: body.id
-                        },
-                        update: {
-                            dep_status: body.status,
-                            dep_admin_id: body.adminid,
-                            dep_updated_at: this.createDate(0),
-                        }
-                    }
+    //                 let update = {
+    //                     where: {
+    //                         dep_id: body.id
+    //                     },
+    //                     update: {
+    //                         dep_status: body.status,
+    //                         dep_admin_id: body.adminid,
+    //                         dep_updated_at: this.createDate(0),
+    //                     }
+    //                 }
 
-                    if(Number(body.status) === 1){
-                        update.update.dep_status = 2;
-                    }else if(Number(body.status) === 2){
-                        update.update.dep_status = 6;
-                    }
+    //                 if(Number(body.status) === 1){
+    //                     update.update.dep_status = 2;
+    //                 }else if(Number(body.status) === 2){
+    //                     update.update.dep_status = 6;
+    //                 }
 
-                    let updateDeposit = await database.deposit.updateOne(update.where, update.update);
+    //                 let updateDeposit = await database.deposit.updateOne(update.where, update.update);
 
-                    if(updateDeposit.state){
-                        if(Number(body.status) === 1){
-                            let format_msg = `PAY_TOPUP.DEPOSIT.${deposit.dep_nominal}.${deposit.dep_total}.${body.id}.${deposit.dep_refid}.${adminProfile.prl_profile_id}`;
-                            // // `PAY_TOPUP.DEPOSIT.-.[nominal].[id_tujuan].[refid].[admin_profile]`
-                            const insertData = {
-                                ibx_refid: deposit.dep_refid,
-                                ibx_id_profile: akun.prl_profile_id,
-                                ibx_interface: 'H',
-                                ibx_tipe: 'TOPUPDEPOSIT',
-                                ibx_status: 'Q',
-                                ibx_format_msg: format_msg,
-                                ibx_keterangan: `Berhasil input ke inbox pada ${this.createDate(0)}`,
-                                ibx_raw_data: JSON.stringify(body)
-                            }
+    //                 if(updateDeposit.state){
+    //                     if(Number(body.status) === 1){
+    //                         let format_msg = `PAY_TOPUP.DEPOSIT.${deposit.dep_nominal}.${deposit.dep_total}.${body.id}.${deposit.dep_refid}.${adminProfile.prl_profile_id}`;
+    //                         // // `PAY_TOPUP.DEPOSIT.-.[nominal].[id_tujuan].[refid].[admin_profile]`
+    //                         const insertData = {
+    //                             ibx_refid: deposit.dep_refid,
+    //                             ibx_id_profile: akun.prl_profile_id,
+    //                             ibx_interface: 'H',
+    //                             ibx_tipe: 'TOPUPDEPOSIT',
+    //                             ibx_status: 'Q',
+    //                             ibx_format_msg: format_msg,
+    //                             ibx_keterangan: `Berhasil input ke inbox pada ${this.createDate(0)}`,
+    //                             ibx_raw_data: JSON.stringify(body)
+    //                         }
 
-                            let insertInbox = await database.inbox.insertOne(insertData);
-                            if(insertInbox.state){
-                                response.data = body;
-                                response.code = 100;
-                                response.state = true;
-                                response.message = "Success Update Deposit";
-                                resolve(response);
-                            }else{
-                                response.data = body;
-                                response.code = 103;
-                                response.state = false;
-                                response.message = "Failed Update Deposit";
-                                resolve(response);
-                            }
-                        }
-                    }else{
-                        response.data = {};
-                        response.message = `Failed to Update Deposit, please try again soon`;
-                        response.code = 104;
-                        response.state = false
-                        throw response;    
-                    }
-                }else{
-                    response.data = {};
-                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
-                    response.code = 102;
-                    response.state = false
-                    throw response;
-                }
-            }catch(err){
-                console.log(err);
-                resolve(err);
-            }
-        });
-    }
+    //                         let insertInbox = await database.inbox.insertOne(insertData);
+    //                         if(insertInbox.state){
+    //                             response.data = body;
+    //                             response.code = 100;
+    //                             response.state = true;
+    //                             response.message = "Success Update Deposit";
+    //                             resolve(response);
+    //                         }else{
+    //                             response.data = body;
+    //                             response.code = 103;
+    //                             response.state = false;
+    //                             response.message = "Failed Update Deposit";
+    //                             resolve(response);
+    //                         }
+    //                     }
+    //                 }else{
+    //                     response.data = {};
+    //                     response.message = `Failed to Update Deposit, please try again soon`;
+    //                     response.code = 104;
+    //                     response.state = false
+    //                     throw response;    
+    //                 }
+    //             }else{
+    //                 response.data = {};
+    //                 response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+    //                 response.code = 102;
+    //                 response.state = false
+    //                 throw response;
+    //             }
+    //         }catch(err){
+    //             console.log(err);
+    //             resolve(err);
+    //         }
+    //     });
+    // }
 
     buyProduct = (fields, body, type) => {
         return new Promise(async (resolve) => {

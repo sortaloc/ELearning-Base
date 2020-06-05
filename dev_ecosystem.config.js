@@ -152,7 +152,7 @@ module.exports = {
         TZ: "Asia/Jakarta"
       }
     },
-     {
+    {
       name: '[DEV] Cron Mutasi OVO',
       script: './src/Jobs/MutasiCron/MutasiOVO.js',
       args: '',
