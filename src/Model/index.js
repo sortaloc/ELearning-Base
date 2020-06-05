@@ -12,6 +12,7 @@ const db = {};
     'evoucher', 
     'inbox', 
     'login',
+    'list_mutasi',
     'otp_list', 
     'mutasi_bank',
     'outbox', 
