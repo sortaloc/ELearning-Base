@@ -36,6 +36,8 @@ class HistoryController extends MainController {
                 		transaksi
                 		WHERE
                 		trx_id_profile = '${body.id}'
+                        WHERE 
+                        trx_status = 'S'
                         ORDER BY trx_created_at DESC
                 		`
                 		);
@@ -73,7 +75,7 @@ class HistoryController extends MainController {
             let diff = fields.filter((x) => newBody.indexOf(x) === -1)
             try{
                 if(diff.length === 0){
-                	let history = await database.transaksi.allSelect({trx_id_profile: body.id, trx_id: body.trx_id, trx_refid: body.trx_refid, trx_status: 'S'});
+                	let history = await database.transaksi.allSelect({trx_id_profile: body.id, trx_id: body.trx_id, trx_refid: body.trx_refid});
                 	if(history.length > 0){
                         history = history[0];
                         let produk = await database.produk.single({produk_id: history.trx_produk_id})
