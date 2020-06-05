@@ -25,6 +25,7 @@ class MutasiBankController extends MainController {
             		response.message = 'Berhasil Insert Mutasi Data';
             		response.code = 100;
             		response.state = true;
+                    console.log(response)
             		resolve(response);
             	// }else{
             	// 	response.data = {};
