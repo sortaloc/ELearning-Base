@@ -28,7 +28,7 @@ const processing = async () => {
             return resolve(true);
         }else{
             try{
-                console.log('Ada Data');
+                // console.log('Ada Data');
                 for(let idx = 0; idx < data.length; idx++){
                     let inbox = data[idx];
 
