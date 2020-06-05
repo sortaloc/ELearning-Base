@@ -19,7 +19,8 @@ class MutasiBankController extends MainController {
 
             		console.log(body);
 
-                    await database.mutasi_bank.insertOne({mutasi_raw: JSON.stringify(body)});
+                    let data = await database.mutasi_bank.insertOne({mutasi_raw: JSON.stringify(body)});
+                    console.log(data);
 
             		response.data = body;
             		response.message = 'Berhasil Insert Mutasi Data';
