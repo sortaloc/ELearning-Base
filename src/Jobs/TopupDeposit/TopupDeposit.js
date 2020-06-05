@@ -24,11 +24,9 @@ const processing = async () => {
         let ibxSucc = new Array();
 
         if(data.length === 0){
-            // console.log('Tidak ada Data');
             return resolve(true);
         }else{
             try{
-                // console.log('Ada Data');
                 for(let idx = 0; idx < data.length; idx++){
                     let inbox = data[idx];
 
