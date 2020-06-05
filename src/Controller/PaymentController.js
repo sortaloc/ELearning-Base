@@ -132,70 +132,70 @@ class PaymentController extends MainController {
         })
     }
 
-    uploadBuktiTransfer = (fields, req) => {
-        return new Promise(async (resolve) => {
-            let response = this.structure;
-            try{
-                let body = req;
-                let newBody = Object.keys(body);
-                let diff = fields.filter((x) => newBody.indexOf(x) === -1)
-                // Validasi ID
-                let akun = await database.profile.allSelect({prl_profile_id: body.id, prl_isactive: 1});
-                if(diff.length === 0 && akun.length > 0){
-                    // Update Deposit menjadi 1 = Ready di cek dari dashboard
-                    akun = akun[0];
-                    let getDataDeposit = await database.deposit.allSelect({dep_id_profile: body.id, dep_kode_unik: body.kode_unik});
-                    if(getDataDeposit.length > 0){
-                        getDataDeposit = getDataDeposit[0];
-                        let refid = `TOPUPDEPO${this.generateID()}`;
-                        let upd = {
-                            where: {
-                                dep_id: getDataDeposit.dep_id,
-                                dep_kode_unik: getDataDeposit.dep_kode_unik,
-                                dep_total: getDataDeposit.dep_total,
-                                dep_id_profile: body.id
-                            },
-                            update: {
-                                dep_status: 1,
-                                dep_refid: refid,
-                                dep_image: body.file
-                            }
-                        }
-                        let updateDeposit = await database.deposit.updateOne(upd.where, upd.update);
+    // uploadBuktiTransfer = (fields, req) => {
+    //     return new Promise(async (resolve) => {
+    //         let response = this.structure;
+    //         try{
+    //             let body = req;
+    //             let newBody = Object.keys(body);
+    //             let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+    //             // Validasi ID
+    //             let akun = await database.profile.allSelect({prl_profile_id: body.id, prl_isactive: 1});
+    //             if(diff.length === 0 && akun.length > 0){
+    //                 // Update Deposit menjadi 1 = Ready di cek dari dashboard
+    //                 akun = akun[0];
+    //                 let getDataDeposit = await database.deposit.allSelect({dep_id_profile: body.id, dep_kode_unik: body.kode_unik});
+    //                 if(getDataDeposit.length > 0){
+    //                     getDataDeposit = getDataDeposit[0];
+    //                     let refid = `TOPUPDEPO${this.generateID()}`;
+    //                     let upd = {
+    //                         where: {
+    //                             dep_id: getDataDeposit.dep_id,
+    //                             dep_kode_unik: getDataDeposit.dep_kode_unik,
+    //                             dep_total: getDataDeposit.dep_total,
+    //                             dep_id_profile: body.id
+    //                         },
+    //                         update: {
+    //                             dep_status: 1,
+    //                             dep_refid: refid,
+    //                             dep_image: body.file
+    //                         }
+    //                     }
+    //                     let updateDeposit = await database.deposit.updateOne(upd.where, upd.update);
 
-                        if(updateDeposit.state){
-                            response.data = {};
-                            response.message = `Success create Topup Deposit Trasaction, wait for admin to verify`;
-                            response.code = 100;
-                            response.state = true;
-                            return resolve(response)
-                        }else{
-                            response.data = {};
-                            response.message = `Failed create Topup Deposit Trasaction`;
-                            response.code = 103;
-                            response.state = true;
-                            return resolve(response)
-                        }
-                    }
+    //                     if(updateDeposit.state){
+    //                         response.data = {};
+    //                         response.message = `Success create Topup Deposit Trasaction, wait for admin to verify`;
+    //                         response.code = 100;
+    //                         response.state = true;
+    //                         return resolve(response)
+    //                     }else{
+    //                         response.data = {};
+    //                         response.message = `Failed create Topup Deposit Trasaction`;
+    //                         response.code = 103;
+    //                         response.state = true;
+    //                         return resolve(response)
+    //                     }
+    //                 }
                     
-                }else{
-                    response.data = {};
-                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
-                    response.code = 102;
-                    response.state = false
-                    resolve(response);
-                }
-            }catch(err){
-                console.log(err)
-                response.data = {};
-                response.message = `Something Error`;
-                response.code = 105;
-                response.state = false
-                resolve(response);
-            }
-        })
+    //             }else{
+    //                 response.data = {};
+    //                 response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+    //                 response.code = 102;
+    //                 response.state = false
+    //                 resolve(response);
+    //             }
+    //         }catch(err){
+    //             console.log(err)
+    //             response.data = {};
+    //             response.message = `Something Error`;
+    //             response.code = 105;
+    //             response.state = false
+    //             resolve(response);
+    //         }
+    //     })
     
-    }
+    // }
 
     getListBank = () => {
         return new Promise(async resolve => {
