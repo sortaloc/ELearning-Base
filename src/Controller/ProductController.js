@@ -140,7 +140,9 @@ class ProductController extends MainController {
             let diff = fields.filter((x) => newBody.indexOf(x) === -1)
             try{
                 if(diff.length === 0){
-                    let data = await database.produk.all();
+                    // let data = await database.produk.all();
+                    let data = await database.produk.connection.raw(`SELECT * FROM produk ORDER BY produk_created_at DESC`)
+                    data = data.rows;
                     let ret = [];
                     for(let idx = 0; idx < data.length; idx++){
                         let d = data[idx];
