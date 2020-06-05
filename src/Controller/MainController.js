@@ -337,10 +337,10 @@ class MainController {
         status = Number(status);
         switch(status){
             case 0: {
-                return 'Belum mengirimkan Gambar Bukti Transfer';
+                return 'Transaksi sedang diproses';
             } break;
             case 1: {
-                return 'Review oleh Admin';
+                return 'Transaksi sedang diproses';
             } break;
             case 2: {
                 return 'Diproses oleh Sistem'
