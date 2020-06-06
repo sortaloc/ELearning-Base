@@ -1,4 +1,3 @@
-// import { Request, Response } from 'express';
 const LoginController = require('@Controllers/LoginController');
 const VerifyMiddleware = require('@Middleware/VerifyMiddleware');
 
@@ -16,13 +15,6 @@ module.exports = (router) => {
         let response = await LoginController.logout(req.body);
         return res.send(response);
     })
-
-    // router.post('/forgotPassword', async (req, res) => {
-    //     console.log('reset password, with username, email, or number phone');
-    //     let response = await LoginController.forgotPassword(req.body);
-    //     res.send(true);
-    // })
-
 
     router.post('/requestForgotPassword', async (req, res) => {
         let response = await LoginController.requestForgotPassword(['value'], req.body);
