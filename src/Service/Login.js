@@ -39,10 +39,13 @@ module.exports = (router) => {
         res.send(response);
     })
 
-    router.get('/testLogout', async (req, res) => {
+    /*
+    * Buat Force Logout
+    */
+    /*router.get('/testLogout', async (req, res) => {
         let response = await LoginController.testLogout();
         res.send(response);
-    })
+    })*/
 
     return router;
 }
