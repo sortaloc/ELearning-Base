@@ -34,7 +34,7 @@ module.exports = (router) => {
         res.send(response);
     })
 
-    router.post('/forgotPassword', async (req, res) => {
+    router.post('/confirmForgot', async (req, res) => {
         let response = await LoginController.confirmForgotPassword(['email', 'username', 'nohp', 'otp', 'newPassword', 'id'], req.body);
         res.send(response);
     })
