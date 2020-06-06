@@ -141,7 +141,7 @@ class ProductController extends MainController {
             try{
                 if(diff.length === 0){
                     // let data = await database.produk.all();
-                    let data = await database.produk.connection.raw(`SELECT * FROM produk ORDER BY produk_created_at DESC`)
+                    let data = await database.produk.connection.raw(`SELECT * FROM produk where produk_is_active = 1 ORDER BY produk_created_at DESC`)
                     data = data.rows;
                     let ret = [];
                     for(let idx = 0; idx < data.length; idx++){
@@ -159,7 +159,7 @@ class ProductController extends MainController {
                                 keterangan: transaksi.trx_keterangan,
                                 trxtipe: transaksi.trx_tipe,
                                 harga: transaksi.trx_harga,
-                                inboice: transaksi.trx_invoice,
+                                invoice: transaksi.trx_invoice,
                                 refid: transaksi.trx_refid,
                                 created: transaksi.trx_created_at
                             }
@@ -282,24 +282,24 @@ class ProductController extends MainController {
         })
     }
 
-    getGroupedProductWithKey(groupid){
-        return new Promise( async (resolve) => {
-            try{
-                let data = await database.produk.allSelect({produk_id_group: groupid})
-                if(data.length > 0){
-                    // 
-                }else{
-                    throw err;
-                }
-            }catch(err){
-                response.state = false;
-                response.data = [];
-                response.message = "Gagal mendapatkan Grouping Produk";
-                response.code = 102;
-                return resolve(response);
-            }
-        })
-    }
+    // getGroupedProductWithKey(groupid){
+    //     return new Promise( async (resolve) => {
+    //         try{
+    //             let data = await database.produk.allSelect({produk_id_group: groupid})
+    //             if(data.length > 0){
+    //                 // 
+    //             }else{
+    //                 throw err;
+    //             }
+    //         }catch(err){
+    //             response.state = false;
+    //             response.data = [];
+    //             response.message = "Gagal mendapatkan Grouping Produk";
+    //             response.code = 102;
+    //             return resolve(response);
+    //         }
+    //     })
+    // }
 
     getSingleProduct(fields, body){
         let response = this.structure;
@@ -333,6 +333,8 @@ class ProductController extends MainController {
                         a."produk_namaProduk" as namaproduk,
                         a.produk_updated_at as updated,
                         a.produk_certificate as produk,
+                        a.produk_viewed as produkview,
+                        a.produk_buy as produkbuy,
                         CONCAT('${URLIMAGE}', a.produk_certificate) as produk_link,
                         CONCAT('${URLIMAGE}', a.produk_cover) as cover_link,
                         bprofile.prl_nama as namaadmin,
@@ -349,7 +351,7 @@ class ProductController extends MainController {
                         WHERE
                         a.produk_id = '${body.produkid}'
                         AND
-                        a."produk_kodeProduk" = '${body.kodeproduk}'
+                        produk_is_active = 1
                     `)
                     if(data.rows.length > 0){
                         let retData = data.rows[0];
@@ -488,7 +490,7 @@ class ProductController extends MainController {
                         response.message = "Failed to update Kategori Produk";
                         response.code = 104;
                         response.state = false
-                        throw response;    
+                        throw response;
                     }
 
 
@@ -553,7 +555,7 @@ class ProductController extends MainController {
                     let update = {
                         where: {
                             produk_id: body.produkid,
-                        }, 
+                        },
                         update: {
                             produk_namaProduk: body.name,
                             produk_keterangan: body.keterangan,

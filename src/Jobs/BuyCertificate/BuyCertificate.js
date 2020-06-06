@@ -31,7 +31,7 @@ const processing = async () => {
                     await database.inbox.updateOne({ibx_refid: inbox.ibx_refid}, {ibx_status: 'P'});
 
                     let FormatMsg = MainController.FormatMsg(inbox.ibx_format_msg.split('.'));
-                    
+
                     let produk = await database.produk.single({produk_id: FormatMsg.productid, produk_kodeProduk: FormatMsg.kode});
                     let akun = await database.profile.single({prl_profile_id: FormatMsg.profileid, prl_isactive: 1});
 
@@ -129,8 +129,8 @@ const processing = async () => {
                             }
 
                             /*Write Image with Text*/
-                            await image.print(font, x, y, { 
-                                text: txt, 
+                            await image.print(font, x, y, {
+                                text: txt,
                                 alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
                                 alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
                             }, textWidth, textHeight);
@@ -159,6 +159,8 @@ const processing = async () => {
                                     obx_raw_data: JSON.stringify(transaksi)
                                 }
                                 await database.outbox.insertOne(Outbox)
+                                // await data.produk.updateOne({produk_id: produk.produk_id}, {})
+                                await database.produk.connection.raw(`UPDATE produk SET produk_buy = produk_buy + 1 WHERE produk_id = '${produk.produk_id}' AND produk_kodeProduk = '${produk.produk_kodeProduk}'`)
                                 let notifData = {
                                   data: {
                                     id: akun.prl_profile_id,

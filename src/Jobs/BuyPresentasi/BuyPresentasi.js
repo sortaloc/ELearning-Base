@@ -31,7 +31,7 @@ const processing = async () => {
                     await database.inbox.updateOne({ibx_refid: inbox.ibx_refid}, {ibx_status: 'P'});
 
                     let FormatMsg = MainController.FormatMsg(inbox.ibx_format_msg.split('.'));
-                    
+
                     let produk = await database.produk.allSelect({produk_id: FormatMsg.productid, produk_kodeProduk: FormatMsg.kode});
                     let akun = await database.profile.single({prl_profile_id: FormatMsg.profileid, prl_isactive: 1});
 

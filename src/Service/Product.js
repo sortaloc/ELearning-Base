@@ -50,7 +50,7 @@ module.exports = (router) => {
     router.post('/getSingleProduct', VerifyMiddleware, async (req, res) => {
         req.body.token = req.headers.authorization.split(' ');
         req.body.token = req.body.token[req.body.token.length - 1];
-        let data = await ProductController.getSingleProduct(['id', 'produkid', 'kodeproduk'], req.body);
+        let data = await ProductController.getSingleProduct(['id', 'produkid'], req.body);
         res.send(data);
     })
 
