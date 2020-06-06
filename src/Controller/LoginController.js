@@ -1,8 +1,12 @@
-
-const { STRUCTURE } = require('@Config/Config');
+const { STRUCTURE, WHATSAPP } = require('@Config/Config');
 const database = require('@Model/index');
 
 let MainController = require('@Controllers/MainController');
+
+const { accountSid, authToken } = WHATSAPP;
+
+const client = require('twilio')(accountSid, authToken);
+const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
 class LoginController extends MainController {
     structure;
@@ -155,11 +159,181 @@ class LoginController extends MainController {
         })
     }
 
-    forgotPassword = (body) => {
-        return new Promise(async resolve => {
+    // forgotPassword = (body) => {
+    //     return new Promise(async resolve => {
+    //         let response = STRUCTURE;
+    //         let id = body.id;
+    //     })
+    // }
+
+    requestForgotPassword = (fields, body) => {
+        let response = this.structure;
+        return new Promise(async (resolve) => {
             let response = STRUCTURE;
-            let id = body.id;
-        })
+            let newBody = Object.keys(body);
+            let diff = list.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    let username = await database.profile.connection.raw(`SELECT * FROM profile WHERE LOWER(prl_username) LKE '%${body.value.toLowerCase()}%' AND prl_isactive = 1`);
+                    let email = await database.profile.connection.raw(`SELECT * FROM profile WHERE LOWER(prl_email) LIKE '%${body.value.toLowerCase()}%' AND prl_isactive = 1`);
+                    if(Number(body.value.charAt(0)) === 0){
+                        body.value = body.value.substr(1);
+                    }
+                    let nohp = await database.profile.connection.raw(`SELECT * FROM profile WHERE LOWER(prl_nohp) LIKE '%${body.value.toLowerCase()}%' AND prl_isactive = 1`);
+                    let akun = [];
+                    if(username.rows.length > 0){
+                        akun = username.rows
+                    }
+                    if(email.rows.length > 0){
+                        akun = email.rows
+                    }
+                    if(nohp.rows.length > 0){
+                        akun = nohp.rows
+                    }
+
+                    if(akun.length > 0){
+                        let OTP = this.getKodeOTP(akun.prl_nohp);
+                        if(!OTP.state){
+                            response.data = {};
+                            response.message = 'Gagal Mendapatkan Kode OTP, silahkan tunggu beberapa saat lagi';
+                            response.code = 104;
+                            response.state = false;
+                            resolve(response);
+                        }
+
+                        OTP = OTP.kode;
+
+                        let data = await client.messages
+                        .create({
+                            from: 'whatsapp:+14155238886',
+                            body: `Berikut adalah Kode OTP untuk pergantian Password\n${OTP}\nKode OTP akan Expired dalam 30 Menit`,
+                            to: `whatsapp:+${akun.prl_nohp}`
+                        })
+                        response.data = {
+                            email: akun.prl_email,
+                            username: akun.prl_username,
+                            nohp: akun.prl_nohp,
+                            otp: OTP,
+                            id: akun.prl_profile_id
+                        };
+                        response.message = 'Berhasil Request Forgot Password';
+                        response.code = 100;
+                        response.state = true;
+                        resolve(response);
+                    }else{
+                        response.data = {};
+                        response.message = `Akun tidak Valid, mohon periksa kembali akun yang dikirimakan`;
+                        response.code = 103;
+                        response.state = false
+                        resolve(response);
+                    }
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    resolve(response);
+                }
+            }catch(err){
+                console.log(err)
+                err.code = 503;
+                err.state = false;
+                resolve(err);
+            }
+        });
+    }
+
+    validasiOTPForgotPassword = (fields, body) => {
+        let response = this.structure;
+        return new Promise(async (resolve) => {
+            let response = STRUCTURE;
+            let newBody = Object.keys(body);
+            let diff = list.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    let otpData = await database.otp_list.allSelect({otp_kode: body.otp, otp_nohp: body.nohp, otp_status: 0});
+                    if(otpData.length > 0){
+                        otpData = otpData[0];
+                        // await database.otp_list.updateOne({id: otpData.id, otp_nohp: otpData.otp_nohp, otp_kode: otpData.otp_kode}, {otp_status: 5});
+                        response.data = body;
+                        response.message = `OTP Valid, silahkan melakukan perubahan password baru`;
+                        response.code = 100;
+                        response.state = true;
+                        resolve(response);
+                    }else{
+                        response.data = {};
+                        response.message = `OTP tidak Valid`;
+                        response.code = 103;
+                        response.state = false
+                        resolve(response);
+                    }
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    resolve(response);
+                }
+            }catch(err){
+                console.log(err)
+                err.code = 503;
+                err.state = false;
+                resolve(err);
+            }
+        });
+    }
+
+    confirmForgotPassword = (fields, body) => {
+        let response = this.structure;
+        return new Promise(async (resolve) => {
+            let response = STRUCTURE;
+            let newBody = Object.keys(body);
+            let diff = list.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    let otp = await database.otp_list.allSelect({otp_kode: body.otp, otp_nohp: body.nohp, otp_status: 0});
+                    if(otp.length > 0){
+                        otp = otp[0];
+                        // Update OTP
+                        await database.otp_list.updateOne({id: otp.id, otp_nohp: otp.otp_nohp, otp_kode: otp.otp_kode}, {otp_status: 1});
+                        // Update password
+                        let password = this.createPassword(body.newPassword);
+
+                        let updatePassword = await database.profile.updateOne({prl_profile_id: body.id, prl_nohp: body.nohp}, {prl_password: password});
+                        if(updatePassword.state){
+                            response.data = body;
+                            response.message = `Sukses merubah password, silahkan login dengan password baru`;
+                            response.code = 100;
+                            response.state = true
+                            resolve(response);
+                        }else{
+                            response.data = body;
+                            response.message = `Gagal merubah Password, silahkan coba beberapa saat lagi`;
+                            response.code = 104;
+                            response.state = false
+                            resolve(response);
+                        }
+                    }else{
+                        response.data = {};
+                        response.message = `OTP tidak Valid`;
+                        response.code = 103;
+                        response.state = false
+                        resolve(response);
+                    }
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    resolve(response);
+                }
+            }catch(err){
+                console.log(err)
+                err.code = 503;
+                err.state = false;
+                resolve(err);
+            }
+        });
     }
 
     testLogout = () => {

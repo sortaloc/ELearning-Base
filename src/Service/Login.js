@@ -17,10 +17,26 @@ module.exports = (router) => {
         return res.send(response);
     })
 
+    // router.post('/forgotPassword', async (req, res) => {
+    //     console.log('reset password, with username, email, or number phone');
+    //     let response = await LoginController.forgotPassword(req.body);
+    //     res.send(true);
+    // })
+
+
+    router.post('/requestForgotPassword', async (req, res) => {
+        let response = await LoginController.requestForgotPassword(['value'], req.body);
+        res.send(response);
+    })
+
+    router.post('/validasiOTP', async (req, res) => {
+        let response = await LoginController.validasiOTPForgotPassword(['otp', ['nohp']], req.body);
+        res.send(response);
+    })
+
     router.post('/forgotPassword', async (req, res) => {
-        console.log('reset password, with username, email, or number phone');
-        let response = await LoginController.forgotPassword(req.body);
-        res.send(true);
+        let response = await LoginController.confirmForgotPassword(['email', 'username', 'nohp', 'otp', 'newPassword', 'id'], req.body);
+        res.send(response);
     })
 
     router.get('/testLogout', async (req, res) => {

@@ -134,6 +134,7 @@ const processing = async () => {
                                     obx_raw_data: JSON.stringify(transaksi)
                                 }
                                 await database.outbox.insertOne(Outbox)
+                                await database.produk.connection.raw(`UPDATE produk SET produk_buy = produk_buy + 1 WHERE produk_id = '${produk.produk_id}' AND produk_kodeProduk = '${produk.produk_kodeProduk}'`)
                                 let notifData = {
                                   data: {
                                     id: akun.prl_profile_id,
