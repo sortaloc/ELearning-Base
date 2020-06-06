@@ -30,7 +30,7 @@ module.exports = (router) => {
     })
 
     router.post('/validasiOTP', async (req, res) => {
-        let response = await LoginController.validasiOTPForgotPassword(['otp', ['nohp']], req.body);
+        let response = await LoginController.validasiOTPForgotPassword(['otp', 'nohp'], req.body);
         res.send(response);
     })
 
