@@ -57,8 +57,8 @@ const processing = async () => {
                     let jurnal1 = {
                         cf_keterangan: `Pengurangan Nexus dari profile ${akun.prl_profile_id} sebesar ${produk.produk_harga} Nexus seharga ${realHarga} Rupiah`,
                         cf_tipe: 'buy',
-                        cf_kredit: realHarga,
-                        cf_debet: 0,
+                        cf_kredit: 0,
+                        cf_debet: realHarga,
                         cf_nominal: produk.produk_harga + ' Nexus',
                         cf_refid: inbox.ibx_refid,
                         cf_internal_acc: '',
@@ -74,8 +74,8 @@ const processing = async () => {
                         let jurnal2 = {
                             cf_keterangan: `Penambahan ke account Penampungan Presentasi dengan id penampung: '${penampung}' degan pembelian Presentasi seharga ${nexus} Nexus, dengan keuntungan sebesar ${keuntunganUserNexus} Nexus dikonversikan menjadi ${keuntunganUser} Rupiah`,
                             cf_tipe: 'buy',
-                            cf_kredit: 0,
-                            cf_debet: keuntunganUser,
+                            cf_kredit: keuntunganUser,
+                            cf_debet: 0,
                             cf_nominal: nexus + ' Nexus',
                             cf_refid: inbox.ibx_refid,
                             cf_internal_acc: penampung,
@@ -91,8 +91,8 @@ const processing = async () => {
                             let jurnal3 = {
                                 cf_keterangan: `Penambahan ke account Penampungan Keuntungan Presentasi dengan id penampung: '${penampung}' degan pembelian Presentasi seharga ${nexus} Nexus dengan keuntungan sebesar ${feeNexus} dikonversikan menjadi ${fee} Rupiah`,
                                 cf_tipe: 'buy',
-                                cf_kredit: 0,
-                                cf_debet: fee,
+                                cf_kredit: fee,
+                                cf_debet: 0,
                                 cf_nominal: nexus + ' Nexus',
                                 cf_refid: inbox.ibx_refid,
                                 cf_internal_acc: penampung,

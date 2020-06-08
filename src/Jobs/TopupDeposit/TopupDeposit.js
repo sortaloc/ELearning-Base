@@ -40,7 +40,7 @@ const processing = async () => {
 
                     let internal1 = '20200506045039801303';
                     let jurnal1 = {
-                        cf_keterangan: 'Penambahan ke penampungan internal',
+                        cf_keterangan: 'Beban ke penampungan internal Topup Deposit',
                         cf_tipe: 'topup',
                         cf_kredit: 0,
                         cf_debet: deposit.dep_total,
@@ -50,14 +50,14 @@ const processing = async () => {
                         cf_profile_id: akun.prl_profile_id
                     }
 
-                    let query = `UPDATE account SET acc_saldo = acc_saldo + ${deposit.dep_total} WHERE acc_noakun = '${internal1}'`
+                    let query = `UPDATE account SET acc_saldo = acc_saldo - ${deposit.dep_total} WHERE acc_noakun = '${internal1}'`
                     let updateAkun1 = await database.account.connection.raw(query);
 
                     if(updateAkun1.rowCount > 0){
                         let nexus = Math.floor(deposit.dep_nominal /*/ 15000*/);
 
                         let jurnal2 = {
-                            cf_keterangan: `Pengurangan ke Akun ${akun.prl_profile_id} dengan nilai ${deposit.dep_nominal} dengan nilai konversi nexus menjadi '${nexus} Nexus'`,
+                            cf_keterangan: `Penambahan ke Akun ${akun.prl_profile_id} dengan nilai ${deposit.dep_nominal} dengan nilai konversi nexus menjadi '${nexus} Nexus'`,
                             cf_tipe: 'topup',
                             cf_kredit: deposit.dep_nominal,
                             cf_debet: 0,
