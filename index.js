@@ -32,6 +32,9 @@ app.get('/', (req, res) => {
 })
 
 app.use('/files', express.static('./src/Source'));
+app.use((req, res, next) => {
+	res.status(404).send({code: 404, error: 'Route Not Found'});
+})
 
 server.listen(PORT, () => {
     console.log(`Service Server ${NAME}\nversion ${VERSION}\nrunning on localhost:${PORT}\n`);
