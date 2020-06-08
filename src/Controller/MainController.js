@@ -55,14 +55,18 @@ class MainController {
         })
     }
 
+    convertDate = (date) => {
+        return moment(date).tz('Asia/Jakarta').format('YYYY-MM-DDTHH:mm:ssZ');
+    }
+
     switchingCommand = () =>{
         return new Promise(async resolve => {
           let JamSekarang = Number(moment().format('HH'))
           let cutStart, cutEnd
-    
+
           cutStart = 23;
           cutEnd = 1;
-    
+
           if (JamSekarang >= cutStart || JamSekarang < cutEnd) {
             setTimeout(() => {
               console.log(`Cutout Inbox, ${new Date()}`)

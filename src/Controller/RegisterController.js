@@ -9,6 +9,7 @@ const client = require('twilio')(accountSid, authToken);
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
 const MainController = require('@Controllers/MainController');
+const EventController = require('@Controllers/EventController');
 
 class RegisterController extends MainController {
     structure;
@@ -37,7 +38,6 @@ class RegisterController extends MainController {
 
             if(diff.length === 0){
                 let profileData = {
-                    // prl_nik: body.nik,
                     prl_nohp: body.nohp,
                     prl_username: body.username,
                     prl_password: this.createPassword(body.password),
@@ -66,13 +66,21 @@ class RegisterController extends MainController {
                         prl_photo: body.photo
                     }
                     let result = await database.profile.insertOne(profileData);
-                    // await database.otp_list.updateOne({otp_nohp: body.nohp, otp_kode: body.otp}, {otp_status: 1})
+                    await database.otp_list.updateOne({otp_nohp: body.nohp, otp_kode: body.otp}, {otp_status: 1})
+                    // Check Event
+                    let event = await EventController.checkingEvent('register', this.createDate(0));
+                    if(event.state){
+                        // Create Event;
+                        await EventController.createEventInbox(profileData.prl_profile_id, event.event_id, event.event_kode, event.event_value, event.event_nama);
+                    }
+
                     if(result.state){
                         response.data = {
                             username: profileData.prl_username,
                             nama: profileData.prl_nama
                         }
                         // Update Kode OTP Menjadi 1
+                        // await database.otp_list.updateOne({})
                         response.message = `Success to Create user ${profileData.prl_nama}`
                         response.state = true;
                         response.code = 100;
