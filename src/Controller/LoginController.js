@@ -6,7 +6,7 @@ let MainController = require('@Controllers/MainController');
 const { accountSid, authToken } = WHATSAPP;
 
 const client = require('twilio')(accountSid, authToken);
-const MessagingResponse = require('twilio').twiml.MessagingResponse;
+// const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
 class LoginController extends MainController {
     structure;
@@ -203,12 +203,14 @@ class LoginController extends MainController {
 
                         OTP = OTP.kode;
 
+                        let WA = await database.setting.single({st_kode:'wa_bot'});
                         let data = await client.messages
                         .create({
-                            from: 'whatsapp:+14155238886',
+                            from: `whatsapp:+${WA.st_value}`,
                             body: `Berikut adalah Kode OTP untuk pergantian Password\n${OTP}\nKode OTP akan Expired dalam 30 Menit`,
                             to: `whatsapp:+${akun.prl_nohp}`
                         })
+
                         response.data = {
                             email: akun.prl_email,
                             username: akun.prl_username,
