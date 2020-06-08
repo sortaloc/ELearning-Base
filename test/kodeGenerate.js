@@ -3,5 +3,6 @@ require('module-alias/register')
 let MainController = require('@Controllers/MainController.js');
 MainController = new MainController;
 
-console.log(MainController.generateID());
-process.exit()
+let id = MainController.makeid(10);
+console.log(id);
+process.exit();
