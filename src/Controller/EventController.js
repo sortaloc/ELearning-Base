@@ -45,7 +45,7 @@ class EventController extends MainController {
 	            ibx_status: 'Q',
 	            ibx_format_msg: format_msg,
 	            ibx_keterangan: `Berhasil input ke inbox pada ${this.createDate(0)}`,
-	            ibx_raw_data: JSON.stringify(body)
+	            ibx_raw_data: JSON.stringify({profile_id, eventid, eventkode, value, namaEvent})
 	        }
         	let harga = Number(value);
 	        let trxID = this.generateID();
