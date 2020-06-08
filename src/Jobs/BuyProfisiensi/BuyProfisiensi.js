@@ -165,9 +165,10 @@ const processing = async () => {
                                         send: 'user'
                                       }
                                     }
+                                    let WA = await database.setting.single({st_kode:'wa_bot'});
                                     let msg = await client.messages
                                     .create({
-                                        from: 'whatsapp:+14155238886',
+                                        from: `whatsapp:+${WA.st_value}`,
                                         body: `Anda telah terdaftar pada Kelas '${produk.produk_namaProduk}'\nUsername : *${username}*\nPassword : *${password}*`,
                                         to: `whatsapp:+${akun.prl_nohp}`
                                     })
