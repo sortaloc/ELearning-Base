@@ -318,7 +318,14 @@ class ProductController extends MainController {
                         produk_end: body.endDate
                     }
 
-                    console.log(insertData)
+                    // console.log(insertData)
+
+                    let placement = {
+                        placement_produkid: insertData.produk_id,
+                        placement_data: body.imagePlacement
+                    }
+
+                    await database.placement.insertOne(placement);
 
                     let insert = await database.produk.insertOne(insertData);
                     if(insert.state){
