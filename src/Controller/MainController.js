@@ -383,7 +383,10 @@ class MainController {
     getKodeOTP = (getNumber) => {
         return new Promise(async resolve => {
             const numberPhone = getNumber;
-            const kode = this.generateOTP();
+            let kode = this.generateOTP();
+            if(kode.length > 10){
+                kode = kode.substr(0, 9);
+            }
             const query = kodeOtpSelect(kode, numberPhone, this.getToday())
             let OTPDatabase = await database.otp_list.connection.raw(query)
             if(OTPDatabase.rows > 0){
