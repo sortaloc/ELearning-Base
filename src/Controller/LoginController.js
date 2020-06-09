@@ -175,11 +175,14 @@ class LoginController extends MainController {
             try{
                 if(diff.length === 0){
                     let username = await database.profile.connection.raw(`SELECT * FROM profile WHERE LOWER(prl_username) LIKE '%${body.value.toLowerCase()}%' AND prl_isactive = 1`);
+                    console.log('username',username.rows)
                     let email = await database.profile.connection.raw(`SELECT * FROM profile WHERE LOWER(prl_email) LIKE '%${body.value.toLowerCase()}%' AND prl_isactive = 1`);
+                    console.log('email',email.rows)
                     if(Number(body.value.charAt(0)) === 0){
                         body.value = body.value.substr(1);
                     }
                     let nohp = await database.profile.connection.raw(`SELECT * FROM profile WHERE LOWER(prl_nohp) LIKE '%${body.value.toLowerCase()}%' AND prl_isactive = 1`);
+                    console.log('nohp',nohp.rows)
                     let akun = [];
                     if(username.rows.length > 0){
                         akun = username.rows
@@ -190,6 +193,8 @@ class LoginController extends MainController {
                     if(nohp.rows.length > 0){
                         akun = nohp.rows
                     }
+
+                    console.log(akun)
 
                     if(akun.length > 0){
                         let OTP = this.getKodeOTP(akun.prl_nohp);
