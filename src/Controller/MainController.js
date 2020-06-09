@@ -43,7 +43,7 @@ class MainController {
 
     getLocation = (ipAddress = '192.1.1.1') => {
         return new Promise(async (resolve) => {
-            let url = `http://api.ipstack.com/36.88.30.82?access_key=${GEOLOCATION}`
+            let url = `http://api.ipstack.com/${ipAddress}?access_key=${GEOLOCATION}`
             let result = await API.get(url);
             resolve(result);
         })
