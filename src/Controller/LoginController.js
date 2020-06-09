@@ -195,8 +195,6 @@ class LoginController extends MainController {
                         akun = nohp.rows
                     }
 
-                    console.log(akun)
-
 
                     if(akun.length > 0){
                         akun = akun[0];
@@ -211,8 +209,9 @@ class LoginController extends MainController {
 
                         OTP = OTP.kode;
 
+                        console.log(OTP);
+
                         let WA = await database.setting.single({st_kode:'wa_bot'});
-                        console.log(WA);
                         let data = await client.messages
                         .create({
                             from: `whatsapp:+${WA.st_value}`,
