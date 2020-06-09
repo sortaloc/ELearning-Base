@@ -186,17 +186,20 @@ class LoginController extends MainController {
                     // console.log('nohp',nohp.rows)
                     let akun = [];
                     if(username.rows.length > 0){
-                        akun = username.rows[0]
+                        akun = username.rows
                     }
                     if(email.rows.length > 0){
-                        akun = email.rows[0]
+                        akun = email.rows
                     }
                     if(nohp.rows.length > 0){
-                        akun = nohp.rows[0]
+                        akun = nohp.rows
                     }
+
+                    console.log(akun)
 
 
                     if(akun.length > 0){
+                        akun = akun[0];
                         let OTP = this.getKodeOTP(akun.prl_nohp);
                         if(!OTP.state){
                             response.data = {};
