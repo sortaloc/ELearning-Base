@@ -198,7 +198,7 @@ class LoginController extends MainController {
 
                     if(akun.length > 0){
                         akun = akun[0];
-                        let OTP = this.getKodeOTP(akun.prl_nohp);
+                        let OTP = await this.getKodeOTP(akun.prl_nohp);
                         if(!OTP.state){
                             response.data = {};
                             response.message = 'Gagal Mendapatkan Kode OTP, silahkan tunggu beberapa saat lagi';
@@ -207,7 +207,7 @@ class LoginController extends MainController {
                             resolve(response);
                         }
 
-                        // OTP = OTP;
+                        OTP = OTP.kode;
 
                         console.log(OTP);
 
