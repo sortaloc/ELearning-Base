@@ -264,12 +264,15 @@ class ProductController extends MainController {
             let diff = fields.filter((x) => newBody.indexOf(x) === -1)
             try{
                 if(diff.length === 0){
-                    // console.log(body);
+                    let ids = this.getRandomInt(0, 99);
+                    if(ids < 10){
+                        ids = `0${ids}`
+                    }
                     let insertData = {
                         produk_namaProduk: body.nama,
                         produk_id_group: body.tipe,
                         produk_harga: body.harga,
-                        produk_kodeProduk: this.makeid(10),
+                        produk_kodeProduk: this.makeid(3)+ids,
                         produk_keterangan: body.keterangan,
                         produk_is_active: 1,
                         produk_cover: body.cover,

@@ -17,6 +17,7 @@ const db = {};
     'otp_list',
     'mutasi_bank',
     'outbox',
+    'placement',
     'profisiensi',
     'produk',
     'produk_group',
