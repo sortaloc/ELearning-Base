@@ -217,7 +217,7 @@ class LoginController extends MainController {
                             to: `whatsapp:+${akun.prl_nohp}`
                         })
 
-                        console.log(data);
+                        console.log(akun);
 
                         response.data = {
                             email: akun.prl_email,
