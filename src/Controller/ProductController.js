@@ -214,6 +214,49 @@ class ProductController extends MainController {
         })
     }
 
+    getAllProductMini = (fields, body) => {
+        let response = this.structure;
+        return new Promise( async (resolve) => {
+            let newBody = Object.keys(body);
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            try{
+                if(diff.length === 0){
+                    let data = await database.produk.connection.raw(`
+                        SELECT
+                        a."produk_namaProduk" as nama,
+                        a."produk_kodeProduk" as kodeproduk,
+                        a.produk_id as produkid,
+                        a.produk_id_group as groupid,
+                        a.produk_harga as harga,
+                        a.produk_is_active as active,
+                        g.group_nama as groupnama
+                        FROM
+                        produk a
+                        JOIN (SELECT group_nama, id_group FROM produk_group) g on g.id_group = a.produk_id_group
+                        WHERE
+                        a.produk_is_active = 1 ORDER BY a.produk_created_at DESC
+                        `)
+                    response.state = true;
+                    response.data = data.rows;
+                    response.code = 100;
+                    response.message = "Sukses mendapatkan Produk Mini";
+                    return resolve(response);
+                }else{
+                    response.data = {};
+                    response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;
+                    response.code = 102;
+                    response.state = false
+                    throw response;
+                }
+            }catch(err){
+                console.log(err)
+                err.code = 503;
+                err.state = false;
+                resolve(err)
+            }
+        });
+    }
+
     createProduct(fields, body){
         let response = this.structure;
         return new Promise(async (resolve) => {
@@ -763,22 +806,50 @@ class ProductController extends MainController {
 
                         JOIN (SELECT prl_profile_id, prl_nama, prl_username FROM profile WHERE prl_isactive = 1) bprofile on bprofile.prl_profile_id = prd.produk_id_profile
                         JOIN (SELECT prl_profile_id, prl_nama, prl_username, prl_photo FROM profile WHERE prl_isactive = 1) cprofile on cprofile.prl_profile_id = prd.produk_id_profile
-                                                                        
                         where a.trx_data LIKE '%download%'
                         GROUP BY a.trx_produk_id, prd."produk_namaProduk", prd.produk_harga, prd.produk_id_group, prdg.group_nama, prd."produk_kodeProduk",prd.produk_cover, prd.produk_keterangan, prd.produk_certificate, prd.produk_cover, bprofile.prl_nama, bprofile.prl_username, cprofile.prl_nama, cprofile.prl_username, cprofile.prl_photo, photopematerilink
                         ORDER BY download DESC
                         `
                         )
+                    // console.log(data.rows);
+                    if(data.rows.length === 0){
+                        let rekomendasi = await database.transaksi.connection.raw(
+                            `SELECT
+                            0 as download,
+                            prd.produk_id as produkid,
+                            prd."produk_kodeProduk" as kodeproduk,
+                            prd."produk_namaProduk" as namaproduk,
+                            prd.produk_harga as hargaproduk,
+                            prd.produk_id_group as groupid,
+                            prd.produk_cover as produkcover,
+                            prd.produk_keterangan as keteranganproduk,
+                            CONCAT('${URLIMAGE}', prd.produk_certificate) as produk_link,
+                            CONCAT('${URLIMAGE}', prd.produk_cover) as cover_link,
+                            prd.produk_id_profile,
+                            bprofile.prl_nama as namaadmin,
+                            bprofile.prl_username as adminusername,
+                            cprofile.prl_nama as namapemateri,
+                            cprofile.prl_username as usernamepemateri,
+                            cprofile.prl_photo as photopemateri,
+                            CONCAT('${URLIMAGE}', cprofile.prl_photo) as photopematerilink,
+                            prdg.group_nama
+                            FROM
+                            produk prd
+                            JOIN (SELECT * FROM produk_group) prdg ON prdg.id_group = prd.produk_id_group
+                            JOIN (SELECT * FROM profile WHERE prl_isactive = 1) bprofile ON bprofile.prl_profile_id = prd.produk_id_profile
+                            JOIN (SELECT * FROM profile WHERE prl_isactive = 1) cprofile ON cprofile.prl_profile_id = prd.produk_id_profile
+                            ORDER BY random()
+                            LIMIT 5
+                            `
+                            )
+                        data = rekomendasi;
+                    }
 
                     response.data = data.rows;
                     response.code = 100;
                     response.state = true;
                     response.message = "Success Get Rekomendasi";
                     resolve(response)
-                    // console.log(data.rows);
-                    // if(Number(data.rowCount) > 0){
-
-                    // }
                 }else{
                     response.data = {};
                     response.message = `Input Not Valid, Missing Parameter : '${diff.toString()}'`;

@@ -6,7 +6,6 @@ module.exports = (router) => {
     router.use(Busboy({
         highWaterMark: 50 * 1024 * 1024, // Set 50MiB buffer
     })); // Insert the busboy middle-ware
-    
     // router.get('/', (req, res) => {
     //     res.send(true);
     // })
@@ -25,12 +24,15 @@ module.exports = (router) => {
         let data = await ProductController.getStatisticProduct();
         return res.send(data)
     })
-    
 
     router.post('/getAllProduct', VerifyMiddleware, async (req, res) => {
         let data = await ProductController.getAllProduct(['id'], req.body);
         return res.send(data);
     });
+    router.post('/getAllProductMini', VerifyMiddleware, async (req, res) => {
+        let response = await ProductController.getAllProductMini(['id'], req.body);
+        return res.send(response);
+    })
 
     router.post('/recomended', VerifyMiddleware, async (req, res) => {
         let response = await ProductController.getRecomended(['id'], req.body);
