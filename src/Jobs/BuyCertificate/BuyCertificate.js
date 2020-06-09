@@ -143,13 +143,13 @@ const processing = async () => {
                                 nomorCert = `${nomorCert}`;
                             }
 
-                            let nomor = `PREI/SEM/${produk.produk_kodeProduk}/${}``
+                            let nomor = `PREI/SEM/${produk.produk_kodeProduk}/${MainController.romanize(moment().tz("Asia/Jakarta").format("MM"))}/${moment().tz("Asia/Jakarta").format("YYY")}/${nomorCert}`
 
-                            console.log(nomorCert);
+                            console.log(nomor);
                             process.exit();
 
                             let namaText = akun.prl_nama;
-                            let nomor
+                            // let nomor
 
                             // console.log(namaText)
                             // process.exit()

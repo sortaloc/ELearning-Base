@@ -172,7 +172,7 @@ class LoginController extends MainController {
             let response = STRUCTURE;
             let newBody = Object.keys(body);
             let diff = fields.filter((x) => newBody.indexOf(x) === -1)
-            console.log(body);
+            // console.log(body);
             try{
                 if(diff.length === 0){
                     let username = await database.profile.connection.raw(`SELECT * FROM profile WHERE LOWER(prl_username) LIKE '%${body.value.toLowerCase()}%' AND prl_isactive = 1`);
@@ -215,6 +215,8 @@ class LoginController extends MainController {
                             body: `Berikut adalah Kode OTP untuk pergantian Password\n${OTP}\nKode OTP akan Expired dalam 30 Menit`,
                             to: `whatsapp:+${akun.prl_nohp}`
                         })
+
+                        console.log(data);
 
                         response.data = {
                             email: akun.prl_email,
