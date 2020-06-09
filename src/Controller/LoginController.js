@@ -213,7 +213,7 @@ class LoginController extends MainController {
                         let data = await client.messages
                         .create({
                             from: `whatsapp:+${WA.st_value}`,
-                            body: `Berikut adalah Kode OTP untuk pergantian Password\n${OTP}\nKode OTP akan Expired dalam 30 Menit`,
+                            body: `Berikut adalah Kode OTP untuk pergantian Password\n*${OTP}*\nKode OTP akan Expired dalam 30 Menit`,
                             to: `whatsapp:+${akun.prl_nohp}`
                         })
 
