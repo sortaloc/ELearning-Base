@@ -172,6 +172,7 @@ class LoginController extends MainController {
             let response = STRUCTURE;
             let newBody = Object.keys(body);
             let diff = fields.filter((x) => newBody.indexOf(x) === -1)
+            console.log(body);
             try{
                 if(diff.length === 0){
                     let username = await database.profile.connection.raw(`SELECT * FROM profile WHERE LOWER(prl_username) LIKE '%${body.value.toLowerCase()}%' AND prl_isactive = 1`);
