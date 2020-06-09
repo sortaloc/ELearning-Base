@@ -2,6 +2,8 @@ const database = require('@Model/index');
 const MainController = require('@Controllers/MainController');
 const { STRUCTURE, URLIMAGE } = require('@Config/Config');
 
+const moment = require('moment-timezone');
+
 class ProductController extends MainController {
     response = STRUCTURE;
     constructor(){
@@ -194,8 +196,28 @@ class ProductController extends MainController {
                             namapemateri: pemateri.prl_nama,
                             usernamepemateri: pemateri.prl_username,
                             photopemateri: pemateri.prl_photo,
-                            photopematerilink: URLIMAGE+pemateri.prl_photo
+                            photopematerilink: URLIMAGE+pemateri.prl_photo,
+                            buttonbuy: 1
                         }
+                        if(res.namagroup.toLowerCase().includes('profisiensi')){
+                            let exprDate = new Date(d.produk_end)
+                            let nowDate = new Date(moment.tz('Asia/Jakarta').format());
+                            if(nowDate > exprDate){
+                                res.buttonbuy = 0;
+                                // res = {
+                                //     ...res,
+                                //     buttonbuy: 0
+                                // }
+                            }else{
+                                res.buttonbuy = 1;
+                                // res = {
+                                //     ...res,
+                                //     buttonbuy: 1
+                                // }
+                            }
+                            // console.log(true)
+                        }
+                        // console.log(res.nama)
 
                         // cprofile.prl_nama as namapemateri,
                         // cprofile.prl_username as usernamepemateri,
