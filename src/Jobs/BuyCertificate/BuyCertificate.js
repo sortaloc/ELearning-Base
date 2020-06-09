@@ -144,20 +144,21 @@ const processing = async () => {
                             }
 
                             let nomor = `PREI/SEM/${produk.produk_kodeProduk}/${MainController.romanize(moment().tz("Asia/Jakarta").format("MM"))}/${moment().tz("Asia/Jakarta").format("YYY")}/${nomorCert}`
+                            let namaText = akun.prl_nama;
 
-                            console.log(nomor);
+                            var textWidth = Jimp.measureText(font, namaText);
+                            var textHeight = Jimp.measureTextHeight(font, namaText);
+
+                            let nomorWidth = Jimp.measureText(font, nomor);
+                            let nomorHeight = Jimp.measureTextHeight(font, nomor);
+
+                            let jimpImage = await Jimp.read(imgPath)
+                            let { width, height } = jimpImage.bitmap;
+                            
+                            console.log(placement);
                             process.exit();
 
-                            let namaText = akun.prl_nama;
-                            // let nomor
-
-                            // console.log(namaText)
-                            // process.exit()
-
-                            // let txt = akun.prl_nama
-
-                            // var textWidth = Jimp.measureText(font, txt);
-                            // var textHeight = Jimp.measureTextHeight(font, txt);
+                            // let imageText = new Jimp()
 
                             // let x = w/2-textWidth/2;
                             // let y = h/2-textHeight/2;
