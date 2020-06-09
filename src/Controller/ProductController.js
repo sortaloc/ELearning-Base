@@ -141,7 +141,14 @@ class ProductController extends MainController {
             try{
                 if(diff.length === 0){
                     // let data = await database.produk.all();
-                    let data = await database.produk.connection.raw(`SELECT * FROM produk where produk_is_active = 1 ORDER BY produk_created_at DESC`)
+                    let data = await database.produk.connection.raw(`
+                        SELECT *
+                        FROM
+                        produk
+                        WHERE
+                        produk_is_active = 1
+                        ORDER BY produk_end DESC, produk_created_at DESC
+                        `)
                     data = data.rows;
                     let ret = [];
                     for(let idx = 0; idx < data.length; idx++){
@@ -164,7 +171,11 @@ class ProductController extends MainController {
                                 created: transaksi.trx_created_at
                             }
                         }
+                        // if(){
+                        // }
                         let res = {
+                            startprofisiensi: d.produk_start,
+                            endprofisiensi: d.produk_end,
                             produkid: d.produk_id,
                             nama: d.produk_namaProduk,
                             groupid: d.produk_id_group,
