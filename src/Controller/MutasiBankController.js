@@ -17,16 +17,16 @@ class MutasiBankController extends MainController {
             try{
             	// if(diff.length === 0){
 
-            		console.log(body);
+            		// console.log(body);
 
                     let data = await database.mutasi_bank.insertOne({mutasi_raw: JSON.stringify(body)});
-                    console.log(data);
+                    // console.log(data);
 
             		response.data = body;
             		response.message = 'Berhasil Insert Mutasi Data';
             		response.code = 100;
             		response.state = true;
-                    console.log(response)
+                    // console.log(response)
             		resolve(response);
             	// }else{
             	// 	response.data = {};

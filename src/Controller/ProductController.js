@@ -204,20 +204,10 @@ class ProductController extends MainController {
                             let nowDate = new Date(moment.tz('Asia/Jakarta').format());
                             if(nowDate > exprDate){
                                 res.buttonbuy = 0;
-                                // res = {
-                                //     ...res,
-                                //     buttonbuy: 0
-                                // }
                             }else{
                                 res.buttonbuy = 1;
-                                // res = {
-                                //     ...res,
-                                //     buttonbuy: 1
-                                // }
                             }
-                            // console.log(true)
                         }
-                        // console.log(res.nama)
 
                         // cprofile.prl_nama as namapemateri,
                         // cprofile.prl_username as usernamepemateri,

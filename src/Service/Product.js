@@ -12,7 +12,6 @@ module.exports = (router) => {
 
     router.post('/upload', async (req, res) => {
         let uploadImage = await ProductController.uploadImage(req);
-        console.log(uploadImage)
         return res.send(uploadImage);
     })
 
@@ -121,9 +120,7 @@ module.exports = (router) => {
     })
 
     router.post('/deleteCategory', VerifyMiddleware, async (req, res) => {
-        console.log(req.body);
         let response = await ProductController.deleteCategory(['id'], req.body);
-        console.log(response)
         return res.send(response);
     })
 
@@ -133,6 +130,5 @@ module.exports = (router) => {
     })
 
     // router.post('/search')
-    
     return router;
 }
