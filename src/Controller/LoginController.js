@@ -171,7 +171,7 @@ class LoginController extends MainController {
         return new Promise(async (resolve) => {
             let response = STRUCTURE;
             let newBody = Object.keys(body);
-            let diff = list.filter((x) => newBody.indexOf(x) === -1)
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
             try{
                 if(diff.length === 0){
                     let username = await database.profile.connection.raw(`SELECT * FROM profile WHERE LOWER(prl_username) LKE '%${body.value.toLowerCase()}%' AND prl_isactive = 1`);
@@ -250,7 +250,7 @@ class LoginController extends MainController {
         return new Promise(async (resolve) => {
             let response = STRUCTURE;
             let newBody = Object.keys(body);
-            let diff = list.filter((x) => newBody.indexOf(x) === -1)
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
             try{
                 if(diff.length === 0){
                     let otpData = await database.otp_list.allSelect({otp_kode: body.otp, otp_nohp: body.nohp, otp_status: 0});
@@ -290,7 +290,7 @@ class LoginController extends MainController {
         return new Promise(async (resolve) => {
             let response = STRUCTURE;
             let newBody = Object.keys(body);
-            let diff = list.filter((x) => newBody.indexOf(x) === -1)
+            let diff = fields.filter((x) => newBody.indexOf(x) === -1)
             try{
                 if(diff.length === 0){
                     let otp = await database.otp_list.allSelect({otp_kode: body.otp, otp_nohp: body.nohp, otp_status: 0});

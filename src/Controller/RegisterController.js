@@ -258,7 +258,6 @@ class RegisterController extends MainController {
         })
     }
     registerWhatsapp = async (body, res) => {
-        // console.log(body)
         return new Promise(async (resolve) => {
             let getText = body.Body;
             let response = this.structure;
@@ -286,7 +285,6 @@ class RegisterController extends MainController {
                     res.writeHead(200, {'Content-Type': 'text/xml'});
                     res.end(twiml.toString());
                 }else{
-                    
                     let OTP = await this.getKodeOTP(getNumber);
                     if(!OTP){
                         res.writeHead(500, {'Content-Type': 'text/xml'});
@@ -298,8 +296,9 @@ class RegisterController extends MainController {
                     res.writeHead(200, {'Content-Type': 'text/xml'});
                     res.end(twiml.toString());
                 }
+            }else if(getText.indexOf('reg') > -1 && getText.indexOf('pgri') > -1){
             }else{
-                const message = `Registrasi tidak valid, coba menggunakan REX PREXUX`
+                const message = `Command tidak ditemukan`
                 twiml.message(message);
                 res.writeHead(200, {'Content-Type': 'text/xml'});
                 res.end(twiml.toString());
