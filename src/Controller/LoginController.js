@@ -209,6 +209,7 @@ class LoginController extends MainController {
                         OTP = OTP.kode;
 
                         let WA = await database.setting.single({st_kode:'wa_bot'});
+                        console.log(WA);
                         let data = await client.messages
                         .create({
                             from: `whatsapp:+${WA.st_value}`,
