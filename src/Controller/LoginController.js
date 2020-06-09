@@ -176,26 +176,25 @@ class LoginController extends MainController {
             try{
                 if(diff.length === 0){
                     let username = await database.profile.connection.raw(`SELECT * FROM profile WHERE LOWER(prl_username) LIKE '%${body.value.toLowerCase()}%' AND prl_isactive = 1`);
-                    console.log('username',username.rows)
+                    // console.log('username',username.rows)
                     let email = await database.profile.connection.raw(`SELECT * FROM profile WHERE LOWER(prl_email) LIKE '%${body.value.toLowerCase()}%' AND prl_isactive = 1`);
-                    console.log('email',email.rows)
+                    // console.log('email',email.rows)
                     if(Number(body.value.charAt(0)) === 0){
                         body.value = body.value.substr(1);
                     }
-                    let nohp = await database.profile.connection.raw(`SELECT * FROM profile WHERE LOWER(prl_nohp) LIKE '%${body.value.toLowerCase()}%' AND prl_isactive = 1`);
-                    console.log('nohp',nohp.rows)
+                    let nohp = await database.profile.connection.raw(`SELECT * FROM profile WHERE LOWER(prl_nohp) LIKE '%${body.value}%' AND prl_isactive = 1`);
+                    // console.log('nohp',nohp.rows)
                     let akun = [];
                     if(username.rows.length > 0){
-                        akun = username.rows
+                        akun = username.rows[0]
                     }
                     if(email.rows.length > 0){
-                        akun = email.rows
+                        akun = email.rows[0]
                     }
                     if(nohp.rows.length > 0){
-                        akun = nohp.rows
+                        akun = nohp.rows[0]
                     }
 
-                    console.log(akun)
 
                     if(akun.length > 0){
                         let OTP = this.getKodeOTP(akun.prl_nohp);
