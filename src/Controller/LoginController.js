@@ -209,8 +209,6 @@ class LoginController extends MainController {
 
                         OTP = OTP.kode;
 
-                        console.log(OTP);
-
                         let WA = await database.setting.single({st_kode:'wa_bot'});
                         let data = await client.messages
                         .create({
