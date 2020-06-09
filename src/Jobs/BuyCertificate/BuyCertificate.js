@@ -44,6 +44,8 @@ const processing = async () => {
 
                     transaksi = transaksi[0];
 
+                    console.log(produk.produk_kodeProduk)
+
                     let realHarga = Number(produk.produk_harga) /** 15000*/
                     let nexus = Number(produk.produk_harga)
 

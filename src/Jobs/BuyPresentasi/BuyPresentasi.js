@@ -46,13 +46,16 @@ const processing = async () => {
                     transaksi = transaksi[0];
                     produk = produk[0];
 
+                    console.log(produk.produk_kodeProduk)
+
+
+                    let realHarga = Number(produk.produk_harga) /** 15000*/
+                    let nexus = Number(produk.produk_harga)
+
                     let fee = realHarga * (feepersen / 100)
                     let feeNexus = nexus * (feepersen / 100);
                     let keuntunganUser = realHarga - fee;
                     let keuntunganUserNexus = nexus - feeNexus;
-
-                    let realHarga = Number(produk.produk_harga) /** 15000*/
-                    let nexus = Number(produk.produk_harga)
 
                     let jurnal1 = {
                         cf_keterangan: `Pengurangan Nexus dari profile ${akun.prl_profile_id} sebesar ${produk.produk_harga} Nexus seharga ${realHarga} Rupiah`,

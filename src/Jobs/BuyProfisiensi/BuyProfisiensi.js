@@ -47,6 +47,8 @@ const processing = async () => {
                     transaksi = transaksi[0];
                     produk = produk[0];
 
+                    console.log(produk.produk_kodeProduk)
+
                     let pemateri = await database.profile.single({prl_profile_id: produk.produk_pemateri_id, prl_isactive: 1})
 
                     var globalData = {
