@@ -207,7 +207,7 @@ class LoginController extends MainController {
                             resolve(response);
                         }
 
-                        OTP = OTP.kode;
+                        // OTP = OTP;
 
                         console.log(OTP);
 
