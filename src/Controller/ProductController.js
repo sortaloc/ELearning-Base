@@ -809,6 +809,7 @@ class ProductController extends MainController {
                         where a.trx_data LIKE '%download%'
                         GROUP BY a.trx_produk_id, prd."produk_namaProduk", prd.produk_harga, prd.produk_id_group, prdg.group_nama, prd."produk_kodeProduk",prd.produk_cover, prd.produk_keterangan, prd.produk_certificate, prd.produk_cover, bprofile.prl_nama, bprofile.prl_username, cprofile.prl_nama, cprofile.prl_username, cprofile.prl_photo, photopematerilink
                         ORDER BY download DESC
+                        LIMIT 5
                         `
                         )
                     // console.log(data.rows);

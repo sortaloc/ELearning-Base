@@ -34,12 +34,13 @@ class PaymentController extends MainController {
 
                         const codeUnique = async () => {
                             return new Promise(async retData => {
-                                let kode = this.generateKodeUnik();
+                                // let kode = this.generateKodeUnik();
+                                let kode = this.getRandomInt(1, 500);
                                 // let statusOtp = await database.deposit.allSelect({dep_kode_unik: kode, dep_status: 1});
                                 let statusOtp = await database.deposit.connection.raw(`
-                                SELECT * FROM 
-                                deposit 
-                                WHERE 
+                                SELECT * FROM
+                                deposit
+                                WHERE
                                 dep_kode_unik = ${kode} AND dep_created_at BETWEEN '${this.createDate(-24)}' AND '${this.createDate(0)}' AND dep_status = 0
                                 `)
                                 if(statusOtp.rows.length === 0){ //Belum ada Kode OTP maka Lanjut
@@ -57,7 +58,7 @@ class PaymentController extends MainController {
                         let trxID = this.generateID();
                         let trxINV = this.createInvoice('TOPUP');
                         let refid = `TOPUPDEPO${this.generateID()}`;
-                        
+
                         const deposit = {
                             dep_id: this.generateID(),
                             dep_kode_unik: kode,

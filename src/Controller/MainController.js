@@ -116,15 +116,17 @@ class MainController {
     }
 
     createInvoice (type) {
-    let uID = crypto.randomBytes(6).toString('hex')
-    uID = parseInt(uID, 16)
-    let invoice = `${type}-${uID}`;
-    return invoice
-  }
-    
+        let uID = crypto.randomBytes(6).toString('hex')
+        uID = parseInt(uID, 16)
+        let invoice = `${type}-${uID}`;
+        return invoice
+    }
     random = (start= 1, end= 9)=> {
         const val = Math.floor(start + Math.random() * end)
         return val
+    }
+    getRandomInt = (min, max) => {
+      return Math.floor(Math.random() * (max - min + 1) + min);
     }
     milli = ()=> {
         const hrTime = process.hrtime()
@@ -152,21 +154,21 @@ class MainController {
         month = this.validateDate(month)
         let day = date.getDay() + 1
         day = this.validateDate(day)
-    
+
         let hour = date.getHours()
         hour = this.validateDate(hour)
         let minutes = date.getMinutes()
         minutes = this.validateDate(minutes)
         let second = date.getSeconds()
         second = this.validateDate(second)
-    
+
         let milisec = date.getMilliseconds()
         if (milisec < 10) {
             milisec = `${this.random()}${this.random()}${milisec}`
         } else if (milisec < 100) {
             milisec = `${this.random()}${milisec}`
         }
-    
+
         var lastmil = this.milli().toString()
         if (parseInt(lastmil.length) === 15) {
             lastmil = parseInt(lastmil.substr(lastmil.length - 6))
