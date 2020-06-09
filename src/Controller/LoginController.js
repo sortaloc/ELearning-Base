@@ -174,7 +174,7 @@ class LoginController extends MainController {
             let diff = fields.filter((x) => newBody.indexOf(x) === -1)
             try{
                 if(diff.length === 0){
-                    let username = await database.profile.connection.raw(`SELECT * FROM profile WHERE LOWER(prl_username) LKE '%${body.value.toLowerCase()}%' AND prl_isactive = 1`);
+                    let username = await database.profile.connection.raw(`SELECT * FROM profile WHERE LOWER(prl_username) LIKE '%${body.value.toLowerCase()}%' AND prl_isactive = 1`);
                     let email = await database.profile.connection.raw(`SELECT * FROM profile WHERE LOWER(prl_email) LIKE '%${body.value.toLowerCase()}%' AND prl_isactive = 1`);
                     if(Number(body.value.charAt(0)) === 0){
                         body.value = body.value.substr(1);
