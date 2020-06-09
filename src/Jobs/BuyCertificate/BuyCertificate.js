@@ -21,7 +21,6 @@ const processing = async () => {
         let ibxSucc = new Array();
 
         if(data.length === 0){
-            // console.log('Tidak ada Data');
             return resolve(true);
         }else{
             try{
@@ -139,7 +138,7 @@ const processing = async () => {
                             let cashflow = await database.cashflow.insert([jurnal1, jurnal2, jurnal3])
 
                             if(cashflow.state){
-                                let keteranganTrx = `Berhasil membeli Sertifikat ${produk.produk_namaProduk}, sertifikat dapat di download pada halaman History`;
+                                let keteranganTrx = `Berhasil membeli Sertifikat ${produk.produk_namaProduk}, sertifikat dapat di download pada halaman Library`;
                                 let trxData = {
                                     certificate: nameCert,
                                     created: MainController.createDate(0),

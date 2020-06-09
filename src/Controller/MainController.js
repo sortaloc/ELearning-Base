@@ -223,11 +223,11 @@ class MainController {
             let response = this.structure;
             let request = req
             req.pipe(req.busboy)
-            
+
             let imageCount = 0;
             var imageRespon = [];
             var dataSource = {};
-    
+
             req.busboy.on('file', (fieldname, file, filename, encoding, mime) => {
                 let name= filename.split('.')
                 let typeFiles = mime.split('/')
@@ -235,11 +235,11 @@ class MainController {
                 name[0] = name[0].replace(/\s/g,'');
                 name[0] = name[0].replace(/[^0-9a-z]/gi, '');
                 name = `${this.generateID()}_${name[0]}.${name[name.length-1]}`;
-    
+
                 const fstream = fs.createWriteStream(path.join(uploadPath, name))
-    
+
                 imageCount++;
-    
+
                 file.pipe(fstream);
 
                 dataSource[fieldname] = name;
@@ -248,7 +248,7 @@ class MainController {
                     name: name,
                     type: mime
                 })
-    
+
                 fstream.on('close', () => {
                     file.unpipe(fstream);
                 });
@@ -261,7 +261,7 @@ class MainController {
             req.busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
                 dataSource[fieldname] = val;
             });
-    
+
 
             req.busboy.on('finish', function(){
                 req.unpipe(req.busboy);
@@ -284,7 +284,7 @@ class MainController {
                 response.message = "Gagal Upload File";
                 resolve(response);
             })
-            
+
         })
     }
 
@@ -338,7 +338,7 @@ class MainController {
         harga: key[3],
         profileid: key[4],
         refid: key[5]
-      }  
+      } 
       return data;
     }
 

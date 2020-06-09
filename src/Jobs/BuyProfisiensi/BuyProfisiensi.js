@@ -138,7 +138,7 @@ const processing = async () => {
                                 dataRaw.acccess = 0;
                                 dataRaw.created = MainController.createDate(0);
                                 if(cashflow.state){
-                                    let keteranganTrx = `Berhasil membeli E-Profisiensi ${produk.produk_namaProduk}, E-Profisiensi dapat di download pada halaman History`;
+                                    let keteranganTrx = `Berhasil membeli E-Profisiensi ${produk.produk_namaProduk}, E-Profisiensi dapat di download pada halaman Library`;
                                     let updateTransaksi = await database.transaksi.updateOne({trx_id: transaksi.trx_id, trx_invoice: transaksi.trx_invoice, trx_refid: inbox.ibx_refid}, {trx_saldo_after: akun.prl_saldo - realHarga, trx_status: 'S', trx_keterangan: keteranganTrx, trx_updated_at: MainController.createDate(0),trx_data: JSON.stringify(dataRaw)})
                                     let updateInbox = await database.inbox.updateOne({ibx_refid: inbox.ibx_refid}, {ibx_status: 'S'});
                                     let Outbox = {

@@ -381,6 +381,8 @@ class ProductController extends MainController {
                         a.produk_certificate as produk,
                         a.produk_viewed as produkview,
                         a.produk_buy as produkbuy,
+                        a.produk_start as startprofisiensi,
+                        a.produk_end as endprofisiensi,
                         CONCAT('${URLIMAGE}', a.produk_certificate) as produk_link,
                         CONCAT('${URLIMAGE}', a.produk_cover) as cover_link,
                         bprofile.prl_nama as namaadmin,

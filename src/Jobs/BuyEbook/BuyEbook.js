@@ -114,7 +114,7 @@ const processing = async () => {
                             let cashflow = await database.cashflow.insert([jurnal1, jurnal2, jurnal3])
 
                             if(cashflow.state){
-                                let keteranganTrx = `Berhasil membeli E-Book ${produk.produk_namaProduk}, E-Book dapat di download pada halaman History`;
+                                let keteranganTrx = `Berhasil membeli E-Book ${produk.produk_namaProduk}, E-Book dapat di download pada halaman Library`;
                                 let trxData = {
                                     ebook: nameEbook,
                                     created: MainController.createDate(0),

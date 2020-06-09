@@ -37,7 +37,6 @@ class HistoryController extends MainController {
                 		WHERE
                 		trx_id_profile = '${body.id}'
                         AND
-                        trx_status = 'S'
                         ORDER BY trx_created_at DESC
                 		`
                 		);
