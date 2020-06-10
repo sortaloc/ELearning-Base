@@ -24,8 +24,9 @@ module.exports = (router) => {
         let uploadImage = await ProfileController.uploadImage(req)
         if(Boolean(uploadImage.state) === true){
             console.log(uploadImage);
-            let data = uploadImage.data.fieldData
-            data.image = uploadImage.data.image[0].name
+            // let data = uploadImage.data.fieldData
+            data = uploadImage.data.fieldData;
+            // data.image = uploadImage.data.image[0].name
             let response = await ProfileController.updatePhoto(['id', 'image'], data)
             res.send(response)
         }else{
