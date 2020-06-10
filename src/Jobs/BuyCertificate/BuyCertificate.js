@@ -112,16 +112,37 @@ const processing = async () => {
                             // let { nomor, nama, image } = placement;
 
                             let imgSource = `../../Source/${produk.produk_certificate}`;
-                            let fontSource = `../../Source/font_storage/cert_${placement.nomor.fontSize}.fnt`
                             let imgPath = path.join(__dirname, imgSource);
-                            let fontPath = path.join(__dirname, fontSource);
 
                             let nameCert = `${MainController.generateID()}_${akun.prl_profile_id}_${produk.produk_certificate}`;
                             let nameExport = `../../Source/${nameCert}`;
                             let exportFile = path.join(__dirname, nameExport);
 
                             const image = await Jimp.read(imgPath);
+                            // let jimpImage = await Jimp.read(imgPath)
+
+                            let { width, height } = image.bitmap;
+
+                            let convertReal = (Math.floor(width / placement.image.resizeTransform.width))
+
+                            let sizeText = Math.floor(placement.nama.fontSize * convertReal);
+                            // sizeText += 10;
+                            let fontSource = `../../Source/font_storage/cert_${sizeText}.fnt`
+                            console.log(fontSource)
+
+                            // console.log(Math.floor(width / placement.image.resizeTransform.width), height / placement.image.resizeTransform.height)
+                            // process.exit()
+
+                            let fontPath = path.join(__dirname, fontSource);
                             const font = await Jimp.loadFont(fontPath);
+                            // console.log(Jimp);
+                            // process.exit()
+
+                            let numberFont = `FONT_SANS_${placement.nomor.fontSize}_BLACK`;
+                            numberFont = await Jimp.loadFont(Jimp[numberFont]);
+                            // console.log(numberFont)
+                            // // console.log(numberFont);
+                            // process.exit();
 
                             var w = image.bitmap.width;
                             var h = image.bitmap.height;
@@ -149,12 +170,68 @@ const processing = async () => {
                             var textWidth = Jimp.measureText(font, namaText);
                             var textHeight = Jimp.measureTextHeight(font, namaText);
 
+                            // console.log(textWidth, textHeight)
+
                             let nomorWidth = Jimp.measureText(font, nomor);
                             let nomorHeight = Jimp.measureTextHeight(font, nomor);
 
-                            let jimpImage = await Jimp.read(imgPath)
-                            let { width, height } = jimpImage.bitmap;
-                            
+                            if(placement.image.resize){
+                                // let imageText = new Jimp(placement.image.resizeTransform.width, placement.image.resizeTransform.height, '#FFFFFF');
+                                // let imageText = await Jimp.read(path.join(__dirname, '../../Source/transparent.png'));
+                                // await imageText.resize(width, height)
+                                // let transparent = await Jimp.read(path.join(__dirname, '../../Source/transparent.png'));
+                                // await imageText.composite(transparent, 0,0);
+                                // await imageText.rgba(false);
+                                // await imageText.background('#FFFFFF');
+                                // imageText.resize()
+
+                                // await imageText.print(numberFont, 5, 10, nomor);
+                                // await imageText.print(font, 50, 50, namaText);
+                                // await imageText.print(font, 10, 10, {
+                                //     text: namaText,
+                                //     alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
+                                //     alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
+                                // }, textWidth, textHeight);
+                                // // await imageText.print(numberFont, 50, 50, {
+                                // //     text: nomor,
+                                // //     alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
+                                // //     alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
+                                // // }, nomorWidth, nomorHeight);
+                                // // await imageText.quality(100);
+                                // // await imageText.resize(width, height)
+                                // // let d = await imageText.writeAsync(path.join(__dirname, '../../Source/testingWazier111.png')); //End
+                                // // console.log(d)
+                                // // image.blit(imageText, 0,0, [0,0,Number(width), Number(height)]);
+                                // image.composite(imageText, 0, 0, {
+                                //     mode: Jimp.BLEND_SCREEN,
+                                //     shadowOpacity: 1,
+                                //     opacityDest: 1
+                                // })
+
+                                // let x = w/2-textWidth/2;
+                                // let y = h/2-textHeight/2;
+                                // let x = width / 2 - textWidth / 2;
+                                let x = (placement.nama.offset.left * convertReal) / 2;
+                                // let x = (placement.nama.position.left * (width / pla));
+                                let y = (placement.nama.offset.top * convertReal);
+                                console.log(x, y)
+                                // console.log(textWidth, placement.nama.width * convertReal)
+                                // console.log(textHeight, placement.nama.height * convertReal)
+                                await image.print(font, x, y, {
+                                    text: namaText,
+                                    alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
+                                    alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
+                                }, textWidth, textHeight);
+
+                                await image.print(numberFont, 100, 100, {
+                                    text: nomor,
+                                    alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
+                                    alignmentY: Jimp.VERTICAL_ALIGN_MIDDLE
+                                }, nomorWidth, nomorHeight);
+                                await image.writeAsync(exportFile); //End
+                            }else{
+
+                            }
                             console.log(placement);
                             process.exit();
 
